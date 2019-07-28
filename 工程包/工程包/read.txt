@@ -1,0 +1,8 @@
+admin.rar 源来ant框架
+type.txt  json设计稿
+
+要使用的ant版本如下
+官网
+https://pro.loacg.com
+Git
+https://github.com/sendya/ant-design-pro-vue
