@@ -7,8 +7,9 @@ import router from './router'
 import '@/assets/js/tool.js'
 //axios引入
 import './server/server'
-// Message按需引入
+// antd of vue
 import {Message} from 'ant-design-vue'
+import "ant-design-vue/dist/antd.css";
 //路由钩子函数
 router.beforeEach((to, from, next) =>{
   if(to.meta.requireAuth) {

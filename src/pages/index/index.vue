@@ -11,26 +11,13 @@
         </div>
         <div class="logo-title" v-if="!collapsed">后台管理系统</div>
       </div>
-      <a-menu theme="dark" mode="inline" :defaultSelectedKeys="['1']">
-        <a-menu-item key="1">
-          <a-icon type="user" />
-          <span>nav 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <a-icon type="video-camera" />
-          <span>nav 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <a-icon type="upload" />
-          <span>nav 3</span>
-        </a-menu-item>
-      </a-menu>
+      <m-nav></m-nav>
     </a-layout-sider>
     <a-layout>
       <m-header :collapsed="collapsed" @clickCollBtn="()=> collapsed = !collapsed"></m-header>
 
-      <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
-        Content
+      <a-layout-content :style="{ margin: '15px 10px', padding: '10px', background: '#fff', minHeight: '280px' }">
+        <router-view></router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -38,6 +25,7 @@
 <script>
   import {Layout, Menu, Icon} from 'ant-design-vue'
   import MHeader from '@/components/m-header/m-header'
+  import MNav from '@/components/m-nav/m-nav'
   export default {
     components : {
       ALayout: Layout,
@@ -47,7 +35,8 @@
       AMenu: Menu,
       AMenuItem: Menu.Item,
       AIcon: Icon,
-      MHeader
+      MHeader,
+      MNav
     },
     data(){
       return {

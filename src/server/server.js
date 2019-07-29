@@ -13,9 +13,9 @@ axios.interceptors.request.use(config=> {
   if(hash != '#/login'){
     let accessToken = Vue.prototype.$getLocalStorage('access_token');
     let tokenType = Vue.prototype.$getLocalStorage('token_type');
-    console.log(accessToken, tokenType)
+    // console.log(accessToken, tokenType)
     if(accessToken && tokenType) {
-      console.log('设置请求头')
+      // console.log('access_token', tokenType + ' ' + accessToken)
       config.headers['Authorization'] = tokenType + ' ' + accessToken // 让每个请求携带自定义 token 请根据实际情况自行修改
     }
   }
@@ -34,7 +34,13 @@ axios.interceptors.response.use(data=> {
   return data;
 }, err=> {
   // console.error('响应拦截器', err.response.status)
-  if (err.response.status == 504) {
+  if(err.response.status == 401){
+    // Message.error(err.response.data.error.message);
+    let path = location.hash.slice(1,location.hash.length)
+    if(path != '/login'){
+      location.hash = '#/login?redirect='+path
+    }
+  }else if (err.response.status == 504) {
     Message.error('服务器被吃了⊙﹏⊙∥');
   }else if(err.response.status == 404){
     //这里进行404页面跳转
