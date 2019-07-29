@@ -1,11 +1,16 @@
 <template>
-  <a-layout id="components-layout-demo-custom-trigger">
+  <a-layout class="index-wrap">
     <a-layout-sider
       :trigger="null"
       collapsible
       v-model="collapsed"
     >
-      <div class="logo" />
+      <div class="logo-wrap">
+        <div class="logo-img">
+          <img src="/static/img/logo.svg" alt="logo">
+        </div>
+        <div class="logo-title" v-if="!collapsed">后台管理系统</div>
+      </div>
       <a-menu theme="dark" mode="inline" :defaultSelectedKeys="['1']">
         <a-menu-item key="1">
           <a-icon type="user" />
@@ -22,13 +27,8 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
-        <a-icon
-          class="trigger"
-          :type="collapsed ? 'menu-unfold' : 'menu-fold'"
-          @click="()=> collapsed = !collapsed"
-        />
-      </a-layout-header>
+      <m-header :collapsed="collapsed" @clickCollBtn="()=> collapsed = !collapsed"></m-header>
+
       <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
         Content
       </a-layout-content>
@@ -37,6 +37,7 @@
 </template>
 <script>
   import {Layout, Menu, Icon} from 'ant-design-vue'
+  import MHeader from '@/components/m-header/m-header'
   export default {
     components : {
       ALayout: Layout,
@@ -45,37 +46,24 @@
       ALayoutSider: Layout.Sider,
       AMenu: Menu,
       AMenuItem: Menu.Item,
-      AIcon: Icon
-      // aIcon, Icon
+      AIcon: Icon,
+      MHeader
     },
     data(){
       return {
         collapsed: false,
+        accessToken: this.$getLocalStorage('access_token'),
+        tokenType: this.$getLocalStorage('token_type'),
+        username: this.$getLocalStorage('username')
       }
     },
     mounted () {
-      let accessToken = this.$getLocalStorage('access_token');
-      let username = this.$getLocalStorage('username');
-      // console.log('get from localStstorage ', accessToken, username)
+      // let accessToken = this.$getLocalStorage('access_token');
+      // let username = this.$getLocalStorage('username');
+      // console.log('get from localStstorage ', this.accessToken, this.username)
     }
   }
 </script>
-<style>
-#components-layout-demo-custom-trigger .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color .3s;
-}
-
-#components-layout-demo-custom-trigger .trigger:hover {
-  color: #1890ff;
-}
-
-#components-layout-demo-custom-trigger .logo {
-  height: 32px;
-  background: rgba(255,255,255,.2);
-  margin: 16px;
-}
+<style lang="less" scoped>
+  @import "index";
 </style>

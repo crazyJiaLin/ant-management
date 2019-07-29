@@ -10,7 +10,10 @@ export default new Router({
     {
       path: '/',
       name: 'index',
-      component: Index
+      component: Index,
+      meta: {
+        requireAuth: true  // 是否需要登录拦截
+      }
     },
     {
       path: '/login',

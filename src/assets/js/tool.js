@@ -8,11 +8,20 @@ Vue.prototype.$setLocalStorage = (key, value, expires) => {
   localStorage.setItem(key,JSON.stringify({data:value,expiresTime:expiresTime}));
 }
 Vue.prototype.$getLocalStorage = (key) => {
-  let curTime = new Date().getTime();
-  let data = JSON.parse(localStorage.getItem(key));
-  // console.log(data, curTime)
-  if(data.expiresTime && data.expiresTime  > curTime) {
-    return data.data
+  let strData = localStorage.getItem(key);
+  if(!strData) {
+    return  null;
   }
-  return null;
+  let curTime = new Date().getTime();
+  try {
+    let data = JSON.parse(strData);
+    // console.log(data, curTime)
+    if(data.expiresTime && data.expiresTime  > curTime) {
+      return data.data
+    }
+    return null;
+  }catch (e) {
+    console.error(e)
+    return null;
+  }
 }

@@ -12,7 +12,7 @@
             <div class="login-body">
                 <a-form class="login-form" :form="form"  @submit="handleSubmit">
                     <a-form-item :wrapper-col="wrapperCol" has-feedback>
-                        <a-input ref="usernameInput" placeholder="请输入用户名" type="text" size="large"
+                        <a-input ref="usernameInput" placeholder="请输入用户名" type="text" size="large" autocomplete="true"
                             v-decorator="[
                                 'username',
                                 { rules: [{ required: true, message: '用户名不能为空' }] }
@@ -22,7 +22,7 @@
                         </a-input>
                     </a-form-item>
                     <a-form-item :wrapper-col="wrapperCol" has-feedback>
-                        <a-input  ref="passwordInput" placeholder="请输入密码" type="passsword" size="large"
+                        <a-input  ref="passwordInput" placeholder="请输入密码" type="password" size="large"
                             v-decorator="[
                                 'password',
                                 { rules: [{ required: true, message: '密码不能为空' }] }
@@ -34,7 +34,7 @@
                     <a-row>
                         <a-col :span="15">
                             <a-form-item :wrapper-col="wrapperCol" has-feedback>
-                                <a-input  ref="captchaCodeInput" placeholder="请输入验证码" type="text" size="large"
+                                <a-input  ref="captchaCodeInput" placeholder="请输入验证码" type="text" size="large" autocomplete="off"
                                     v-decorator="[
                                         'captchaCode',
                                         { rules: [{ required: true, message: '验证码不能为空' }] }
@@ -75,17 +75,18 @@ export default {
         ACol: Col
     },
     data () {
-        return {
-            username: '',
-            password: '',
-            captchaId: '',
-            captchaImg: '',
-            captchaCode: '',
-            btnLoading: false,
-            form: this.$form.createForm(this),
-            labelCol: {span: 0},
-            wrapperCol: {span: 24},
-        }
+      return {
+        username: '',
+        password: '',
+        captchaId: '',
+        captchaImg: '',
+        captchaCode: '',
+        btnLoading: false,
+        redirectPath: this.$route.query.redirect ? this.$route.query.redirect : '/',
+        form: this.$form.createForm(this),
+        labelCol: {span: 0},
+        wrapperCol: {span: 24},
+      }
     },
     methods: {
         emptyInput (value, ref) {
@@ -96,7 +97,7 @@ export default {
             e.preventDefault();
             this.form.validateFields((err, values) => {
             if (!err) {
-                console.log('Received values of form: ', values);
+                // console.log('Received values of form: ', values);
                 this.btnLoading = true;
                 this.login(values);
             }
@@ -109,28 +110,25 @@ export default {
                 "password": Md5(values.password),
                 "user_name": values.username
             }).then(res => {
-                console.log('then', res)
+                // console.log('then', res)
                 this.btnLoading = false;
                 let data = res.data;
                 if(data.access_token){
-                    //将acces_token和用户名保存到localStorage
-                    this.$setLocalStorage('access_token', data.access_token, data.expires_at);
-                    this.$setLocalStorage('username', values.username, data.expires_at);
-                    // localStorage.setItem('username', values.username)
-                    //路由跳转
-                    this.$router.push({
-                        path: '/'
-                    });
+                  //将acces_token和用户名保存到localStorage
+                  this.$setLocalStorage('access_token', data.access_token, data.expires_at);
+                  this.$setLocalStorage('token_type', data.token_type, data.expires_at);
+                  this.$setLocalStorage('username', values.username, data.expires_at);
+                  // localStorage.setItem('username', values.username)
+                  //路由跳转
+                  this.$router.push({
+                      path: this.redirectPath
+                  });
                 }
             }).catch(err => {
-                console.log('catch', err)
-                console.log(err.response)
-                this.btnLoading = false;
-                // let errData = err.response.data.error;
-                // if(errData.message === "无效的验证码"){
-                    
-                // }else if(errData.message === '用户名或密码错误'){}
-                // if(err.response.)
+              console.log(err.response)
+              this.btnLoading = false;
+              //如果登陆失败，则重新获取验证码
+              this.getCaptchaId();
             })
         },
         getCaptchaId () {
@@ -179,9 +177,10 @@ export default {
         }
     },
     mounted () {
-        this.getCaptchaId()
-        // console.log(this.binToBase64(010))
-        // console.log(window.URL, window.webkitURL)
+      //获取验证码
+      this.getCaptchaId()
+      //获取当前页面请求参数，用于做登陆重定向
+      // console.log(this.$route.query)
     }
 }
 </script>
