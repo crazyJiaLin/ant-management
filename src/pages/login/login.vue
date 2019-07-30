@@ -120,6 +120,7 @@ export default {
                   this.$setLocalStorage('username', values.username, data.expires_at);
                   // localStorage.setItem('username', values.username)
                   //路由跳转
+                  // console.log(this.redirectPath)
                   this.$router.push({
                       path: this.redirectPath
                   });
