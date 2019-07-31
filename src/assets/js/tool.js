@@ -30,6 +30,7 @@ Vue.prototype.$getLocalStorage = (key) => {
 //路由面包屑vuex设置
 Vue.prototype.$setRouteToStore = (to) => {
   let routes = [];
+  //通过对当前路由的所匹配的matched数组来渲染面包屑
   for (let i=0; i<to.matched.length; i++){
     let title = to.matched[i].meta.title;
     if(title && title != '') {

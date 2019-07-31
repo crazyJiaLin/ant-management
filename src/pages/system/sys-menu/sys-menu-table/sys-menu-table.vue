@@ -37,6 +37,11 @@
           this.fetch(newVal);
         },
         deep: true
+      },
+      '$store.state.menuList'(newVal, oldVal){
+        // console.log(newVal, oldVal)
+        //监听vuex中menuList变化，从而对导航栏进行重置
+        this.data = newVal;
       }
     },
     data() {
@@ -48,7 +53,7 @@
           {
             title: '菜单名称',
             dataIndex: 'name',
-            align: 'center',
+            align: 'left',
           }, {
             title: '排序值',
             dataIndex: 'sequence',
@@ -64,7 +69,7 @@
           }, {
             title: '图标',
             dataIndex: 'icon',
-            align: 'center',
+            align: 'left',
             scopedSlots: { customRender: 'icon' },
           }, {
             title: '操作者',
@@ -106,6 +111,7 @@
           console.log('get menu page',res.data)
           if(res.data) {
             this.data = res.data.list;
+            this.$store.commit('setMenuToLocalStorage',res.data.list);
           }
         }).catch(err => {
           console.log(err)

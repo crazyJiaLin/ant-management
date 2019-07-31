@@ -1,6 +1,6 @@
 <template functional>
   <a-sub-menu
-    :key="props.menuInfo.router"
+    :key="props.menuInfo.record_id"
   >
     <span slot="title">
 <!--      <router-link :to="props.menuInfo.router">-->
@@ -10,7 +10,7 @@
     <template v-for="item in props.menuInfo.children">
       <a-menu-item
         v-if="!item.children"
-        :key="item.router"
+        :key="item.record_id"
       >
         <router-link :to="item.router">
           <a-icon :type="item.icon" />
@@ -41,7 +41,7 @@
       menuInfo: Object
     },
     mounted() {
-      console.log('111',this.menuInfo)
+      // console.log('111',this.menuInfo)
     }
   };
 </script>

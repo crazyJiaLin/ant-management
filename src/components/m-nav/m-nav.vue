@@ -1,8 +1,9 @@
 <template>
-  <a-menu theme="dark" mode="inline" :defaultSelectedKeys="curRouter"
-          :defaultOpenKeys="defaultOpenArr" @select="handleMenuChange">
+  <a-menu theme="dark" mode="inline" :defaultSelectedKeys="defaultSelectedKeys"
+          :defaultOpenKeys="defaultOpenKeys" @select="handleMenuChange"
+          forceSubMenuRender>
     <template v-for="(item, index) in menuList">
-      <a-menu-item v-if="!item.children" :key="item.router">
+      <a-menu-item v-if="!item.children" :key="item.record_id">
         <router-link :to="item.router">
           <a-icon :type="item.icon" />
           <span>{{item.name}}</span>
@@ -10,26 +11,6 @@
       </a-menu-item>
       <m-sub-menu v-else :menu-info="item"/>
     </template>
-<!--    <a-menu-item v-for="(item, index) in menuList" :key="item.router"-->
-<!--                 v-if="!item.hidden && (!item.children || item.children.length == 0)">-->
-<!--      <router-link :to="item.router">-->
-<!--        <a-icon :type="item.icon"/>-->
-<!--        <span>{{item.name}}</span>-->
-<!--      </router-link>-->
-<!--    </a-menu-item>-->
-<!--    <a-sub-menu v-for="(item, index) in menuList" :key="item.router"-->
-<!--                v-if="!item.hidden && (item.children && item.children.length > 0)">-->
-<!--      <span slot="title">-->
-<!--        <a-icon :type="item.icon"/>-->
-<!--        <span>{{item.name}}</span>-->
-<!--      </span>-->
-<!--      <a-menu-item v-for="(item2, index2) in item.children" :key="item2.router">-->
-<!--        <router-link :to="item2.router">-->
-<!--          <a-icon :type="item2.icon"/>-->
-<!--          <span>{{item2.name}}</span>-->
-<!--        </router-link>-->
-<!--      </a-menu-item>-->
-<!--    </a-sub-menu>-->
   </a-menu>
 </template>
 
@@ -49,7 +30,18 @@
       return {
         menuList : [],
         curRouter: [this.$route.path],
-        defaultOpenArr: ['']
+        defaultSelectedKeys: [],
+        defaultOpenKeys: []
+      }
+    },
+    watch: {
+      '$store.state.menuList'(newVal, oldVal){
+        // console.log(newVal, oldVal)
+
+        //根据当前路由在menuList中查找指定项
+        // this.setCurRouter();
+        //监听vuex中menuList变化，从而对导航栏进行重置
+        this.menuList = newVal;
       }
     },
     methods: {
@@ -57,7 +49,10 @@
         this.$axios.get('/current/menutree').then(res => {
           // console.log(res)
           if(res.data){
-            this.menuList = res.data.list;
+            // this.menuList = res.data.list;
+            //将菜单数据同步到vuex中，这里不需要在对this.data设置了，因为我们监听了vuex中的数据，state变化后会自动渲染
+            // this.$store.commit('setMenuList',res.data.list);
+            this.$store.commit('setMenuToLocalStorage',res.data.list);
           }
         }).catch(err => {
           console.log(err)
@@ -66,11 +61,42 @@
       handleMenuChange (value) {
         //菜单选择回调函数
         // console.log(value)
+      },
+      //根据当前路由在menuList中查找指定项
+      setCurRouter () {
+        // console.log(this.$route)
+        let path = this.$route.path;
+        let menuList = JSON.parse(localStorage.getItem('menuList'));
+        this.recursionList(menuList, path);
+        console.log('curRouter', this.curRouter)
+        this.defaultSelectedKeys = [this.curRouter.record_id];
+        this.defaultOpenKeys = this.curRouter.parent_path.split('/');
+      },
+      //递归查找路由
+      recursionList(list, path) {
+        if(list && list.length > 0){
+          for(let i=0; i<list.length; i++) {
+            // console.log(list[i], path)
+            if(list[i].router == path) {
+              // console.log('匹配成功', list[i])
+              this.curRouter = list[i];
+            }
+            if(list[i].children && list[i].children.length > 0){
+              this.recursionList(list[i].children, path);
+            }
+          }
+        }
+        return;
       }
+    },
+    created () {
+      this.setCurRouter();
+      // this.defaultOpenKeys = ['dfbb4bd9-de6d-4e02-ba0f-5a147bed3670']
     },
     mounted() {
       this.getUserMenuTree();
-    }
+
+    },
   }
 </script>
 
