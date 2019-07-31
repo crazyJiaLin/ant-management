@@ -23,20 +23,52 @@ export default new Router({
       name: 'index',
       component: Index,
       meta: {
-        requireAuth: true  // 是否需要登录拦截
+        requireAuth: true,  // 是否需要登录拦截
+        title: '权限管理脚手架'
       },
       children: [
         {path: '/', redirect:Dashboard},
-        {path: '/dashboard', name:'dashboard', component:Dashboard},
+        {
+          path: '/dashboard',
+          name:'dashboard',
+          component:Dashboard,
+          meta: {
+            title: '首页'
+          }
+        },
         {
           path: '/system',
           name: 'system',
           component: System,
+          meta: {
+            title: '系统管理'
+          },
           children: [
             // {path: '/system', redirect:Menu},
-            {path: '/system/menu', name:'sys-menu', component: SysMenu},
-            {path: '/system/role', name:'sys-role', component: SysRole},
-            {path: '/system/user', name:'sys-user', component: SysUser}
+            {
+              path: '/system/menu',
+              name:'sys-menu',
+              component: SysMenu,
+              meta: {
+                title: '菜单管理'
+              }
+            },
+            {
+              path: '/system/role',
+              name:'sys-role',
+              component: SysRole,
+              meta: {
+                title: '角色管理'
+              }
+            },
+            {
+              path: '/system/user',
+              name:'sys-user',
+              component: SysUser,
+              meta: {
+                title: '用户管理'
+              }
+            }
           ]
         },
         {

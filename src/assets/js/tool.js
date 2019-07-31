@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import store from '@/store'
 
 //localStorage封装
 Vue.prototype.$setLocalStorage = (key, value, expires) => {
@@ -24,4 +25,19 @@ Vue.prototype.$getLocalStorage = (key) => {
     console.error(e)
     return null;
   }
+}
+
+//路由面包屑vuex设置
+Vue.prototype.$setRouteToStore = (to) => {
+  let routes = [];
+  for (let i=0; i<to.matched.length; i++){
+    let title = to.matched[i].meta.title;
+    if(title && title != '') {
+      routes.push({
+        title: title,
+        path: to.matched[i].path
+      });
+    }
+  }
+  store.commit('setRoutes',routes);
 }

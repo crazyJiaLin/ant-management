@@ -5,10 +5,14 @@
     <div class="user-wrap">
       <a-dropdown>
         <a href="#">
-          <a-icon type="user"></a-icon>
-          {{realName}}
+          <a-avatar icon="user"/>
+<!--          <a-icon type="user"></a-icon>-->
+          &nbsp;{{realName}}
         </a>
         <a-menu slot="overlay">
+          <a-menu-item>
+            <a href="javascript:;">修改密码</a>
+          </a-menu-item>
           <a-menu-item>
             <a href="javascript:;" @click="logout">退出登录</a>
           </a-menu-item>
@@ -19,7 +23,7 @@
 </template>
 
 <script>
-  import {Layout, Icon, Dropdown, Menu} from 'ant-design-vue'
+  import {Layout, Icon, Dropdown, Menu, Avatar} from 'ant-design-vue'
   export default {
     name: "m-header",
     components: {
@@ -27,7 +31,8 @@
       AIcon: Icon,
       ADropdown: Dropdown,
       AMenu: Menu,
-      AMenuItem: Menu.Item
+      AMenuItem: Menu.Item,
+      AAvatar: Avatar
     },
     props: {
       collapsed: Boolean

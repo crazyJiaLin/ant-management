@@ -1,107 +1,102 @@
 <template>
-  <a-table :columns="columns"
-           :rowKey="record => record.record_id"
-           :dataSource="data"
-           :pagination="pagination"
-           :loading="loading"
-           @change="handleTableChange"
-  >
-    <template slot="icon" slot-scope="icon">
-      <a-icon :type="icon"></a-icon>
-    </template>
-    <template slot="operation" slot-scope="text, record">
-      <a-popconfirm
-        v-if="data.length"
-        title="Sure to delete?"
-        @confirm="() => onDelete(record.record_id)">
-        <a href="javascript:;">删除</a>
-      </a-popconfirm>
-    </template>
-  </a-table>
+  <div>
+    <a-table :columns="columns" :rowKey="record => record.record_id"
+             :dataSource="data" :pagination="false" :loading="loading">
+      <template slot="icon" slot-scope="icon">
+        <a-icon :type="icon"></a-icon> - {{icon}}
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <a-button size="small">查看</a-button>
+        <a-button size="small">编辑</a-button>
+        <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
+                      @confirm="() => onDelete(record.record_id)">
+          <a-button type="danger" ghost size="small">删除</a-button>
+        </a-popconfirm>
+      </template>
+    </a-table>
+  </div>
 </template>
 <script>
-  import {Table, Icon, Popconfirm} from 'ant-design-vue'
+  import {Table, Icon, Button, Popconfirm} from 'ant-design-vue'
 
   export default {
     name: 'sys-menu-table',
-    mounted() {
-      // this.fetch();
-      this.fetch2();
+    components: {
+      ATable: Table,
+      AIcon: Icon,
+      APopconfirm: Popconfirm,
+      AButton: Button
+    },
+    props: {
+      searchParams: Object
+    },
+    watch: {
+      searchParams: {
+        handler (newVal, oldVal) {
+          // console.log(newVal, oldVal)
+          this.fetch(newVal);
+        },
+        deep: true
+      }
     },
     data() {
       return {
         data: [],
-        pagination: {
-          current: 1,
-          pageSize: 3
-        },
+        selectedRowKeys: [],
         loading: false,
-        columns: [{
-          title: '菜单名称',
-          dataIndex: 'name',
-          // sorter: (a,b) => {
-          //   return -1;
-          // },
-          // sortOrder: 'descend',
-          width: '20%',
-          fixed: 'left',
-          // scopedSlots: { customRender: 'name' },
-        }, {
-          title: '排序值',
-          dataIndex: 'sequence',
-          // filters: [
-          //   { text: 'Male2', value: 'male' },
-          //   { text: 'Female2', value: 'female' },
-          // ],
-          width: '20%',
-        }, {
-          title: '隐藏状态',
-          dataIndex: 'hidden',
-        }, {
-          title: '图标',
-          dataIndex: 'icon',
-          scopedSlots: { customRender: 'icon' },
-        }, {
-          title: '操作',
-          dataIndex: 'record_id',
-          scopedSlots: { customRender: 'operation' },
-        }],
+        columns: [
+          {
+            title: '菜单名称',
+            dataIndex: 'name',
+            align: 'center',
+          }, {
+            title: '排序值',
+            dataIndex: 'sequence',
+            align: 'center',
+            width: '20%',
+          }, {
+            title: '隐藏状态',
+            dataIndex: 'hidden',
+            align: 'center',
+            customRender (text) {
+              return text == 0 ? '显示' : '隐藏';
+            }
+          }, {
+            title: '图标',
+            dataIndex: 'icon',
+            align: 'center',
+            scopedSlots: { customRender: 'icon' },
+          }, {
+            title: '操作者',
+            dataIndex: 'creator',
+            align: 'center'
+          }, {
+            title: '操作',
+            dataIndex: 'record_id',
+            // fixed: 'right',
+            width: '250px',
+            align: 'center',
+            scopedSlots: { customRender: 'operation' },
+          }],
       }
     },
-    components: {
-      ATable: Table,
-      AIcon: Icon,
-      APopconfirm: Popconfirm
+    mounted() {
+      this.fetch();
     },
     methods: {
-      onDelete (record_id) {
+      onDelete (record_id) {  //点击删除
         console.log(record_id)
       },
-      handleTableChange (pagination, filters, sorter) {
-        console.log(pagination);
-        const pager = { ...this.pagination };
-        pager.current = pagination.current;
-        this.pagination = pager;
-        this.fetch2({
-          results: pagination.pageSize,
-          page: pagination.current,
-          sortField: sorter.field,
-          sortOrder: sorter.order,
-          ...filters,
-        });
-      },
-      fetch2 (params = {}) {
+      fetch (params = {}) {
         this.loading = true;
-        this.$axios.get('/menus?q=page',{
+        this.$axios.get('/menus?q=tree',{
           params: {
-            current : this.pagination.current,
-            pageSize : this.pagination.pageSize
+            ...params
           }
         }).then(res => {
           console.log('get menu page',res.data)
           if(res.data) {
             this.data = res.data.list;
-            this.pagination = res.data.pagination;
           }
         }).catch(err => {
           console.log(err)

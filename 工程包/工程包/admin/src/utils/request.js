@@ -3,7 +3,7 @@ import { notification } from 'antd';
 import moment from 'moment';
 import store from './store';
 
-export const baseURL = 'http://192.168.31.150:10088/api';
+export const baseURL = 'http://47.244.197.84:10088/api';
 
 function checkAccessTokenExpires(expiresAt) {
   const now = moment().unix();

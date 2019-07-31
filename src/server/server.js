@@ -34,8 +34,8 @@ axios.interceptors.response.use(data=> {
   return data;
 }, err=> {
   // console.error('响应拦截器', err.response.status)
-  if(err.response.status == 401){
-    // Message.error(err.response.data.error.message);
+  if(err.response.status == 401 || err.response.status == 403){
+    Message.error(err.response.data.error.message);
     let path = location.hash.split('?')[0]
     console.log(path)
     if(path != '#/login'){
@@ -46,9 +46,7 @@ axios.interceptors.response.use(data=> {
   }else if(err.response.status == 404){
     //这里进行404页面跳转
     Message.error('页面找不到了')
-  } else if (err.response.status == 403) {
-    Message.error('权限不足,请联系管理员!');
-  }else {
+  } else {
     console.log(err.response)
     Message.error(err.response.data.error.message);
   }

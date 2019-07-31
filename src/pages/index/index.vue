@@ -16,7 +16,7 @@
     <a-layout>
       <m-header :collapsed="collapsed" @clickCollBtn="()=> collapsed = !collapsed"></m-header>
 
-      <a-layout-content :style="{ margin: '15px 10px', padding: '10px', background: '#fff', minHeight: '280px' }">
+      <a-layout-content class="index-content-wrap">
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
@@ -26,6 +26,7 @@
   import {Layout, Menu, Icon} from 'ant-design-vue'
   import MHeader from '@/components/m-header/m-header'
   import MNav from '@/components/m-nav/m-nav'
+
   export default {
     components : {
       ALayout: Layout,
@@ -36,7 +37,7 @@
       AMenuItem: Menu.Item,
       AIcon: Icon,
       MHeader,
-      MNav
+      MNav,
     },
     data(){
       return {
