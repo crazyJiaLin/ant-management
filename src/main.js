@@ -17,7 +17,7 @@ import "ant-design-vue/dist/antd.css";
 
 //路由钩子函数
 router.beforeEach((to, from, next) =>{
-  console.log(to)
+  // console.log(to)
   Vue.prototype.$setRouteToStore(to);
   if(to.meta.requireAuth) {
     //登录验证

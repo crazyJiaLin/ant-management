@@ -95,13 +95,16 @@
           <a-button type="primary" html-type="submit"> 确认 </a-button>
         </div>
       </a-form>
-      <m-menu-action @change="onMenuActionChange"></m-menu-action>
+      <m-menu-action :submit-times="submitTimes" @change="onMenuActionChange"></m-menu-action>
+      <m-menu-resource :submit-times="submitTimes" @change="onMenuResourceChange"></m-menu-resource>
     </a-drawer>
   </div>
 </template>
 <script>
-  import {Button, Form, Drawer, Row, Col, Input, InputNumber, Select, Radio, Cascader, Tooltip, Icon} from 'ant-design-vue'
+  import {Button, Form, Drawer, Row, Col, Input, InputNumber,
+          Select, Radio, Cascader, Tooltip, Icon, Notification} from 'ant-design-vue'
   import MMenuAction from '@/components/m-menu-action/m-menu-action'
+  import MMenuResource from '@/components/m-menu-resource/m-menu-resource'
   export default {
     name: "sys-menu-create",
     components: {
@@ -120,7 +123,8 @@
       ACascader: Cascader,
       ATooltip: Tooltip,
       AIcon: Icon,
-      MMenuAction
+      MMenuAction,
+      MMenuResource
     },
     props: {
       visible: Boolean
@@ -133,7 +137,9 @@
           value: 'record_id',
           children: 'children'
         },
+        submitTimes: 0,
         action: [],
+        resource: [],
         form: this.$form.createForm(this),
         labelCol: {span:6},
         wrapperCol: {span:16}
@@ -141,8 +147,20 @@
     },
     methods: {
       onMenuActionChange (value) {
-        console.log(value)  //当前value是带key值的，记得在提交之前把key值去掉
+        // console.log('onMenuActionChange', value)
+        /**
+         * 当前value是带key值的，记得在提交之前把key值去掉
+         * */
         this.action = value;
+        // console.log(this.createObjWithoutKey(this.action, 'key'))
+      },
+      onMenuResourceChange (value) {
+        // console.log('onMenuResourceChange', value)
+        /**
+         * 当前value是带key值的，记得在提交之前把key值去掉
+         * */
+        this.resource = value
+        // console.log(this.createObjWithoutKey(this.resource, 'key'))
       },
       handleSubmit (e) {
         e.preventDefault();
@@ -151,13 +169,56 @@
           if(values.parent_id) {
             values.parent_id = values.parent_id[values.parent_id.length-1]
           }
-          console.log('Received values of form: ', values);
-          // let params = {};
-          // values.name && (params.name = values.name);
-          // values.hidden && (params.hidden = values.hidden);
-          // values.parent_id && (params.parent_id = values.parent_id[values.parent_id.length-1]);
-          // this.$emit('search',params);
+          // console.log('Received values of form: ', values);
+          let params = {
+            "actions": this.createObjWithoutKey(this.action, 'key'),
+            "created_at": new Date(),
+            "creator": this.$getLocalStorage('username'),
+            "hidden": values.hidden,
+            "icon": values.icon,
+            "name": values.name,
+            "parent_id": values.parent_id ? values.parent_id.split(',')[0] : '',
+            // "parent_path": values.parent_id.split(',')[1],
+            // "record_id": "string",
+            "resources": this.createObjWithoutKey(this.resource, 'key'),
+            "router": values.router,
+            "sequence": values.sequence,
+            "updated_at": new Date()
+          }
+          console.log(params)
+          this.$axios.post('/menus',params).then(res => {
+            console.log(res)
+            if(res.data){
+              Notification['success']({
+                message: '创建成功'
+              })
+              //告诉父组件，创建完了，你可以关闭了
+              this.$emit('close');
+              //清空本组件内部的表单内容
+              this.form.resetFields(['name', 'hidden', 'icon', 'parent_id', 'router', 'sequence'])
+              //告诉两个子组件，自己去清空自己的内容
+              this.submitTimes++;
+              //告诉父组件去刷新列表信息
+              this.$emit('created')
+            }
+          }).catch(err => {
+            console.log(err)
+          })
         });
+      },
+      createObjWithoutKey (arr, keyStr) {
+        let newArr = []
+        for(let i=0; i<arr.length; i++) {
+          let item = arr[i]
+          let newItem = {}
+          for(let key in item) {
+            if(key != keyStr) {
+              newItem[key] = item[key]
+            }
+          }
+          newArr.push(newItem)
+        }
+        return newArr
       },
       onClose() {
         this.$emit('close');
@@ -165,11 +226,24 @@
       getMenuTree () {
         this.$axios.get('/current/menutree').then(res => {
           if(res.data){
-            this.menuTree = res.data.list;
+            let list = res.data.list
+            //递归将菜单中record_id和record_path合并
+            this.contactIdAndPath(list)
+            this.menuTree = list;
+            // console.log(list)
           }
         }).catch(err => {
           console.log(err)
         })
+      },
+      //递归将菜单中record_id和record_path合并
+      contactIdAndPath(list){
+        for(let i=0; i<list.length; i++) {
+          list[i].record_id = [list[i].record_id, list[i].router].join(',')
+          if(list[i].children) {
+            this.contactIdAndPath(list[i].children);
+          }
+        }
       }
     },
     mounted() {

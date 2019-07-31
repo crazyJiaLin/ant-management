@@ -36,9 +36,10 @@ axios.interceptors.response.use(data=> {
   // console.error('响应拦截器', err.response.status)
   if(err.response.status == 401 || err.response.status == 403){
     Message.error(err.response.data.error.message);
-    let path = location.hash.split('?')[0]
+    let hash = location.hash.split('?')[0];
+    let path = hash.slice(1, hash.length);
     console.log(path)
-    if(path != '#/login'){
+    if(path != '/login'){
       location.hash = '#/login?redirect='+path
     }
   }else if (err.response.status == 504) {

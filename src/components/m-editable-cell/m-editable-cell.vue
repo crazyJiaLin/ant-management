@@ -1,6 +1,7 @@
 <template>
   <div class="editable-cell">
     <div
+      v-if="editable"
       class="editable-cell-input-wrapper"
     >
       <a-form>
@@ -9,22 +10,22 @@
           label=""
           :validate-status="validStatus"
         >
-          <a-input :value="value" @change="handleChange"/>
-<!--          <a-icon type="check" class="editable-cell-icon-check" @click="check" />-->
+          <a-input :value="value" @change="handleChange" @pressEnter="check"/>
+          <a-icon type="check" class="editable-cell-icon-check" @click="check" />
         </a-form-item>
       </a-form>
     </div>
-<!--    <div-->
-<!--      v-else-->
-<!--      class="editable-cell-text-wrapper"-->
-<!--    >-->
-<!--      {{ value || ' ' }}-->
-<!--      <a-icon-->
-<!--        type="edit"-->
-<!--        class="editable-cell-icon"-->
-<!--        @click="edit"-->
-<!--      />-->
-<!--    </div>-->
+    <div
+      v-else
+      class="editable-cell-text-wrapper"
+    >
+      {{ value || ' ' }}
+      <a-icon
+        type="edit"
+        class="editable-cell-icon"
+        @click="edit"
+      />
+    </div>
   </div>
 </template>
 <script>
@@ -42,7 +43,7 @@
     data () {
       return {
         value: this.text,
-        editable: true,
+        editable: false,
         validStatus: '',
       };
     },
@@ -55,23 +56,22 @@
         }else {
           this.validStatus = 'validating'
         }
-        this.$emit('change', this.value)
       },
-      // check () {
-      //   this.editable = false;
-      //   this.$emit('change', this.value);
-      // },
-      // edit () {
-      //   this.editable = true;
-      // },
+      check () {
+        this.editable = false;
+        this.$emit('change', this.value);
+      },
+      edit () {
+        this.editable = true;
+      },
     },
   };
 </script>
 <style lang="less" scoped>
   .editable-cell-input-wrapper {
     .ant-input{
-      /*width: 85%;*/
-      /*margin-right: 15px;*/
+      width: 85%;
+      margin-right: 15px;
     }
     .ant-row.ant-form-item {
       margin-bottom: 0;

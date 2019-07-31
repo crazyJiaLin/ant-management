@@ -41,7 +41,7 @@
       menuInfo: Object
     },
     mounted() {
-      console.log(this.menuInfo)
+      console.log('111',this.menuInfo)
     }
   };
 </script>
