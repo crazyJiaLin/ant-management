@@ -86,6 +86,15 @@
     methods: {
       onDelete (record_id) {  //点击删除
         console.log(record_id)
+        this.$axios.delete('menus/' + record_id).then(res => {
+          console.log(res)
+          if(res.data){
+            //删除成功，同步表格信息
+            this.fetch()
+          }
+        }).catch(err => {
+          console.log(err)
+        })
       },
       fetch (params = {}) {
         this.loading = true;
