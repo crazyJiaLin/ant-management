@@ -1,7 +1,5 @@
 <template functional>
-  <a-sub-menu
-    :key="props.menuInfo.record_id"
-  >
+  <a-sub-menu :key="props.menuInfo.record_id">
     <span slot="title">
 <!--      <router-link :to="props.menuInfo.router">-->
         <a-icon :type="props.menuInfo.icon" /><span>{{ props.menuInfo.name }}</span>
@@ -39,6 +37,8 @@
     },
     props: {
       menuInfo: Object
+    },
+    methods: {
     },
     mounted() {
       // console.log('111',this.menuInfo)

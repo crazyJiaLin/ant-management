@@ -1,6 +1,6 @@
 <template>
-  <a-menu theme="dark" mode="inline" :defaultSelectedKeys="defaultSelectedKeys"
-          :defaultOpenKeys="defaultOpenKeys" @select="handleMenuChange"
+  <a-menu theme="dark" mode="inline" :selectedKeys="defaultSelectedKeys"
+          :openKeys="defaultOpenKeys" @select="handleMenuChange" @openChange="handleTitleClick"
           forceSubMenuRender>
     <template v-for="(item, index) in menuList">
       <a-menu-item v-if="!item.children" :key="item.record_id">
@@ -29,7 +29,7 @@
     data () {
       return {
         menuList : [],
-        curRouter: [this.$route.path],
+        curRouter: [],
         defaultSelectedKeys: [],
         defaultOpenKeys: []
       }
@@ -49,10 +49,12 @@
         this.$axios.get('/current/menutree').then(res => {
           // console.log(res)
           if(res.data){
-            // this.menuList = res.data.list;
+            this.menuList = res.data.list;
+            //设置默认展开项和默认选中项
+            this.setCurRouter()
             //将菜单数据同步到vuex中，这里不需要在对this.data设置了，因为我们监听了vuex中的数据，state变化后会自动渲染
-            // this.$store.commit('setMenuList',res.data.list);
-            this.$store.commit('setMenuToLocalStorage',res.data.list);
+            this.$store.commit('setMenuList',res.data.list);
+            // this.$store.commit('setMenuToLocalStorage',res.data.list);
           }
         }).catch(err => {
           console.log(err)
@@ -60,15 +62,20 @@
       },
       handleMenuChange (value) {
         //菜单选择回调函数
-        // console.log(value)
+        // console.log(value);
+        this.defaultSelectedKeys = [value.key]
+      },
+      handleTitleClick (openKeys) {
+        // console.log(openKeys)
+        this.defaultOpenKeys = openKeys
       },
       //根据当前路由在menuList中查找指定项
       setCurRouter () {
         // console.log(this.$route)
         let path = this.$route.path;
-        let menuList = JSON.parse(localStorage.getItem('menuList'));
-        this.recursionList(menuList, path);
-        console.log('curRouter', this.curRouter)
+        // let menuList = JSON.parse(localStorage.getItem('menuList'));
+        this.recursionList(this.menuList, path);
+        // console.log('curRouter', this.curRouter)
         this.defaultSelectedKeys = [this.curRouter.record_id];
         this.defaultOpenKeys = this.curRouter.parent_path.split('/');
       },
@@ -90,7 +97,7 @@
       }
     },
     created () {
-      this.setCurRouter();
+      // this.setCurRouter();
       // this.defaultOpenKeys = ['dfbb4bd9-de6d-4e02-ba0f-5a147bed3670']
     },
     mounted() {

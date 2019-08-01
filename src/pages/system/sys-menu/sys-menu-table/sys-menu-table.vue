@@ -111,7 +111,7 @@
           console.log('get menu page',res.data)
           if(res.data) {
             this.data = res.data.list;
-            this.$store.commit('setMenuToLocalStorage',res.data.list);
+            this.$store.commit('setMenuList',res.data.list);
           }
         }).catch(err => {
           console.log(err)
