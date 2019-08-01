@@ -2,7 +2,7 @@
   <a-menu theme="dark" mode="inline" :selectedKeys="defaultSelectedKeys"
           :openKeys="defaultOpenKeys" @select="handleMenuChange" @openChange="handleTitleClick"
           forceSubMenuRender>
-    <template v-for="(item, index) in menuList">
+    <template v-for="(item, index) in menuList" v-if="item.hidden == 0">
       <a-menu-item v-if="!item.children" :key="item.record_id">
         <router-link :to="item.router">
           <a-icon :type="item.icon" />

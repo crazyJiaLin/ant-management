@@ -28,9 +28,15 @@
       AButton: Button
     },
     props: {
-      searchParams: Object
+      searchParams: Object,
+      createMenuTimes: Number
     },
     watch: {
+      // 监听创建表单动作，如果创建完成，进行数据更新
+      createMenuTimes (newVal, oldVal) {
+        this.fetch()  //如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
+      },
+      //监听查询条件变化，用于表单组件和table组件通信
       searchParams: {
         handler (newVal, oldVal) {
           // console.log(newVal, oldVal)
@@ -38,6 +44,7 @@
         },
         deep: true
       },
+      //监听vuex中menuList变化，有变化及时更新
       '$store.state.menuList'(newVal, oldVal){
         // console.log(newVal, oldVal)
         //监听vuex中menuList变化，从而对导航栏进行重置

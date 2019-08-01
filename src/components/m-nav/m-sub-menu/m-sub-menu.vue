@@ -5,7 +5,7 @@
         <a-icon :type="props.menuInfo.icon" /><span>{{ props.menuInfo.name }}</span>
 <!--      </router-link>-->
     </span>
-    <template v-for="item in props.menuInfo.children">
+    <template v-for="item in props.menuInfo.children" v-if="item.hidden == 0">
       <a-menu-item
         v-if="!item.children"
         :key="item.record_id"

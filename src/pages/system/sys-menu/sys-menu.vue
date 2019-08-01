@@ -11,7 +11,7 @@
       <!--      <a-button type="danger" icon="delete" v-show="hasSelected">删除</a-button>-->
     </div>
     <div class="table-wrap">
-      <sys-menu-table :search-params="searchParams"></sys-menu-table>
+      <sys-menu-table :search-params="searchParams" :create-menu-times="createMenuTimes"></sys-menu-table>
     </div>
   </div>
 </template>
@@ -36,6 +36,7 @@
       return {
         showCreateDraw: false,
         menuTree: [],
+        createMenuTimes: 0,
         searchParams: {}
       }
     },
@@ -47,9 +48,13 @@
       onClickCreateBtn () {
         this.showCreateDraw = true;
       },
-      handleCreateDrawClose () {
-        console.log('close')
+      handleCreateDrawClose (action) {
+        console.log('action', action)
         this.showCreateDraw = false;
+        if(action && action == 'created') {
+          //如果是创建完成，告诉table去更新你的内容
+          this.createMenuTimes ++ ;
+        }
       }
     },
     mounted() {
