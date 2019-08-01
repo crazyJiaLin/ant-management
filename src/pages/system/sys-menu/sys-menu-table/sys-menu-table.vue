@@ -7,7 +7,7 @@
       </template>
       <template slot="operation" slot-scope="text, record">
         <a-button size="small">查看</a-button>
-        <a-button size="small">编辑</a-button>
+        <a-button size="small" @click="onEdit(record)">编辑</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
@@ -96,6 +96,9 @@
       this.fetch();
     },
     methods: {
+      onEdit(item){
+        console.log(item)
+      },
       onDelete (record_id) {  //点击删除
         console.log(record_id)
         this.$axios.delete('menus/' + record_id).then(res => {
