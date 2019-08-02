@@ -146,6 +146,8 @@
         // 重置当前组件内容,
         this.dataSource = [];
         this.count = 0;
+        //如果为新建，则不为其data赋值
+        if(!defaultVal) return;
         this.addKeyIntoDefault(defaultVal);
         // console.log(defaultVal)
         this.dataSource = defaultVal;

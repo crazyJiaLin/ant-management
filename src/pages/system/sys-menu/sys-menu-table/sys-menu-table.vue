@@ -112,9 +112,11 @@
         this.showEditDrawer = true;
         this.editItem = item;
       },
-      handleEditDrawClose () {
+      handleEditDrawClose (action) {
         this.showEditDrawer = false;
-        this.fetch()
+        if(action && action == 'update') {
+          this.fetch()
+        }
       },
       onDelete (record_id) {  //点击删除
         console.log(record_id)

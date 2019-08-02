@@ -195,7 +195,7 @@
                 message: '修改成功'
               })
               //告诉父组件，创建完了，你可以关闭了, 传值created告诉父组件去刷新列表信息
-              this.$emit('close', 'created');
+              this.$emit('close', 'update');
               //清空本组件内部的表单内容
               this.form.resetFields(['name', 'hidden', 'icon', 'parent_id', 'router', 'sequence'])
               //告诉两个子组件，自己去清空自己的内容

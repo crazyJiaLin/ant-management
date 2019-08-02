@@ -98,9 +98,13 @@
         // 重置当前组件内容,
         this.dataSource = [];
         this.count = 0;
+        //如果为新建，则不为其data赋值
+        if(!defaultVal) return;
         this.addKeyIntoDefault(defaultVal);
         // console.log(defaultVal)
         this.dataSource = defaultVal;
+        //初始化完本组件时，将数据同步到父组件中
+        this.$emit('change', this.dataSource);
       },
       // 给数据添加key值
       addKeyIntoDefault(arr){
