@@ -1,42 +1,41 @@
 <template>
   <div>
-    <a-table :columns="columns" :rowKey="record => record.record_id" size="middle"
-             :dataSource="data" :pagination="false" :loading="loading"
-             :scroll="{ y: 450 }">
-      <template slot="icon" slot-scope="icon">
-        <a-icon :type="icon"></a-icon> - {{icon}}
-      </template>
+    <a-table :columns="columns" :rowKey="record => record.record_id" :pagination="pagination"
+             :dataSource="data" :loading="loading"  @change="handleTableChange"
+             :scroll="{ y: 350 }">
       <template slot="operation" slot-scope="text, record">
+        <a-button size="small">查看</a-button>
         <a-button size="small" @click="onEdit(record)">编辑</a-button>
-        <a-button size="small">配置菜单</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
       </template>
+      <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{123}}</p>
     </a-table>
-    <sys-menu-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-menu-edit>
+<!--    想要直接在列表上显示角色对每个菜单的操作权限，因为这里接口中返回的menus为空，所以先不展示-->
+<!--    <sys-role-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-role-edit>-->
   </div>
 </template>
 <script>
   import {Table, Icon, Button, Popconfirm} from 'ant-design-vue'
-  import SysMenuEdit from '../sys-menu-edit/sys-menu-edit'
+  import SysRoleEdit from '../sys-role-edit/sys-role-edit'
   export default {
-    name: 'sys-menu-table',
+    name: 'sys-role-table',
     components: {
       ATable: Table,
       AIcon: Icon,
       APopconfirm: Popconfirm,
       AButton: Button,
-      SysMenuEdit
+      SysRoleEdit
     },
     props: {
       searchParams: Object,
-      createMenuTimes: Number
+      createTimes: Number
     },
     watch: {
       // 监听创建表单动作，如果创建完成，进行数据更新
-      createMenuTimes (newVal, oldVal) {
+      createTimes (newVal, oldVal) {
         this.fetch()  // 如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
       },
       // 监听查询条件变化，用于表单组件和table组件通信
@@ -46,12 +45,6 @@
           this.fetch(newVal);
         },
         deep: true
-      },
-      //监听vuex中menuList变化，有变化及时更新
-      '$store.state.menuList'(newVal, oldVal){
-        // console.log(newVal, oldVal)
-        //监听vuex中menuList变化，从而对导航栏进行重置
-        this.data = newVal;
       }
     },
     data() {
@@ -59,13 +52,15 @@
         showEditDrawer: false,
         editItem: {},
         data: [],
+        pagination: {},
         loading: false,
         tableHeight: 0,
         columns: [
           {
-            title: '菜单名称',
+            title: '角色名称',
             dataIndex: 'name',
-            align: 'left',
+            align: 'center',
+            width: '200px'
 
           }, {
             title: '排序值',
@@ -73,37 +68,28 @@
             align: 'center',
             width: '200px',
           }, {
-            title: '隐藏状态',
-            dataIndex: 'hidden',
+            title: '角色描述',
+            dataIndex: 'memo',
             align: 'center',
-            width: '200px',
-            customRender (text) {
-              return text == 0 ? '显示' : '隐藏';
-            }
-          }, {
-            title: '图标',
-            dataIndex: 'icon',
-            align: 'left',
-            width: '250px',
-            scopedSlots: { customRender: 'icon' },
+            width: '200px'
           },
-          // {
-          //   title: '操作者',
-          //   dataIndex: 'creator',
-          //   align: 'center'
-          // },
+          {
+            title: '创建人',
+            dataIndex: 'creator',
+            align: 'center'
+          },
           {
             title: '操作',
             dataIndex: 'record_id',
             // fixed: 'right',
-            width: '300px',
             align: 'center',
+            width: '300px',
             scopedSlots: { customRender: 'operation' },
           }],
       }
     },
     mounted() {
-      this.fetch();
+      this.fetch(this.pagination);
       // TODO: 这几行代码是想设置table高度的，但是failed
       // let routerWrapDOM = document.querySelector('.index-content-wrap.ant-layout-content');
       // let wrapHeight = routerWrapDOM.clientHeight;
@@ -124,11 +110,11 @@
       },
       onDelete (record_id) {  //点击删除
         console.log(record_id)
-        this.$axios.delete('menus/' + record_id).then(res => {
+        this.$axios.delete('roles/' + record_id).then(res => {
           console.log(res)
           if(res.data){
             //删除成功，同步表格信息
-            this.fetch()
+            this.fetch(this.searchParams)
           }
         }).catch(err => {
           console.log(err)
@@ -136,24 +122,35 @@
       },
       fetch (params = {}) {
         this.loading = true;
-        this.$axios.get('/menus?q=tree',{
+        this.$axios.get('/roles?q=page',{
           params: {
-            include_actions: 1,
-            include_resources: 1,
             ...params
           }
         }).then(res => {
-          console.log('get menu page',res.data)
+          console.log('get roles page',res.data)
           if(res.data) {
             this.data = res.data.list;
-            this.$store.commit('setMenuList',res.data.list);
+            this.pagination = res.data.pagination;
           }
         }).catch(err => {
           console.log(err)
         }).finally(() => {
           this.loading= false
         })
-      }
+      },
+      handleTableChange (pagination, filters, sorter) {
+        console.log(pagination, filters, sorter);
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.fetch({
+          results: pagination.pageSize,
+          page: pagination.current,
+          sortField: sorter.field,
+          sortOrder: sorter.order,
+          ...filters,
+        });
+      },
     },
   }
 </script>

@@ -17,7 +17,6 @@
 </template>
 
 <script>
-  // import MTable from '@/components/m-table/m-table'
   import {Button} from 'ant-design-vue'
   import SysMenuTable from './sys-menu-table/sys-menu-table'
   import SysMenuForm from './sys-menu-form/sys-menu-form'

@@ -27,7 +27,7 @@
       </a-modal>
     </div>
     <div class="menu-template-table">
-      <a-table bordered :dataSource="dataSource" :columns="columns" :pagination="false">
+      <a-table bordered :dataSource="dataSource" :columns="columns" :pagination="false" size="middle">
         <template slot="name" slot-scope="text, record">
           <a-input :defaultValue="text" @change="onInputChange(record.key, 'name', $event)"></a-input>
         </template>

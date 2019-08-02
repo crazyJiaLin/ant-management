@@ -8,7 +8,7 @@
       <a-button type="primary" size="small" @click="useTemplate">使用模板</a-button>
     </div>
     <div class="menu-template-table">
-      <a-table bordered :dataSource="dataSource" :columns="columns" :pagination="false">
+      <a-table bordered :dataSource="dataSource" :columns="columns" :pagination="false" size="middle">
         <template slot="code" slot-scope="text, record">
           <a-input :defaultValue="text" @change="onInputChange(record.key, 'code', $event)"></a-input>
           <!--          <m-editable-cell :text="text" @change="onCellChange(record.key, 'code', $event)"/>-->
