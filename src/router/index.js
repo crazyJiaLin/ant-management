@@ -33,6 +33,7 @@ export default new Router({
           name:'dashboard',
           component:Dashboard,
           meta: {
+            requireAuth: true,  // 是否需要登录拦截
             title: '首页'
           }
         },
@@ -41,6 +42,7 @@ export default new Router({
           name: 'system',
           component: System,
           meta: {
+            requireAuth: true,  // 是否需要登录拦截
             title: '系统管理'
           },
           children: [
@@ -50,6 +52,7 @@ export default new Router({
               name:'sys-menu',
               component: SysMenu,
               meta: {
+                requireAuth: true,  // 是否需要登录拦截
                 title: '菜单管理'
               }
             },
@@ -58,6 +61,7 @@ export default new Router({
               name:'sys-role',
               component: SysRole,
               meta: {
+                requireAuth: true,  // 是否需要登录拦截
                 title: '角色管理'
               }
             },
@@ -66,6 +70,7 @@ export default new Router({
               name:'sys-user',
               component: SysUser,
               meta: {
+                requireAuth: true,  // 是否需要登录拦截
                 title: '用户管理'
               }
             }
@@ -74,7 +79,10 @@ export default new Router({
         {
           path: '*',
           name: 'view-template',
-          component: ViewTemplate
+          component: ViewTemplate,
+          meta: {
+            requireAuth: true,  // 是否需要登录拦截
+          }
         }
       ]
     }

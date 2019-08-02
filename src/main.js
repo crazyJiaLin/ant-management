@@ -21,23 +21,43 @@ router.beforeEach((to, from, next) =>{
   Vue.prototype.$setRouteToStore(to);
   if(to.meta.requireAuth) {
     //登录验证
+
     let username = Vue.prototype.$getLocalStorage('username')
     // console.log(username)
     if(!username) {
       // console.log('跳转到login')
       Message.warn('登陆超时,请重新登录！')
-      next({
+      return next({
         path: '/login',
         query : {
           redirect: to.fullPath
         }
       })
     }else {
-      next();
+      if(!store.state.isLogin){
+        // 如果vuex为未登录状态，请求用户信息数据，然后让axios处理
+        Vue.prototype.$axios.get('/current/user').then(res => {
+          // console.log(res)
+          if(res.data.user_name){
+            store.commit('setLogin', true)
+            store.commit('setUserInfo', res.data)
+          }else {
+            Message.warn('登陆超时,请重新登录！')
+            return next({
+              path: '/login',
+              query : {
+                redirect: to.fullPath
+              }
+            })
+          }
+        }).catch(err => {
+          // console.log('router钩子处理')
+          console.log(err)
+        })
+      }
     }
-  }else {
-    next();
   }
+  next();
 })
 
 Vue.config.productionTip = false
