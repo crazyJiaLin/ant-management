@@ -38,7 +38,7 @@
         </template>
         <template slot="method" slot-scope="text, record">
 <!--          <a-input :defaultValue="text" @change="onInputChange(record.key, 'method', $event)"></a-input>-->
-          <a-select :defaultValue="text">
+          <a-select :defaultValue="text" @change="onInputChange(record.key, 'method', $event)">
             <a-select-option value="GET">GET</a-select-option>
             <a-select-option value="POST">POST</a-select-option>
             <a-select-option value="PUT">PUT</a-select-option>
@@ -152,15 +152,15 @@
         this.resourceModalVisible = false
       },
       onInputChange (key, dataIndex, ev) {
-        let value = ev.target&& ev.target.value;
-        // console.log(key, dataIndex, value)
+        let value = dataIndex == 'method' ? ev : ev.target && ev.target.value;
+        console.log(key, dataIndex, value)
         const dataSource = [...this.dataSource]
         const target = dataSource.find(item => item.key === key)
         if (target) {
           target[dataIndex] = value
           this.dataSource = dataSource
         }
-        // console.log('after change', this.dataSource)
+        console.log('after change', this.dataSource)
         this.$emit('change', this.dataSource);
       },
       onDelete (key) {

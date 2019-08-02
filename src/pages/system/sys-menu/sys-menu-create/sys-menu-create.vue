@@ -170,21 +170,7 @@
             values.parent_id = values.parent_id[values.parent_id.length-1]
           }
           // console.log('Received values of form: ', values);
-          let params = {
-            "actions": this.createObjWithoutKey(this.action, 'key'),
-            "created_at": new Date(),
-            "creator": this.$getLocalStorage('username'),
-            "hidden": values.hidden,
-            "icon": values.icon,
-            "name": values.name,
-            "parent_id": values.parent_id ? values.parent_id.split(',')[0] : '',
-            // "parent_path": values.parent_id.split(',')[1],
-            // "record_id": "string",
-            "resources": this.createObjWithoutKey(this.resource, 'key'),
-            "router": values.router,
-            "sequence": values.sequence,
-            "updated_at": new Date()
-          }
+          let params = {"name":"3","parent_id":"7ed304cb-6243-4ab4-9b15-572142917b92","icon":"1","sequence":1000000,"hidden":0,"actions":[{"key":"111","code":"3","name":"3"}],"resources":[{"key":"111","code":"3","name":"3","method":"HEAD","path":"3"}]}
           console.log(params)
           this.$axios.post('/menus',params).then(res => {
             console.log(res)

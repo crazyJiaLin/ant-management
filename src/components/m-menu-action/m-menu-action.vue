@@ -9,13 +9,13 @@
     </div>
     <div class="menu-template-table">
       <a-table bordered :dataSource="dataSource" :columns="columns" :pagination="false">
+        <template slot="code" slot-scope="text, record">
+          <a-input :defaultValue="text" @change="onInputChange(record.key, 'code', $event)"></a-input>
+          <!--          <m-editable-cell :text="text" @change="onCellChange(record.key, 'code', $event)"/>-->
+        </template>
         <template slot="name" slot-scope="text, record">
           <a-input :defaultValue="text" @change="onInputChange(record.key, 'name', $event)"></a-input>
 <!--          <m-editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)"/>-->
-        </template>
-        <template slot="code" slot-scope="text, record">
-          <a-input :defaultValue="text" @change="onInputChange(record.key, 'code', $event)"></a-input>
-<!--          <m-editable-cell :text="text" @change="onCellChange(record.key, 'code', $event)"/>-->
         </template>
         <template slot="operation" slot-scope="text, record">
           <a-popconfirm
@@ -65,17 +65,17 @@
         ],
         count: 0,
         hasUseTemplate: false,
-        columns: [{
+        columns: [ {
+          title: '动作编号',
+          width: '45%',
+          dataIndex: 'code',
+          scopedSlots: { customRender: 'code' },
+        }, {
           title: '动作名称',
           dataIndex: 'name',
           width: '45%',
           scopedSlots: { customRender: 'name' },
         }, {
-          title: '动作编号',
-          width: '45%',
-          dataIndex: 'code',
-          scopedSlots: { customRender: 'code' },
-        },{
           title: '操作',
           dataIndex: 'key',
           scopedSlots: { customRender: 'operation' },
@@ -102,7 +102,7 @@
           target[dataIndex] = value
           this.dataSource = dataSource
         }
-        // console.log('after change', this.dataSource)
+        console.log('after change', this.dataSource)
         this.$emit('change', this.dataSource);
       },
       onDelete (key) {

@@ -1,7 +1,8 @@
 <template>
   <div>
     <a-table :columns="columns" :rowKey="record => record.record_id"
-             :dataSource="data" :pagination="false" :loading="loading">
+             :dataSource="data" :pagination="false" :loading="loading"
+             :scroll="{ y: 450 }">
       <template slot="icon" slot-scope="icon">
         <a-icon :type="icon"></a-icon> - {{icon}}
       </template>
@@ -34,9 +35,9 @@
     watch: {
       // 监听创建表单动作，如果创建完成，进行数据更新
       createMenuTimes (newVal, oldVal) {
-        this.fetch()  //如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
+        this.fetch()  // 如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
       },
-      //监听查询条件变化，用于表单组件和table组件通信
+      // 监听查询条件变化，用于表单组件和table组件通信
       searchParams: {
         handler (newVal, oldVal) {
           // console.log(newVal, oldVal)
@@ -56,6 +57,7 @@
         data: [],
         selectedRowKeys: [],
         loading: false,
+        tableHeight: 0,
         columns: [
           {
             title: '菜单名称',
@@ -94,6 +96,10 @@
     },
     mounted() {
       this.fetch();
+      // let routerWrapDOM = document.querySelector('.index-content-wrap.ant-layout-content');
+      // let wrapHeight = routerWrapDOM.clientHeight;
+      // console.log(routerWrapDOM, wrapHeight)
+      // this.tableHeight = wrapHeight - 115;
     },
     methods: {
       onEdit(item){

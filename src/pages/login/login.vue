@@ -54,7 +54,7 @@
                    <a-form-item :wrapper-col="wrapperCol">
                         <a-button class="login-btn" :loading="btnLoading" type="primary" size="large" html-type="submit">登录</a-button>
                    </a-form-item>
-                    
+
                 </a-form>
             </div>
         </div>
@@ -177,7 +177,7 @@ export default {
             return a;
         }
     },
-    mounted () {
+    created () {
       //获取验证码
       this.getCaptchaId()
       //获取当前页面请求参数，用于做登陆重定向
