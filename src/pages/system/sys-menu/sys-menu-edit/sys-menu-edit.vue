@@ -20,8 +20,7 @@
                           allowClear placeholder="请选择"
                           v-decorator="[ 'parent_id',
                             {
-                              rules: [{ required: false, message: '' }],
-                              initialValue: 'dfbb4bd9-de6d-4e02-ba0f-5a147bed3670'
+                              initialValue: options.parent_path ? options.parent_path.split('/') : []
                             }]"
                           />
             </a-form-item>
@@ -36,8 +35,10 @@
                   <a-input placeholder="请输入"
                            v-decorator="[
                              'icon',
-                            { rules: [{ required: true, message: '请输入菜单图标' }]}
-                           ]"/>
+                            {
+                              rules: [{ required: true, message: '请输入菜单图标' }],
+                              initialValue: options.icon
+                            }]"/>
                 </a-form-item>
               </a-col>
               <a-col :span="4">
@@ -57,7 +58,7 @@
               <a-input placeholder="请输入"
                        v-decorator="[
                              'router',
-                            { rules: [{ required: false, message: '' }]}
+                            { rules: [{ required: false, message: '' }],initialValue: options.router}
                            ]"/>
             </a-form-item>
           </a-col>
@@ -69,7 +70,7 @@
               <a-input-number placeholder="请输入"
                               v-decorator="[
                           'sequence',
-                          { rules: [{ required: true, message: '请输入' }]}
+                          { rules: [{ required: true, message: '请输入' }],initialValue: options.sequence}
                         ]"/>
             </a-form-item>
           </a-col>
@@ -79,7 +80,7 @@
               <a-radio-group
                 v-decorator="[
                                 'hidden',
-                                { rules: [{ required: true, message: '请输入' }],initialValue:0}
+                                { rules: [{ required: true, message: '请输入' }],initialValue: options.hidden}
                               ]">
                 <a-radio :value="0">显示</a-radio>
                 <a-radio :value="1">隐藏</a-radio>
@@ -92,8 +93,8 @@
           <a-button type="primary" html-type="submit"> 确认 </a-button>
         </div>
       </a-form>
-      <m-menu-action :submit-times="submitTimes" @change="onMenuActionChange"></m-menu-action>
-      <m-menu-resource :submit-times="submitTimes" @change="onMenuResourceChange"></m-menu-resource>
+      <m-menu-action :submit-times="submitTimes" @change="onMenuActionChange" :default-value="options.actions"></m-menu-action>
+      <m-menu-resource :submit-times="submitTimes" @change="onMenuResourceChange" :default-value="options.resources"></m-menu-resource>
     </a-drawer>
   </div>
 </template>
@@ -126,20 +127,6 @@
     props: {
       visible: Boolean,
       options: Object
-    },
-    watch: {
-      options: {
-        handler (newVal, oldVal) {
-          // console.log(newVal)
-          this.parentCascader = (newVal.parent_path && newVal.parent_path != '') ? newVal.parent_path.split('/') : [];
-          console.log(this.parentCascader)
-          // this.parent_id = newVal.parent_id;
-          // this.form.setFieldsValue({
-          //   parent_id: newVal.parent_path && newVal.parent_path != '' && newVal.parent_path.split('/')
-          // })
-        },
-        deep: true
-      }
     },
     data() {
       return {
@@ -183,6 +170,8 @@
             values.parent_id = values.parent_id[values.parent_id.length-1]
           }
           // console.log('Received values of form: ', values);
+          let arr = values.parent_id ? values.parent_id.split(',') : null;
+          let parent_id = arr ? arr[arr.length-1] : '';
           let params = {
             "actions": this.createObjWithoutKey(this.action, 'key'),
             "created_at": new Date(),
@@ -190,20 +179,20 @@
             "hidden": values.hidden,
             "icon": values.icon,
             "name": values.name,
-            "parent_id": values.parent_id ? values.parent_id.split(',')[0] : '',
+            "parent_id": parent_id,
             // "parent_path": values.parent_id.split(',')[1],
-            // "record_id": "string",
+            "record_id": this.options.record_id,
             "resources": this.createObjWithoutKey(this.resource, 'key'),
             "router": values.router,
             "sequence": values.sequence,
             "updated_at": new Date()
           }
           console.log(params)
-          this.$axios.post('/menus',params).then(res => {
+          this.$axios.put('/menus/'+this.options.record_id,params).then(res => {
             console.log(res)
             if(res.data){
               Notification['success']({
-                message: '创建成功'
+                message: '修改成功'
               })
               //告诉父组件，创建完了，你可以关闭了, 传值created告诉父组件去刷新列表信息
               this.$emit('close', 'created');
@@ -239,23 +228,22 @@
           if(res.data){
             let list = res.data.list
             //递归将菜单中record_id和record_path合并
-            this.contactIdAndPath(list)
+            // this.contactIdAndPath(list)
             this.menuTree = list;
-            // console.log(list)
           }
         }).catch(err => {
           console.log(err)
         })
       },
       //递归将菜单中record_id和record_path合并
-      contactIdAndPath(list){
-        for(let i=0; i<list.length; i++) {
-          list[i].record_id = [list[i].record_id, list[i].router].join(',')
-          if(list[i].children) {
-            this.contactIdAndPath(list[i].children);
-          }
-        }
-      }
+      // contactIdAndPath(list){
+      //   for(let i=0; i<list.length; i++) {
+      //     list[i].record_id = [list[i].record_id, list[i].router].join(',')
+      //     if(list[i].children) {
+      //       this.contactIdAndPath(list[i].children);
+      //     }
+      //   }
+      // }
     },
     mounted() {
       this.getMenuTree();

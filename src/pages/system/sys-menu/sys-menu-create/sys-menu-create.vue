@@ -170,6 +170,8 @@
             values.parent_id = values.parent_id[values.parent_id.length-1]
           }
           // console.log('Received values of form: ', values);
+          let arr = values.parent_id ? values.parent_id.split(',') : null;
+          let parent_id = arr ? arr[arr.length-1] : '';
           let params = {
             "actions": this.createObjWithoutKey(this.action, 'key'),
             "created_at": new Date(),
@@ -177,7 +179,7 @@
             "hidden": values.hidden,
             "icon": values.icon,
             "name": values.name,
-            "parent_id": values.parent_id ? values.parent_id.split(',')[0] : '',
+            "parent_id": parent_id,
             // "parent_path": values.parent_id.split(',')[1],
             // "record_id": "string",
             "resources": this.createObjWithoutKey(this.resource, 'key'),

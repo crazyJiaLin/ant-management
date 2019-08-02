@@ -43,7 +43,8 @@
       // MEditableCell
     },
     props: {
-      submitTimes: Number
+      submitTimes: Number,
+      defaultValue: Array
     },
     watch: {
       submitTimes (newVal, oldVal) {
@@ -56,14 +57,23 @@
         this.count = 0;
         //清空使用模板操作记录
         this.hasUseTemplate = false;
+      },
+      defaultValue : {
+        handler (newVal, oldVal) {
+          // console.log(newVal)
+          //每次监听到数据变化后，初始化数据
+          this.initDataFromDefault(newVal)
+        },
+        deep : true
       }
+    },
+    mounted () {
+      this.initDataFromDefault(this.defaultValue)
     },
     data () {
       return {
-        dataSource: [
-          // {code:'add', name: '添加', key: 1}
-        ],
-        count: 0,
+        dataSource: [],
+        count: 0 ,
         hasUseTemplate: false,
         columns: [ {
           title: '动作编号',
@@ -83,16 +93,23 @@
       }
     },
     methods : {
-      // onCellChange (key, dataIndex, value) {
-      //   console.log(key, dataIndex,value)
-      //   const dataSource = [...this.dataSource]
-      //   const target = dataSource.find(item => item.key === key)
-      //   if (target) {
-      //     target[dataIndex] = value
-      //     this.dataSource = dataSource
-      //   }
-      //   console.log('after change', this.dataSource)
-      // },
+      initDataFromDefault (value) {
+        let defaultVal = value;
+        // 重置当前组件内容,
+        this.dataSource = [];
+        this.count = 0;
+        this.addKeyIntoDefault(defaultVal);
+        // console.log(defaultVal)
+        this.dataSource = defaultVal;
+      },
+      // 给数据添加key值
+      addKeyIntoDefault(arr){
+        // let result = [];
+        if(!arr) return;
+        for(let i=0; i<arr.length; i++){
+          arr[i].key = ++this.count;
+        }
+      },
       onInputChange (key, dataIndex, ev) {
         let value = ev.target&& ev.target.value;
         // console.log(key, dataIndex, value)
@@ -145,7 +162,7 @@
         this.count = count
         this.hasUseTemplate = true
         this.$emit('change', this.dataSource)
-      }
+      },
     }
   }
 </script>

@@ -100,6 +100,7 @@
     },
     mounted() {
       this.fetch();
+      // TODO: 这几行代码是想设置table高度的，但是failed
       // let routerWrapDOM = document.querySelector('.index-content-wrap.ant-layout-content');
       // let wrapHeight = routerWrapDOM.clientHeight;
       // console.log(routerWrapDOM, wrapHeight)
@@ -113,6 +114,7 @@
       },
       handleEditDrawClose () {
         this.showEditDrawer = false;
+        this.fetch()
       },
       onDelete (record_id) {  //点击删除
         console.log(record_id)

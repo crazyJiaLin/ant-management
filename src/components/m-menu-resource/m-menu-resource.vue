@@ -7,9 +7,7 @@
       <a-button type="primary" size="small" @click="handleAdd">新增</a-button>
       <a-button type="primary" size="small" @click="useTemplate">使用模板</a-button>
       <a-modal title="资源模板" :visible="resourceModalVisible" @ok="confirmResource"
-               @cancel="handleCancel" cancelText="取消" okText="确认" :width="350"
-               :getContainer="getResourceContainer"
-               >
+               @cancel="handleCancel" cancelText="取消" okText="确认" :width="350">
         <a-form :form="resourceForm" @submit="confirmResource">
           <a-form-item label="资源名" :labelCol="{span: 6}" :wrapperCol="{span: 16, offset:1}">
               <a-input placeholder="请输入资源名" v-decorator="[
@@ -81,7 +79,8 @@
       // MEditableCell
     },
     props: {
-      submitTimes: Number
+      submitTimes: Number,
+      defaultValue: Array
     },
     watch: {
       submitTimes (newVal, oldVal) {
@@ -94,7 +93,18 @@
         this.count = 0;
         //清空使用模板操作记录
         this.hasUseTemplate = false;
+      },
+      defaultValue : {
+        handler (newVal, oldVal) {
+          // console.log(newVal)
+          //每次监听到数据变化后，初始化数据
+          this.initDataFromDefault(newVal)
+        },
+        deep : true
       }
+    },
+    mounted () {
+      this.initDataFromDefault(this.defaultValue)
     },
     data () {
       return {
@@ -130,12 +140,26 @@
         }]
       }
     },
-    mounted () {
-      // let dom = document.querySelector('.sys-menu-create-wrap .ant-drawer-content-wrapper')
-      // console.log(dom)
-    },
     methods : {
-      getResourceContainer: () => document.querySelector('.sys-menu-create-wrap .ant-drawer-content-wrapper'),
+      initDataFromDefault (value) {
+        let defaultVal = value;
+        // 重置当前组件内容,
+        this.dataSource = [];
+        this.count = 0;
+        this.addKeyIntoDefault(defaultVal);
+        // console.log(defaultVal)
+        this.dataSource = defaultVal;
+        //初始化完本组件时，将数据同步到父组件中
+        this.$emit('change', this.dataSource);
+      },
+      // 给数据添加key值
+      addKeyIntoDefault(arr){
+        // let result = [];
+        if(!arr) return;
+        for(let i=0; i<arr.length; i++){
+          arr[i].key = ++this.count;
+        }
+      },
       confirmResource(){
         // e.preventDefault();
         this.resourceForm.validateFields((error, values) => {
