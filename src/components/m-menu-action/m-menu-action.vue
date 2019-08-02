@@ -123,7 +123,7 @@
           target[dataIndex] = value
           this.dataSource = dataSource
         }
-        console.log('after change', this.dataSource)
+        // console.log('after change', this.dataSource)
         this.$emit('change', this.dataSource);
       },
       onDelete (key) {

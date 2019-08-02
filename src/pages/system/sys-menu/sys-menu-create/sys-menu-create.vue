@@ -170,8 +170,8 @@
             values.parent_id = values.parent_id[values.parent_id.length-1]
           }
           // console.log('Received values of form: ', values);
-          let arr = values.parent_id ? values.parent_id.split(',') : null;
-          let parent_id = arr ? arr[arr.length-1] : '';
+          // let arr = values.parent_id ? values.parent_id.split(',') : null;
+          // let parent_id = arr ? arr[arr.length-1] : '';
           let params = {
             "actions": this.createObjWithoutKey(this.action, 'key'),
             "created_at": new Date(),
@@ -179,7 +179,7 @@
             "hidden": values.hidden,
             "icon": values.icon,
             "name": values.name,
-            "parent_id": parent_id,
+            "parent_id": values.parent_id,
             // "parent_path": values.parent_id.split(',')[1],
             // "record_id": "string",
             "resources": this.createObjWithoutKey(this.resource, 'key'),
@@ -228,7 +228,6 @@
           if(res.data){
             let list = res.data.list
             //递归将菜单中record_id和record_path合并
-            this.contactIdAndPath(list)
             this.menuTree = list;
             // console.log(list)
           }
@@ -236,15 +235,15 @@
           console.log(err)
         })
       },
-      //递归将菜单中record_id和record_path合并
-      contactIdAndPath(list){
-        for(let i=0; i<list.length; i++) {
-          list[i].record_id = [list[i].record_id, list[i].router].join(',')
-          if(list[i].children) {
-            this.contactIdAndPath(list[i].children);
-          }
-        }
-      }
+      // //递归将菜单中record_id和record_path合并
+      // contactIdAndPath(list){
+      //   for(let i=0; i<list.length; i++) {
+      //     list[i].record_id = [list[i].record_id, list[i].router].join(',')
+      //     if(list[i].children) {
+      //       this.contactIdAndPath(list[i].children);
+      //     }
+      //   }
+      // }
     },
     mounted() {
       this.getMenuTree();
