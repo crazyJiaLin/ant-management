@@ -19,11 +19,15 @@
         </a-menu>
       </a-dropdown>
     </div>
+    <div class="notice-wrap">
+      <m-notice></m-notice>
+    </div>
   </a-layout-header>
 </template>
 
 <script>
   import {Layout, Icon, Dropdown, Menu, Avatar} from 'ant-design-vue'
+  import MNotice from '@/components/m-notice/m-notice'
   export default {
     name: "m-header",
     components: {
@@ -32,7 +36,8 @@
       ADropdown: Dropdown,
       AMenu: Menu,
       AMenuItem: Menu.Item,
-      AAvatar: Avatar
+      AAvatar: Avatar,
+      MNotice
     },
     props: {
       collapsed: Boolean

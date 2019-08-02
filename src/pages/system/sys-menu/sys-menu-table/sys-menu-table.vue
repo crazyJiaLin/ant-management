@@ -15,18 +15,20 @@
         </a-popconfirm>
       </template>
     </a-table>
+    <sys-menu-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-menu-edit>
   </div>
 </template>
 <script>
   import {Table, Icon, Button, Popconfirm} from 'ant-design-vue'
-
+  import SysMenuEdit from '../sys-menu-edit/sys-menu-edit'
   export default {
     name: 'sys-menu-table',
     components: {
       ATable: Table,
       AIcon: Icon,
       APopconfirm: Popconfirm,
-      AButton: Button
+      AButton: Button,
+      SysMenuEdit
     },
     props: {
       searchParams: Object,
@@ -54,6 +56,8 @@
     },
     data() {
       return {
+        showEditDrawer: false,
+        editItem: {},
         data: [],
         selectedRowKeys: [],
         loading: false,
@@ -104,6 +108,11 @@
     methods: {
       onEdit(item){
         console.log(item)
+        this.showEditDrawer = true;
+        this.editItem = item;
+      },
+      handleEditDrawClose () {
+        this.showEditDrawer = false;
       },
       onDelete (record_id) {  //点击删除
         console.log(record_id)
@@ -121,6 +130,8 @@
         this.loading = true;
         this.$axios.get('/menus?q=tree',{
           params: {
+            include_actions: 1,
+            include_resources: 1,
             ...params
           }
         }).then(res => {

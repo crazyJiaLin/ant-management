@@ -1,21 +1,29 @@
 <template>
   <div>
-    <a-drawer title="新建菜单" :width="720" @close="onClose"
+    <a-drawer title="编辑菜单" :width="720" @close="onClose"
       :visible="visible" wrapClassName="sys-menu-create-wrap">
       <a-form :form="form" @submit="handleSubmit">
         <a-row>
           <a-col :span="12">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol" label="菜单名称" >
               <a-input placeholder="请输入" v-decorator="[ 'name',
-                { rules: [{ required: true, message: '请输入菜单名称' }]}]"/>
+                {
+                  rules: [{ required: true, message: '请输入菜单名称' }],
+                  initialValue: options.name
+                }]"/>
             </a-form-item>
           </a-col>
           <a-col :span="12">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
                          label="上级菜单" >
               <a-cascader :options="menuTree" :fieldNames="treeTemplate" changeOnSelect
-                          allowClear placeholder="请选择" v-decorator="[ 'parent_id',
-                          { rules: [{ required: false, message: '' }]}]"/>
+                          allowClear placeholder="请选择"
+                          v-decorator="[ 'parent_id',
+                            {
+                              rules: [{ required: false, message: '' }],
+                              initialValue: 'dfbb4bd9-de6d-4e02-ba0f-5a147bed3670'
+                            }]"
+                          />
             </a-form-item>
           </a-col>
         </a-row>
@@ -116,7 +124,22 @@
       MMenuResource
     },
     props: {
-      visible: Boolean
+      visible: Boolean,
+      options: Object
+    },
+    watch: {
+      options: {
+        handler (newVal, oldVal) {
+          // console.log(newVal)
+          this.parentCascader = (newVal.parent_path && newVal.parent_path != '') ? newVal.parent_path.split('/') : [];
+          console.log(this.parentCascader)
+          // this.parent_id = newVal.parent_id;
+          // this.form.setFieldsValue({
+          //   parent_id: newVal.parent_path && newVal.parent_path != '' && newVal.parent_path.split('/')
+          // })
+        },
+        deep: true
+      }
     },
     data() {
       return {
@@ -126,6 +149,7 @@
           value: 'record_id',
           children: 'children'
         },
+        parentCascader: [],
         submitTimes: 0,
         action: [],
         resource: [],
