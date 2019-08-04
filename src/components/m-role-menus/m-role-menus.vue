@@ -5,7 +5,7 @@
     </div>
     <div class="menu-template-table">
       <a-table bordered :dataSource="dataSource" :loading="loading" :columns="columns" :pagination="false" size="middle"
-               :rowKey="(record) => {return record.record_id}" :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onTableChange}" >
+               :rowKey="(record) => {return record.record_id}" :rowSelection="rowSelection" >
 <!--        动作权限-->
         <template slot="actions" slot-scope="text, record">
           <a-checkbox-group v-if="!record.children"
@@ -71,8 +71,19 @@
       }
     },
     computed : {
-      hello () {
-        return this.loading
+      rowSelection () {
+        return {
+          selectedRowKeys: this.selectedRowKeys,
+          onChange: this.onTableChange,
+          getCheckboxProps: record => {
+            // console.log(record)  //这里的record虽然是本行的数据，但是table会自动吧children去掉，让单条数据只显示本条的基本数据，children直接干到下一层
+            return {
+              props: {
+                disabled: !record.actions && !record.resources, // Column configuration not to be checked
+              }
+            }
+          }
+        }
       }
     },
     mounted () {
@@ -80,7 +91,7 @@
     },
     methods: {
       onTableChange (selectedRowKeys) {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        // console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.selectedRowKeys = selectedRowKeys;
         //先置空checkbox选项
         this.checkboxSeletedKeys = {};
@@ -91,6 +102,7 @@
           this.checkboxSeletedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
           this.checkboxSeletedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
         }
+        //向父组件提交最新数据
         this.$emit('change', this.checkboxSeletedKeys)
       },
       findSthWithId (id, action, list) {
@@ -116,7 +128,22 @@
         return result;
       },
       onCheckboxChange (record, action, checkedValues) {
-        console.log(record, action, checkedValues)
+        // console.log(record, action, checkedValues)
+        //  想办法让value能够深度监听 --- 自己封装组件？
+        //  --- no: 直接让temp保存一下checkboxSeletedKeys,然后重置一下，这样checkbox-group的value就能监听到他的变化了
+        let temp = this.checkboxSeletedKeys;
+        this.checkboxSeletedKeys = {};
+        this.checkboxSeletedKeys = temp;
+        if(!this.checkboxSeletedKeys[record.record_id]) {
+          this.checkboxSeletedKeys[record.record_id] = {
+            menu_id: record.record_id,
+            actions: [],
+            resources: []
+          };
+        }
+        this.checkboxSeletedKeys[record.record_id][action] = checkedValues;
+        //向父组件提交最新数据
+        this.$emit('change', this.checkboxSeletedKeys)
       },
       getMenus () {
         this.loading = true;
