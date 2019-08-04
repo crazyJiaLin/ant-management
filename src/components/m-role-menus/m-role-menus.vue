@@ -5,14 +5,29 @@
     </div>
     <div class="menu-template-table">
       <a-table bordered :dataSource="dataSource" :loading="loading" :columns="columns" :pagination="false" size="middle"
-               :rowKey="(record) => {return record.record_id}">
+               :rowKey="(record) => {return record.record_id}" :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onTableChange}" >
+<!--        动作权限-->
         <template slot="actions" slot-scope="text, record">
-          <a-checkbox-group  @change="onCheckboxChange(text, record)">
-            <span slot="label" slot-scope="{value}">{{text.code}}</span>
+          <a-checkbox-group v-if="!record.children"
+                            :value="checkboxSeletedKeys[record.record_id] ? checkboxSeletedKeys[record.record_id].actions : []"
+                            @change="onCheckboxChange(record, 'actions', $event)">
+            <a-row v-for="(item, index) in text" :key="index">
+              <a-col :span="24">
+                <a-checkbox :value="item.code">{{item.name}}</a-checkbox>
+              </a-col>
+            </a-row>
           </a-checkbox-group>
         </template>
         <template slot="resources" slot-scope="text, record">
-          {{1}}
+          <a-checkbox-group v-if="!record.children"
+                            :value="checkboxSeletedKeys[record.record_id] ? checkboxSeletedKeys[record.record_id].resources : []"
+                            @change="onCheckboxChange(record, 'resources', $event)">
+            <a-row v-for="(item, index) in text" :key="index">
+              <a-col :span="24">
+                <a-checkbox :value="item.code">{{item.name}}</a-checkbox>
+              </a-col>
+            </a-row>
+          </a-checkbox-group>
         </template>
       </a-table>
     </div>
@@ -20,22 +35,21 @@
 </template>
 
 <script>
-  import {Table, Checkbox} from 'ant-design-vue'
+  import {Table, Checkbox, Row, Col} from 'ant-design-vue'
   export default {
     name: "m-role-menus",
     components: {
       ATable: Table,
-      ACheckboxGroup: Checkbox.Group
+      ACheckbox: Checkbox,
+      ACheckboxGroup: Checkbox.Group,
+      ARow: Row,
+      ACol: Col,
     },
     data () {
       return {
         dataSource: [],
-        actionsOptions: [
-          {
-            label: 'name',
-            value: 'code',
-          }
-        ],
+        selectedRowKeys : [],
+        checkboxSeletedKeys: {},
         columns: [
           {
             title: '菜单名称',
@@ -56,12 +70,53 @@
         loading: false
       }
     },
+    computed : {
+      hello () {
+        return this.loading
+      }
+    },
     mounted () {
       this.getMenus();
     },
     methods: {
-      onCheckboxChange (text, record, checkedValues) {
-        console.log(text, record, checkedValues)
+      onTableChange (selectedRowKeys) {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        this.selectedRowKeys = selectedRowKeys;
+        //先置空checkbox选项
+        this.checkboxSeletedKeys = {};
+        // 选中当前行的时候，将actions和resources设置为选中状态
+        for(let i=0; i<selectedRowKeys.length; i++){
+          let id = selectedRowKeys[i]
+          this.checkboxSeletedKeys[id] = {menu_id: id};
+          this.checkboxSeletedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
+          this.checkboxSeletedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
+        }
+        this.$emit('change', this.checkboxSeletedKeys)
+      },
+      findSthWithId (id, action, list) {
+        let result = []
+        if(!list) return;
+        for (let i=0; i<list.length; i++) {
+          if(list[i].record_id == id) {
+            // console.log('匹配到', list[i])
+            result = [];
+            //如果本节点有actions或者resources，并且没有子节点（即为叶子节点）
+            if(list[i][action] && !list[i].children) {
+              for(let j=0; j<list[i][action].length; j++) {
+                result.push(list[i][action][j].code);
+              }
+            }
+            // console.log(list[i][action], result);
+            return result;
+          }
+          if(list[i].children) {
+            result = this.findSthWithId(id,action, list[i].children)
+          }
+        }
+        return result;
+      },
+      onCheckboxChange (record, action, checkedValues) {
+        console.log(record, action, checkedValues)
       },
       getMenus () {
         this.loading = true;
@@ -73,6 +128,7 @@
         }).then(res => {
           console.log('get menus',res.data)
           if(res.data) {
+            console.log(res.data.list)
             this.dataSource = res.data.list;
           }
         }).catch(err => {
@@ -80,7 +136,29 @@
         }).finally(() => {
           this.loading= false
         })
-      }
+      },
+      // 如果是用直接的checkgroup的话，指定的value值和name值的key是固定的，所以需要通过递归给每个对象添加value值，而现在采用直接的v-for生成checkbox列表的方式，所以不需要了
+      // formatMenu (list) {
+      //   // console.log(list)
+      //   // 第一层循环获取到的menu最外层
+      //   for(let i=0; i<list.length; i++){
+      //     list[i].actions && (list[i].actions = this.addValueInList(list[i].actions));
+      //     list[i].resources && (list[i].resources = this.addValueInList(list[i].resources));
+      //     if(list[i].children) {
+      //       // 如果有子节点，进行递归调用
+      //       this.formatMenu(list[i].children);
+      //     }
+      //   }
+      // },
+      // // 因涉及到checkbox中的option只能识别key值为value的字段，所以需要将我们的数据封装到value中 （使用递归）
+      // addValueInList (arr) {
+      //   if(arr) {
+      //     for(let i=0; i<arr.length; i++) {
+      //       arr[i].value = arr[i].code;
+      //     }
+      //   }
+      //   return arr;
+      // }
     }
   }
 </script>

@@ -11,7 +11,7 @@
       <!--      <a-button type="danger" icon="delete" v-show="hasSelected">删除</a-button>-->
     </div>
     <div class="table-wrap">
-      <sys-role-table :search-params="searchParams" :create-role-times="createTimes"></sys-role-table>
+      <sys-role-table :search-params="searchParams" :create-times="createTimes"></sys-role-table>
     </div>
   </div>
 </template>

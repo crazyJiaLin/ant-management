@@ -45,7 +45,7 @@
           <a-button type="primary" html-type="submit"> 确认 </a-button>
         </div>
       </a-form>
-      <m-role-menus></m-role-menus>
+      <m-role-menus @change="onRoleMenusChange"></m-role-menus>
     </a-drawer>
   </div>
 </template>
@@ -77,16 +77,31 @@
     props: {
       visible: Boolean
     },
+    computed : {
+      hello () {
+        return 1
+      }
+    },
     data() {
       return {
         menuTree: [],
         submitTimes: 0,
         form: this.$form.createForm(this),
         labelCol: {span:6},
-        wrapperCol: {span:16}
+        wrapperCol: {span:16},
+        //子组件m-role-menus数据
+        menus: []
       }
     },
     methods: {
+      onRoleMenusChange (menu) {
+        console.log('父组件接受到变化', menu)
+        // TODO: 去掉数组为空的数据, 将正确的数据转化到表单中去
+        for(let key in menu){
+          this.menus.push(menu[key])
+        }
+        console.log('转化完成', this.menus)
+      },
       handleSubmit (e) {
         e.preventDefault();
         this.form.validateFields((error, values) => {
@@ -96,12 +111,13 @@
             "name": values.name,
             "memo": values.memo,
             "sequence": values.sequence,
+            "menus": this.menus,
             "updated_at": new Date(),
             "created_at": new Date(),
             "creator": this.$getLocalStorage('username')
           }
           console.log(params)
-          this.$axios.post('/menus',params).then(res => {
+          this.$axios.post('/roles',params).then(res => {
             console.log(res)
             if(res.data){
               Notification['success']({
@@ -136,30 +152,8 @@
       onClose() {
         this.$emit('close');
       },
-      getMenuTree () {
-        this.$axios.get('/current/menutree').then(res => {
-          if(res.data){
-            let list = res.data.list
-            //递归将菜单中record_id和record_path合并
-            this.menuTree = list;
-            // console.log(list)
-          }
-        }).catch(err => {
-          console.log(err)
-        })
-      },
-      // //递归将菜单中record_id和record_path合并
-      // contactIdAndPath(list){
-      //   for(let i=0; i<list.length; i++) {
-      //     list[i].record_id = [list[i].record_id, list[i].router].join(',')
-      //     if(list[i].children) {
-      //       this.contactIdAndPath(list[i].children);
-      //     }
-      //   }
-      // }
     },
     mounted() {
-      this.getMenuTree();
     }
   }
 </script>

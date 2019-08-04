@@ -11,10 +11,10 @@
           <a-button type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
       </template>
-      <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{123}}</p>
+<!--      <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{record.record_id}}</p>-->
     </a-table>
 <!--    想要直接在列表上显示角色对每个菜单的操作权限，因为这里接口中返回的menus为空，所以先不展示-->
-<!--    <sys-role-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-role-edit>-->
+    <sys-role-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-role-edit>
   </div>
 </template>
 <script>
@@ -101,6 +101,12 @@
         console.log(item)
         this.showEditDrawer = true;
         this.editItem = item;
+        //查询指定roles数据，test
+        this.$axios.get('/roles/'+item.record_id).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err)
+        })
       },
       handleEditDrawClose (action) {
         this.showEditDrawer = false;
