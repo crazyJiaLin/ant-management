@@ -45,6 +45,17 @@
       ARow: Row,
       ACol: Col,
     },
+    props: {
+      submitTimes: Number
+    },
+    watch: {
+      submitTimes (newVal, oldVal) {
+        console.log(newVal, oldVal);
+        // 创建成功，需要将本组件重置
+        this.selectedRowKeys = [];
+        this.checkboxSeletedKeys = {};
+      }
+    },
     data () {
       return {
         dataSource: [],
@@ -90,43 +101,56 @@
       this.getMenus();
     },
     methods: {
-      onTableChange (selectedRowKeys) {
-        // console.log('selectedRowKeys changed: ', selectedRowKeys);
+      onTableChange (selectedRowKeys,selectedRows) {
+        console.log('selectedRowKeys changed: ', selectedRowKeys, selectedRows);
         this.selectedRowKeys = selectedRowKeys;
-        //先置空checkbox选项
+        //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
         this.checkboxSeletedKeys = {};
         // 选中当前行的时候，将actions和resources设置为选中状态
-        for(let i=0; i<selectedRowKeys.length; i++){
-          let id = selectedRowKeys[i]
-          this.checkboxSeletedKeys[id] = {menu_id: id};
-          this.checkboxSeletedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
-          this.checkboxSeletedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
+        for(let i=0; i<selectedRows.length; i++){
+          let item = selectedRows[i]
+          this.checkboxSeletedKeys[item.record_id] = {
+            menu_id: item.record_id,
+            actions: item.actions ? this.getCodeArr(item.actions) : [],
+            resources: item.resources ? this.getCodeArr(item.resources) : []
+          };
+          console.log(this.checkboxSeletedKeys)
+          // 原始方法，如果onSelect参数中没有选中行全部数据的时候，需要我们通过id去查询，这样就用到了下边的递归方法
+          // this.checkboxSeletedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
+          // this.checkboxSeletedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
         }
         //向父组件提交最新数据
         this.$emit('change', this.checkboxSeletedKeys)
       },
-      findSthWithId (id, action, list) {
-        let result = []
-        if(!list) return;
-        for (let i=0; i<list.length; i++) {
-          if(list[i].record_id == id) {
-            // console.log('匹配到', list[i])
-            result = [];
-            //如果本节点有actions或者resources，并且没有子节点（即为叶子节点）
-            if(list[i][action] && !list[i].children) {
-              for(let j=0; j<list[i][action].length; j++) {
-                result.push(list[i][action][j].code);
-              }
-            }
-            // console.log(list[i][action], result);
-            return result;
-          }
-          if(list[i].children) {
-            result = this.findSthWithId(id,action, list[i].children)
-          }
+      getCodeArr (list) {
+        let res = [];
+        for(let i=0; i<list.length; i++) {
+          res.push(list[i].code);
         }
-        return result;
+        return res;
       },
+      // findSthWithId (id, action, list) {
+      //   let result = []
+      //   if(!list) return;
+      //   for (let i=0; i<list.length; i++) {
+      //     if(list[i].record_id == id) {
+      //       // console.log('匹配到', list[i])
+      //       result = [];
+      //       //如果本节点有actions或者resources，并且没有子节点（即为叶子节点）
+      //       if(list[i][action] && !list[i].children) {
+      //         for(let j=0; j<list[i][action].length; j++) {
+      //           result.push(list[i][action][j].code);
+      //         }
+      //       }
+      //       // console.log(list[i][action], result);
+      //       return result;
+      //     }
+      //     if(list[i].children) {
+      //       result = this.findSthWithId(id,action, list[i].children)
+      //     }
+      //   }
+      //   return result;
+      // },
       onCheckboxChange (record, action, checkedValues) {
         // console.log(record, action, checkedValues)
         //  想办法让value能够深度监听 --- 自己封装组件？
@@ -153,9 +177,8 @@
             include_resources: 1,
           }
         }).then(res => {
-          console.log('get menus',res.data)
+          // console.log('get menus',res.data.list)
           if(res.data) {
-            console.log(res.data.list)
             this.dataSource = res.data.list;
           }
         }).catch(err => {

@@ -3,6 +3,11 @@ import axios from 'axios'
 
 import {Message} from 'ant-design-vue'
 
+//配置最大通知数，超过覆盖最早消息
+Message.config({
+  maxCount: 1,
+});
+
 //配置请求根路径
 axios.defaults.baseURL = 'http://47.244.197.84:10088/api/v1';
 
