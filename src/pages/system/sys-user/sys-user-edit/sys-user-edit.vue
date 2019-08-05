@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-drawer
-      title="编辑角色"
+      title="编辑用户"
       :width="720"
       @close="onClose"
       :visible="visible"
@@ -126,7 +126,7 @@
     Button, Form, Drawer, Row, Col, Input, InputNumber,
     Select, Radio, Cascader, Tooltip, Icon, Notification
   } from 'ant-design-vue'
-
+  import md5 from 'md5'
   export default {
     name: "sys-user-edit",
     components: {
@@ -178,15 +178,16 @@
             "creator": this.$getLocalStorage('username'),
             "user_name": values.user_name,
             "email": values.email,
-            "password": md5(values.password),
             "phone": values.phone,
             "real_name": values.real_name,
+            // TODO 请求参数错误 这里应该是role是数据格式出错了
             "roles": [{
               "role_id": values.role_id
             }],
             "status": values.status,
             "updated_at": new Date()
           }
+          values.password && (params.password = md5(values.password))
           console.log(params)
           this.$axios.put('/users/' + this.options.record_id, params).then(res => {
             console.log(res)

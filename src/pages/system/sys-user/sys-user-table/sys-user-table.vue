@@ -3,14 +3,6 @@
     <a-table :columns="columns" :rowKey="record => record.record_id" :pagination="pagination"
              :dataSource="data" :loading="loading" @change="handleTableChange"
              :scroll="{ y: 350 }">
-      <template slot="operation" slot-scope="text, record">
-<!--        <a-button size="small">查看</a-button>-->
-        <a-button size="small" @click="onEdit(record)">编辑</a-button>
-        <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
-                      @confirm="() => onDelete(record.record_id)">
-          <a-button type="danger" ghost size="small">删除</a-button>
-        </a-popconfirm>
-      </template>
       <template slot="roles" slot-scope="text, record">
         <span v-for="(item, index) in text" :key="index"> {{item.name}}</span>
       </template>
@@ -19,6 +11,17 @@
         <div class="status_circle2" v-if="text===2"></div>
         <span v-if="text===1">启用</span>
         <span v-if="text===2">停用</span>
+      </template>
+      <template slot="created" slot-scope="text, record">
+        <span>{{text.split('T')[0]}} {{text.split('T')[1].split('+')[0]}}</span>
+      </template>
+      <template slot="operation" slot-scope="text, record">
+        <!--        <a-button size="small">查看</a-button>-->
+        <a-button size="small" @click="onEdit(record)">编辑</a-button>
+        <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
+                      @confirm="() => onDelete(record.record_id)">
+          <a-button type="danger" ghost size="small">删除</a-button>
+        </a-popconfirm>
       </template>
       <!--      <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{record.record_id}}</p>-->
     </a-table>
@@ -103,13 +106,14 @@
             title: '手机号',
             dataIndex: 'phone',
             align: 'center',
-            width: '200px'
+            width: '200px',
           },
           {
             title: '创建时间',
             dataIndex: 'created_at',
             align: 'center',
-            width: '200px'
+            width: '220px',
+            scopedSlots: {customRender: 'created'},
           },
           {
             title: '操作',

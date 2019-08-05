@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-drawer
-      title="新建菜单"
+      title="新建用户"
       :width="720"
       @close="onClose"
       :visible="visible"
