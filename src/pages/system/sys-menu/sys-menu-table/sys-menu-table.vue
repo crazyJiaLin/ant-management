@@ -16,11 +16,13 @@
       </template>
     </a-table>
     <sys-menu-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-menu-edit>
+    <sys-menu-config :visible="showConfigDrawer" @close="handleConfigDrawClose"></sys-menu-config>
   </div>
 </template>
 <script>
   import {Table, Icon, Button, Popconfirm} from 'ant-design-vue'
   import SysMenuEdit from '../sys-menu-edit/sys-menu-edit'
+  import SysMenuConfig from '../sys-menu-config/sys-menu-config'
   export default {
     name: 'sys-menu-table',
     components: {
@@ -28,7 +30,8 @@
       AIcon: Icon,
       APopconfirm: Popconfirm,
       AButton: Button,
-      SysMenuEdit
+      SysMenuEdit,
+      SysMenuConfig
     },
     props: {
       searchParams: Object,
@@ -57,6 +60,7 @@
     data() {
       return {
         showEditDrawer: false,
+        showConfigDrawer: false,
         editItem: {},
         data: [],
         baseMenus: ['首页','系统管理', '菜单管理', '角色管理', '用户管理'],
@@ -115,6 +119,7 @@
       // 配置菜单
       configMenu (record) {
         console.log('配置菜单', record)
+        this.showConfigDrawer = true;
       },
       isInBaseMenus(menuName){
         for(let i=0; i<this.baseMenus.length; i++) {
@@ -134,6 +139,9 @@
         if(action && action == 'update') {
           this.fetch()
         }
+      },
+      handleConfigDrawClose () {
+        this.showConfigDrawer = false;
       },
       onDelete (record_id) {  //点击删除
         console.log(record_id)

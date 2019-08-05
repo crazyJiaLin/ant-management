@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-drawer
-      title="新建菜单"
+      title="配置菜单"
       :width="720"
       @close="onClose"
       :visible="visible"
@@ -245,5 +245,5 @@
   }
 </script>
 <style lang="less">
-  @import "sys-menu-create";
+  @import "../../sys-drawer";
 </style>
