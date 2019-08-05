@@ -8,7 +8,7 @@
       </template>
       <template slot="operation" slot-scope="text, record">
         <a-button size="small" @click="onEdit(record)">编辑</a-button>
-        <a-button size="small" @click="configMenu(record)">配置菜单</a-button>
+        <a-button size="small" @click="configMenu(record)" v-if="!isInBaseMenus(record.name)">配置菜单</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
@@ -59,6 +59,7 @@
         showEditDrawer: false,
         editItem: {},
         data: [],
+        baseMenus: ['首页','系统管理', '菜单管理', '角色管理', '用户管理'],
         loading: false,
         tableHeight: 0,
         columns: [
@@ -114,6 +115,14 @@
       // 配置菜单
       configMenu (record) {
         console.log('配置菜单', record)
+      },
+      isInBaseMenus(menuName){
+        for(let i=0; i<this.baseMenus.length; i++) {
+          if(menuName == this.baseMenus[i]) {
+            return true;
+          }
+        }
+        return false;
       },
       onEdit(item){
         console.log(item)
