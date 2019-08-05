@@ -8,7 +8,7 @@
       </template>
       <template slot="operation" slot-scope="text, record">
         <a-button size="small" @click="onEdit(record)">编辑</a-button>
-        <a-button size="small">配置菜单</a-button>
+        <a-button size="small" @click="configMenu(record)">配置菜单</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
@@ -111,6 +111,10 @@
       // this.tableHeight = wrapHeight - 115;
     },
     methods: {
+      // 配置菜单
+      configMenu (record) {
+        console.log('配置菜单', record)
+      },
       onEdit(item){
         console.log(item)
         this.showEditDrawer = true;
