@@ -61,7 +61,7 @@
     }
   }
 </script>
-<style scoped>
+<style scoped lang="less">
   .router-wrap {
     padding: 10px 20px 20px;
     height: 100%;
@@ -69,4 +69,5 @@
   .form-wrap {
     margin-bottom: 20px;
   }
+
 </style>

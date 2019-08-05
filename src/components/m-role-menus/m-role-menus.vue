@@ -5,11 +5,11 @@
     </div>
     <div class="menu-template-table">
       <a-table bordered :dataSource="dataSource" :loading="loading" :columns="columns" :pagination="false" size="middle"
-               :rowKey="(record) => {return record.record_id}" :rowSelection="rowSelection" >
-<!--        动作权限-->
+               :rowKey="(record) => {return record.record_id}" :rowSelection="rowSelection">
+        <!--        动作权限-->
         <template slot="actions" slot-scope="text, record">
           <a-checkbox-group v-if="!record.children"
-                            :value="checkboxSeletedKeys[record.record_id] ? checkboxSeletedKeys[record.record_id].actions : []"
+                            :value="checkboxSelectedKeys[record.record_id] ? checkboxSelectedKeys[record.record_id].actions : []"
                             @change="onCheckboxChange(record, 'actions', $event)">
             <a-row v-for="(item, index) in text" :key="index">
               <a-col :span="24">
@@ -20,7 +20,7 @@
         </template>
         <template slot="resources" slot-scope="text, record">
           <a-checkbox-group v-if="!record.children"
-                            :value="checkboxSeletedKeys[record.record_id] ? checkboxSeletedKeys[record.record_id].resources : []"
+                            :value="checkboxSelectedKeys[record.record_id] ? checkboxSelectedKeys[record.record_id].resources : []"
                             @change="onCheckboxChange(record, 'resources', $event)">
             <a-row v-for="(item, index) in text" :key="index">
               <a-col :span="24">
@@ -36,6 +36,7 @@
 
 <script>
   import {Table, Checkbox, Row, Col} from 'ant-design-vue'
+
   export default {
     name: "m-role-menus",
     components: {
@@ -46,21 +47,44 @@
       ACol: Col,
     },
     props: {
-      submitTimes: Number
+      submitTimes: Number,
+      defaultValue: Array
     },
     watch: {
-      submitTimes (newVal, oldVal) {
-        console.log(newVal, oldVal);
+      submitTimes(newVal, oldVal) {
+        // console.log(newVal, oldVal);
         // 创建成功，需要将本组件重置
         this.selectedRowKeys = [];
-        this.checkboxSeletedKeys = {};
+        this.checkboxSelectedKeys = {};
+      },
+      defaultValue(newVal, oldVal) {
+        // console.log('role-menu接受到默认数据defaultValue1', newVal);
+        if (!newVal || newVal.length <= 0) return;
+        // 将父组件传来的值更改数据格式后赋值给当前table的选择数组和checkbox选中状态
+        this.selectedRowKeys = [];
+        this.checkboxSelectedKeys = {};
+        for (let i = 0; i < newVal.length; i++) {
+          let item = newVal[i];
+          // 如果这条数据里actions和resources都没有的话，直接进入下一次循环
+          if (!item.actions && !item.resources) continue;
+          // 设置table选中状态
+          this.selectedRowKeys.push(item.menu_id);
+          // 设置checkbox选中状态
+          this.checkboxSelectedKeys[item.menu_id] = {
+            menu_id: item.menu_id,
+            actions: [],
+            resources: []
+          };
+          item.actions && (this.checkboxSelectedKeys[item.menu_id].actions = item.actions);
+          item.resources && (this.checkboxSelectedKeys[item.menu_id].resources = item.resources);
+        }
       }
     },
-    data () {
+    data() {
       return {
         dataSource: [],
-        selectedRowKeys : [],
-        checkboxSeletedKeys: {},
+        selectedRowKeys: [],
+        checkboxSelectedKeys: {},
         columns: [
           {
             title: '菜单名称',
@@ -70,19 +94,19 @@
           {
             title: '动作权限',
             dataIndex: 'actions',
-            scopedSlots: { customRender: 'actions' }
+            scopedSlots: {customRender: 'actions'}
           },
           {
             title: '资源权限',
             dataIndex: 'resources',
-            scopedSlots: { customRender: 'resources' }
+            scopedSlots: {customRender: 'resources'}
           }
         ],
         loading: false
       }
     },
-    computed : {
-      rowSelection () {
+    computed: {
+      rowSelection() {
         return {
           selectedRowKeys: this.selectedRowKeys,
           onChange: this.onTableChange,
@@ -97,34 +121,94 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.getMenus();
     },
     methods: {
-      onTableChange (selectedRowKeys,selectedRows) {
-        console.log('selectedRowKeys changed: ', selectedRowKeys, selectedRows);
-        this.selectedRowKeys = selectedRowKeys;
-        //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
-        this.checkboxSeletedKeys = {};
-        // 选中当前行的时候，将actions和resources设置为选中状态
-        for(let i=0; i<selectedRows.length; i++){
-          let item = selectedRows[i]
-          this.checkboxSeletedKeys[item.record_id] = {
+      onTableChange(selectedRowKeys, selectedRows) {
+        // console.log('选择的数据', selectedRowKeys, selectedRows);
+        // console.log('组件原始data', this.selectedRowKeys, this.checkboxSelectedKeys)
+        /**
+         * 点击选择后，只有最后一层是当前新增的，不要修改其他层的； 点击取消后，只有最后一层的数据去掉，其他的不需要动
+         * 1 当选择的数据比原始数据长度大的时，说明是新增，
+         * 2 当选择的数据比原始数据长度小，说明是取消全选操作
+         */
+        if (selectedRowKeys.length >= this.selectedRowKeys.length) {
+          // 新增最后一条数据
+
+          //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
+          // let temp = this.checkboxSelectedKeys;
+          // this.checkboxSelectedKeys = {};
+          // this.checkboxSelectedKeys = temp;
+          this.selectedRowKeys = selectedRowKeys;
+           // item 有问题，不是最后一个
+          let item = this.findItemById(selectedRowKeys[selectedRowKeys.length - 1], selectedRows);
+          // console.log('新增的选项', selectedRowKeys[selectedRowKeys.length-1], item)
+          this.checkboxSelectedKeys[item.record_id] = {
             menu_id: item.record_id,
             actions: item.actions ? this.getCodeArr(item.actions) : [],
             resources: item.resources ? this.getCodeArr(item.resources) : []
           };
-          console.log(this.checkboxSeletedKeys)
-          // 原始方法，如果onSelect参数中没有选中行全部数据的时候，需要我们通过id去查询，这样就用到了下边的递归方法
-          // this.checkboxSeletedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
-          // this.checkboxSeletedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
+        } else {
+          // 删除数据
+          // 根据selectedRowKeys 和 this.selectedRowKeys进行比对，看看少了哪一项，吧少了的清空
+          let cancelId = this.findMissedItem(selectedRowKeys, this.selectedRowKeys);
+          // console.log('取消的选项', cancelId)
+          if(cancelId) {
+            this.selectedRowKeys = selectedRowKeys;
+            this.checkboxSelectedKeys[cancelId] = {
+              menu_id: cancelId,
+              actions: [],
+              resources: []
+            }
+          }
         }
+        //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
+        // let temp = this.checkboxSelectedKeys;
+        // this.checkboxSelectedKeys = {};
+        // this.checkboxSelectedKeys = temp;
+        // // 选中当前行的时候，将actions和resources设置为选中状态
+        // for(let i=0; i<selectedRows.length; i++){
+        //   let item = selectedRows[i]
+        //   this.checkboxSelectedKeys[item.record_id] = {
+        //     menu_id: item.record_id,
+        //     actions: item.actions ? this.getCodeArr(item.actions) : [],
+        //     resources: item.resources ? this.getCodeArr(item.resources) : []
+        //   };
+        //   // console.log(this.checkboxSelectedKeys)
+        //   // 原始方法，如果onSelect参数中没有选中行全部数据的时候，需要我们通过id去查询，这样就用到了下边的递归方法
+        //   // this.checkboxSelectedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
+        //   // this.checkboxSelectedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
+        // }
         //向父组件提交最新数据
-        this.$emit('change', this.checkboxSeletedKeys)
+        this.$emit('change', this.checkboxSelectedKeys)
       },
-      getCodeArr (list) {
+      findItemById (id, arr) {
+        for(let i=0; i<arr.length; i++){
+          if(arr[i].record_id == id) {
+            return arr[i]
+          }
+        }
+        return null;
+      },
+      //查找点击取消的id
+      findMissedItem(arr1, arr2) {
+        //循环长度大的，进行比对
+        let temp = arr1.concat(arr2);
+        let rel = {};
+        for(let i = 0;i < temp.length; i ++){
+          temp[i] in rel ? rel[temp[i]] ++ : rel[temp[i]] = 1;
+        }
+        for(let x in rel){
+          if(rel[x] == 1){
+            return x;
+          }
+        }
+        return null;
+      },
+      getCodeArr(list) {
         let res = [];
-        for(let i=0; i<list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
           res.push(list[i].code);
         }
         return res;
@@ -151,40 +235,40 @@
       //   }
       //   return result;
       // },
-      onCheckboxChange (record, action, checkedValues) {
+      onCheckboxChange(record, action, checkedValues) {
         // console.log(record, action, checkedValues)
         //  想办法让value能够深度监听 --- 自己封装组件？
-        //  --- no: 直接让temp保存一下checkboxSeletedKeys,然后重置一下，这样checkbox-group的value就能监听到他的变化了
-        let temp = this.checkboxSeletedKeys;
-        this.checkboxSeletedKeys = {};
-        this.checkboxSeletedKeys = temp;
-        if(!this.checkboxSeletedKeys[record.record_id]) {
-          this.checkboxSeletedKeys[record.record_id] = {
+        //  --- no: 直接让temp保存一下checkboxSelectedKeys,然后重置一下，这样checkbox-group的value就能监听到他的变化了
+        let temp = this.checkboxSelectedKeys;
+        this.checkboxSelectedKeys = {};
+        this.checkboxSelectedKeys = temp;
+        if (!this.checkboxSelectedKeys[record.record_id]) {
+          this.checkboxSelectedKeys[record.record_id] = {
             menu_id: record.record_id,
             actions: [],
             resources: []
           };
         }
-        this.checkboxSeletedKeys[record.record_id][action] = checkedValues;
+        this.checkboxSelectedKeys[record.record_id][action] = checkedValues;
         //向父组件提交最新数据
-        this.$emit('change', this.checkboxSeletedKeys)
+        this.$emit('change', this.checkboxSelectedKeys)
       },
-      getMenus () {
+      getMenus() {
         this.loading = true;
-        this.$axios.get('/menus?q=tree',{
+        this.$axios.get('/menus?q=tree', {
           params: {
             include_actions: 1,
             include_resources: 1,
           }
         }).then(res => {
           // console.log('get menus',res.data.list)
-          if(res.data) {
+          if (res.data) {
             this.dataSource = res.data.list;
           }
         }).catch(err => {
           console.log(err)
         }).finally(() => {
-          this.loading= false
+          this.loading = false
         })
       },
       // 如果是用直接的checkgroup的话，指定的value值和name值的key是固定的，所以需要通过递归给每个对象添加value值，而现在采用直接的v-for生成checkbox列表的方式，所以不需要了
@@ -223,6 +307,7 @@
     color: #555;
     border-bottom: 1px solid #e8e8e8;
   }
+
   .menu-template-table {
     box-sizing: border-box;
     padding: 20px 15px 0;

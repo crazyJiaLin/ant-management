@@ -54,7 +54,7 @@
           Select, Radio, Cascader, Tooltip, Icon, Notification} from 'ant-design-vue'
   import MRoleMenus from '@/components/m-role-menus/m-role-menus'
   export default {
-    name: "sys-menu-create",
+    name: "sys-role-create",
     components: {
       AButton: Button,
       AForm: Form,
@@ -95,7 +95,7 @@
     },
     methods: {
       onRoleMenusChange (menu) {
-        console.log('父组件接受到变化', menu)
+        // console.log('父组件接受到变化', menu)
         // 去掉数组为空的数据, 将正确的数据转化到表单中去
         this.menus = [];
         for(let key in menu){
@@ -104,7 +104,7 @@
             this.menus.push(menu[key])
           }
         }
-        console.log('转化完成', this.menus)
+        // console.log('转化完成', this.menus)
       },
       handleSubmit (e) {
         e.preventDefault();
@@ -120,9 +120,9 @@
             "created_at": new Date(),
             "creator": this.$getLocalStorage('username')
           }
-          console.log(params)
+          // console.log(params)
           this.$axios.post('/roles',params).then(res => {
-            console.log(res)
+            console.log(res.data)
             if(res.data){
               Notification['success']({
                 message: '创建成功'
@@ -138,20 +138,6 @@
             console.log(err)
           })
         });
-      },
-      createObjWithoutKey (arr, keyStr) {
-        let newArr = []
-        for(let i=0; i<arr.length; i++) {
-          let item = arr[i]
-          let newItem = {}
-          for(let key in item) {
-            if(key != keyStr) {
-              newItem[key] = item[key]
-            }
-          }
-          newArr.push(newItem)
-        }
-        return newArr
       },
       onClose() {
         this.$emit('close');

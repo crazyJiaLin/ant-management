@@ -40,7 +40,7 @@
 <script>
   import {Row, Col, Form, Input, Cascader, Button, Select, Switch} from 'ant-design-vue'
   export default {
-    name: "sys-menu-form",
+    name: "sys-role-form",
     components: {
       ARow: Row,
       ACol: Col,

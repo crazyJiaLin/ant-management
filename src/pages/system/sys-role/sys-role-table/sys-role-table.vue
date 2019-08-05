@@ -4,7 +4,7 @@
              :dataSource="data" :loading="loading"  @change="handleTableChange"
              :scroll="{ y: 350 }">
       <template slot="operation" slot-scope="text, record">
-        <a-button size="small">查看</a-button>
+<!--        <a-button size="small">查看</a-button>-->
         <a-button size="small" @click="onEdit(record)">编辑</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
@@ -100,10 +100,14 @@
       onEdit(item){
         console.log(item)
         this.showEditDrawer = true;
-        this.editItem = item;
+
         //查询指定roles数据，test
         this.$axios.get('/roles/'+item.record_id).then(res => {
-          console.log(res)
+          console.log('edit item :', res.data)
+          if(res.data) {
+            this.editItem = res.data;
+          }
+
         }).catch(err => {
           console.log(err)
         })
@@ -117,7 +121,7 @@
       onDelete (record_id) {  //点击删除
         console.log(record_id)
         this.$axios.delete('roles/' + record_id).then(res => {
-          console.log(res)
+          console.log('delete',res.data)
           if(res.data){
             //删除成功，同步表格信息
             this.fetch(this.searchParams)
