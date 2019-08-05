@@ -148,5 +148,5 @@
   }
 </script>
 <style lang="less">
-  @import "sys-role-create";
+  @import "../../sys-drawer";
 </style>

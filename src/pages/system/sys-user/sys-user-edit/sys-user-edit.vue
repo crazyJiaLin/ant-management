@@ -232,5 +232,5 @@
 </script>
 
 <style lang="less">
-  @import "sys-user-edit.less";
+  @import "../../sys-drawer";
 </style>

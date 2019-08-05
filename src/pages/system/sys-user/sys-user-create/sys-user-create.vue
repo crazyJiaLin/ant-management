@@ -203,5 +203,5 @@
   }
 </script>
 <style lang="less">
-  @import "sys-user-create.less";
+  @import "../../sys-drawer";
 </style>

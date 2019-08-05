@@ -12,7 +12,7 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
                          label="菜单名称" >
               <a-input placeholder="请输入"
-                v-decorator="[
+                       v-decorator="[
                 'name',
                 { rules: [{ required: true, message: '请输入菜单名称' }]}
               ]"/>
@@ -70,7 +70,7 @@
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
                          label="排序值" >
               <a-input-number placeholder="请输入"
-                       v-decorator="[
+                              v-decorator="[
                           'sequence',
                           { rules: [{ required: true, message: '请输入' }]}
                         ]"/>
@@ -79,14 +79,14 @@
           <a-col :span="12">
             <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
                          label="隐藏状态" >
-                <a-radio-group
-                               v-decorator="[
+              <a-radio-group
+                v-decorator="[
                                 'hidden',
                                 { rules: [{ required: true, message: '请输入' }],initialValue:0}
                               ]">
-                  <a-radio :value="0">显示</a-radio>
-                  <a-radio :value="1">隐藏</a-radio>
-                </a-radio-group>
+                <a-radio :value="0">显示</a-radio>
+                <a-radio :value="1">隐藏</a-radio>
+              </a-radio-group>
             </a-form-item>
           </a-col>
         </a-row>
@@ -95,18 +95,14 @@
           <a-button type="primary" html-type="submit"> 确认 </a-button>
         </div>
       </a-form>
-      <m-menu-action :submit-times="submitTimes" @change="onMenuActionChange"></m-menu-action>
-      <m-menu-resource :submit-times="submitTimes" @change="onMenuResourceChange"></m-menu-resource>
     </a-drawer>
   </div>
 </template>
 <script>
   import {Button, Form, Drawer, Row, Col, Input, InputNumber,
-          Select, Radio, Cascader, Tooltip, Icon, Notification} from 'ant-design-vue'
-  import MMenuAction from '@/components/m-menu-action/m-menu-action'
-  import MMenuResource from '@/components/m-menu-resource/m-menu-resource'
+    Select, Radio, Cascader, Tooltip, Icon, Notification} from 'ant-design-vue'
   export default {
-    name: "sys-menu-create",
+    name: "sys-menu-config",
     components: {
       AButton: Button,
       AForm: Form,
@@ -122,9 +118,7 @@
       ASelectOption: Select.Option,
       ACascader: Cascader,
       ATooltip: Tooltip,
-      AIcon: Icon,
-      MMenuAction,
-      MMenuResource
+      AIcon: Icon
     },
     props: {
       visible: Boolean
@@ -251,5 +245,5 @@
   }
 </script>
 <style lang="less">
-  @import "../../sys-drawer";
+  @import "sys-menu-create";
 </style>

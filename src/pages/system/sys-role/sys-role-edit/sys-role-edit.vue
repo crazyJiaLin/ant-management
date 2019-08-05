@@ -167,5 +167,5 @@
 </script>
 
 <style lang="less">
-  @import "sys-role-edit";
+  @import "../../sys-drawer";
 </style>

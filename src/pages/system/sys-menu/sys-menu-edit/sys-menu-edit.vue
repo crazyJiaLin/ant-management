@@ -251,5 +251,5 @@
   }
 </script>
 <style lang="less">
-  @import "sys-menu-edit";
+  @import "../../sys-drawer";
 </style>
