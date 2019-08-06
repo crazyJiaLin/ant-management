@@ -29,7 +29,7 @@
     data () {
       return {
         menuList : [],
-        curRouter: [],
+        curRouter: {},
         defaultSelectedKeys: [],
         defaultOpenKeys: []
       }
@@ -62,8 +62,10 @@
       },
       handleMenuChange (value) {
         //菜单选择回调函数
-        // console.log(value);
         this.defaultSelectedKeys = [value.key]
+        this.recursionList(this.menuList, 'record_id', value.key);
+        this.$store.commit('setCurMenu', this.curRouter)
+        // console.log(this.curRouter)
       },
       handleTitleClick (openKeys) {
         // console.log(openKeys)
@@ -74,22 +76,24 @@
         // console.log(this.$route)
         let path = this.$route.path;
         // let menuList = JSON.parse(localStorage.getItem('menuList'));
-        this.recursionList(this.menuList, path);
+        this.recursionList(this.menuList, 'router', path);
         // console.log('curRouter', this.curRouter)
         this.defaultSelectedKeys = [this.curRouter.record_id];
         this.defaultOpenKeys = this.curRouter.parent_path.split('/');
+        this.$store.commit('setCurMenu', this.curRouter)
+        // console.log(this.curRouter)
       },
       //递归查找路由
-      recursionList(list, path) {
+      recursionList(list,  key, value ) {
         if(list && list.length > 0){
           for(let i=0; i<list.length; i++) {
             // console.log(list[i], path)
-            if(list[i].router == path) {
+            if(list[i][key] == value) {
               // console.log('匹配成功', list[i])
               this.curRouter = list[i];
             }
             if(list[i].children && list[i].children.length > 0){
-              this.recursionList(list[i].children, path);
+              this.recursionList(list[i].children, key, value);
             }
           }
         }

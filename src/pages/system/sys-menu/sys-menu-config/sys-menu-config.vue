@@ -6,244 +6,147 @@
       @close="onClose"
       :visible="visible"
       wrapClassName="sys-menu-create-wrap">
-      <a-form :form="form" @submit="handleSubmit">
-        <a-row>
-          <a-col :span="12">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
-                         label="菜单名称" >
-              <a-input placeholder="请输入"
-                       v-decorator="[
-                'name',
-                { rules: [{ required: true, message: '请输入菜单名称' }]}
-              ]"/>
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
-                         label="上级菜单" >
-              <a-cascader :options="menuTree" :fieldNames="treeTemplate" changeOnSelect
-                          allowClear placeholder="请选择"
-                          v-decorator="[
-                          'parent_id',
-                          { rules: [{ required: false, message: '' }]}
-                        ]"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :span="12">
-            <a-row>
-              <a-col :span="20">
-                <a-form-item :labelCol="{span:7}" :wrapperCol="{span:17}"
-                             label="菜单图标" >
-                  <a-input placeholder="请输入"
-                           v-decorator="[
-                             'icon',
-                            { rules: [{ required: true, message: '请输入菜单图标' }]}
-                           ]"/>
-                </a-form-item>
-              </a-col>
-              <a-col :span="4">
-                <div class="tooltip-wrap">
-                  <div>
-                    <a-tooltip title="图标紧支持Antd官方ICON">
-                      <a-icon type="question-circle"></a-icon>
-                    </a-tooltip>
-                  </div>
-                </div>
-              </a-col>
-            </a-row>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
-                         label="访问路由" >
-              <a-input placeholder="请输入"
-                       v-decorator="[
-                             'router',
-                            { rules: [{ required: false, message: '' }]}
-                           ]"/>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <a-row>
-          <a-col :span="12">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
-                         label="排序值" >
-              <a-input-number placeholder="请输入"
-                              v-decorator="[
-                          'sequence',
-                          { rules: [{ required: true, message: '请输入' }]}
-                        ]"/>
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item :labelCol="labelCol" :wrapperCol="wrapperCol"
-                         label="隐藏状态" >
-              <a-radio-group
-                v-decorator="[
-                                'hidden',
-                                { rules: [{ required: true, message: '请输入' }],initialValue:0}
-                              ]">
-                <a-radio :value="0">显示</a-radio>
-                <a-radio :value="1">隐藏</a-radio>
-              </a-radio-group>
-            </a-form-item>
-          </a-col>
-        </a-row>
-        <div class="btn-wrap">
-          <a-button :style="{marginRight: '8px'}" @click="onClose" > 取消 </a-button>
-          <a-button type="primary" html-type="submit"> 确认 </a-button>
+      <div class="loading-wrap" v-if="loading">
+        <a-icon type="loading" />
+      </div>
+      <div class="template-input" v-if="!loading">
+        <div class="tool-btn">
+          <div class="switch-btn">
+            <a-switch checkedChildren="启用" unCheckedChildren="停用" defaultChecked v-model="status"/>
+          </div>
+          <div class="format-btn">
+            <a-button type="primary" @click="formatJSON"> 格式化 </a-button>
+          </div>
         </div>
-      </a-form>
+        <a-textarea :autosize="{ minRows: 20}" v-model="template" placeholder="请输入json格式模板数据"></a-textarea>
+      </div>
+      <div class="btn-wrap">
+        <a-button :style="{marginRight: '8px'}" @click="onClose" > 取消 </a-button>
+        <a-button type="primary" @click="submit" :loading="submitBtnLoading"> 确认 </a-button>
+      </div>
     </a-drawer>
   </div>
 </template>
 <script>
-  import {Button, Form, Drawer, Row, Col, Input, InputNumber,
-    Select, Radio, Cascader, Tooltip, Icon, Notification} from 'ant-design-vue'
+  const Base64 = require('js-base64').Base64
+  import {Button, Drawer, Icon, Input, Switch, Notification, Message} from 'ant-design-vue'
   export default {
     name: "sys-menu-config",
     components: {
       AButton: Button,
-      AForm: Form,
-      AFormItem: Form.Item,
       ADrawer: Drawer,
-      ARow: Row,
-      ACol: Col,
-      AInput: Input,
-      AInputNumber: InputNumber,
-      ASelect: Select,
-      ARadio: Radio,
-      ARadioGroup: Radio.Group,
-      ASelectOption: Select.Option,
-      ACascader: Cascader,
-      ATooltip: Tooltip,
+      ATextarea: Input.TextArea,
+      ASwitch: Switch,
       AIcon: Icon
     },
     props: {
-      visible: Boolean
+      visible: Boolean,
+      menuId: String
     },
     data() {
       return {
-        menuTree: [],
-        treeTemplate : {
-          label: 'name',
-          value: 'record_id',
-          children: 'children'
-        },
-        submitTimes: 0,
-        action: [],
-        resource: [],
-        form: this.$form.createForm(this),
-        labelCol: {span:6},
-        wrapperCol: {span:16}
+        template : '',
+        status: true,
+        loading: false,
+        submitBtnLoading: false,
+        hasBefore: false
+      }
+    },
+    watch : {
+      menuId(newVal, oldVal){
+        // 监听到数据变化后，通过menuId查询template
+        console.log(newVal)
+        this.getTemplates();
       }
     },
     methods: {
-      onMenuActionChange (value) {
-        // console.log('onMenuActionChange', value)
-        /**
-         * 当前value是带key值的，记得在提交之前把key值去掉
-         * */
-        this.action = value;
-        // console.log(this.createObjWithoutKey(this.action, 'key'))
-      },
-      onMenuResourceChange (value) {
-        // console.log('onMenuResourceChange', value)
-        /**
-         * 当前value是带key值的，记得在提交之前把key值去掉
-         * */
-        this.resource = value
-        // console.log(this.createObjWithoutKey(this.resource, 'key'))
-      },
-      handleSubmit (e) {
-        e.preventDefault();
-        this.form.validateFields((error, values) => {
-          if(error) return;
-          if(values.parent_id) {
-            values.parent_id = values.parent_id[values.parent_id.length-1]
-          }
-          // console.log('Received values of form: ', values);
-          // let arr = values.parent_id ? values.parent_id.split(',') : null;
-          // let parent_id = arr ? arr[arr.length-1] : '';
+      submit () {
+        try{
+          let json = JSON.parse(this.template);
+          let tempStr = JSON.stringify(json)
+          console.log('序列化',tempStr)
           let params = {
-            "actions": this.createObjWithoutKey(this.action, 'key'),
             "created_at": new Date(),
             "creator": this.$getLocalStorage('username'),
-            "hidden": values.hidden,
-            "icon": values.icon,
-            "name": values.name,
-            "parent_id": values.parent_id,
-            // "parent_path": values.parent_id.split(',')[1],
-            // "record_id": "string",
-            "resources": this.createObjWithoutKey(this.resource, 'key'),
-            "router": values.router,
-            "sequence": values.sequence,
+            "menu_id": this.menuId,
+            "status": this.status ? 1 : 2,
+            "template": tempStr,
             "updated_at": new Date()
           }
-          console.log(params)
-          this.$axios.post('/menus',params).then(res => {
-            console.log(res)
-            if(res.data){
-              Notification['success']({
-                message: '创建成功'
-              })
-              //告诉父组件，创建完了，你可以关闭了, 传值created告诉父组件去刷新列表信息
-              this.$emit('close', 'created');
-              //清空本组件内部的表单内容
-              this.form.resetFields(['name', 'hidden', 'icon', 'parent_id', 'router', 'sequence'])
-              //告诉两个子组件，自己去清空自己的内容
-              this.submitTimes++;
-            }
-          }).catch(err => {
-            console.log(err)
-          })
-        });
-      },
-      createObjWithoutKey (arr, keyStr) {
-        let newArr = []
-        for(let i=0; i<arr.length; i++) {
-          let item = arr[i]
-          let newItem = {}
-          for(let key in item) {
-            if(key != keyStr) {
-              newItem[key] = item[key]
-            }
-          }
-          newArr.push(newItem)
+          this.submitBtnLoading = true;
+          this.hasBefore ? this.update(params) :this.create(params);
+        }catch (e) {
+          let err = e.toString().split(':')
+          console.log('转化错误',err[err.length-1])
+          Message.error('请填写正确的json格式数据')
         }
-        return newArr
+      },
+      update (params) {
+        console.log('编辑')
+
+      },
+      create (params) {
+        console.log('新建')
+        this.$axios.post('templates',params).then(res => {
+          console.log(res)
+          if(res.data) {
+            Notification['success']({
+              message: '创建成功'
+            })
+            this.$emit('close', 'created')
+          }
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+          this.submitBtnLoading = false;
+        })
       },
       onClose() {
         this.$emit('close');
       },
-      getMenuTree () {
-        this.$axios.get('/current/menutree').then(res => {
+      // 根据菜单id查询模板数据
+      getTemplates () {
+        if(!this.menuId) return;
+        this.loading = true;
+        this.$axios.get('/gettemplates/'+this.menuId).then(res => {
+          console.log(res)
           if(res.data){
-            let list = res.data.list
-            //递归将菜单中record_id和record_path合并
-            this.menuTree = list;
-            // console.log(list)
+            //数据库中有对应于本菜单的template数据
+            this.hasBefore = true;
+            let jsonStr = Base64.decode(res.data.data)
+            this.formatJSON(jsonStr)
           }
         }).catch(err => {
-          console.log(err)
-        })
+          console.log(err.response)
+          if(err.response.status == 404) {
+            //如果返回状态为404，说明资源不存在
+            // err.response.data.error.message
+            Message.info('该菜单未创建模板')
+            this.template = ''
+            this.hasBefore = false
+          }
+        }).finally(() => {
+          this.loading = false;
+        });
       },
-      // //递归将菜单中record_id和record_path合并
-      // contactIdAndPath(list){
-      //   for(let i=0; i<list.length; i++) {
-      //     list[i].record_id = [list[i].record_id, list[i].router].join(',')
-      //     if(list[i].children) {
-      //       this.contactIdAndPath(list[i].children);
-      //     }
-      //   }
-      // }
+      //格式化template为json格式字符串并显示到view中，如果传参，按照参数来格式化，如果不传参，按照文本框中的数据格式化
+      formatJSON (jsonStr) {
+        try{
+          let json = jsonStr ? JSON.parse(jsonStr) : JSON.parse(this.template);
+          console.log(json)
+          this.template = JSON.stringify(json, null, 4)
+        }catch (e) {
+          let err = e.toString().split(':')
+          console.log('转化错误',err[err.length-1])
+          Message.error('数据不能转化为json格式')
+        }
+      },
     },
     mounted() {
-      this.getMenuTree();
     }
   }
 </script>
 <style lang="less">
   @import "../../sys-drawer";
+  @import "sys-menu-config";
 </style>

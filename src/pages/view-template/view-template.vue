@@ -11,10 +11,17 @@
     name: "view-template",
     components: {
       MTest
+    },
+    watch : {
+      '$store.state.curMenu' (newVal, oldVal) {
+        console.log('当前menuid', newVal)
+      }
+    },
+    mounted() {
+
     }
   }
 </script>
 
 <style scoped>
-
 </style>

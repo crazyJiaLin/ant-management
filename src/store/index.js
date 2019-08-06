@@ -6,6 +6,7 @@ let store = new Vuex.Store({
   state: {
     routes: [],   // 当前路由的matched数组，用于根据路由显示面包屑使用
     menuList: [], // 导航菜单list
+    curMenu: '',  // 当前菜单id
     isLogin: false,
     userInfo: {}
   },
@@ -24,6 +25,9 @@ let store = new Vuex.Store({
     },
     setMenuList (state, menuList) {
       state.menuList = menuList;
+    },
+    setCurMenu (state, curMenu) {
+      state.curMenu = curMenu;
     },
     setMenuToLocalStorage (state, menuList) {
       // console.log(JSON.stringify(menuList))

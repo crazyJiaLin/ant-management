@@ -8,7 +8,7 @@
       </template>
       <template slot="operation" slot-scope="text, record">
         <a-button size="small" @click="onEdit(record)">编辑</a-button>
-        <a-button size="small" @click="configMenu(record)" v-if="!isInBaseMenus(record.name)">配置菜单</a-button>
+        <a-button size="small" @click="configMenu(record)" v-if="!isInBaseMenus(record)">配置菜单</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
@@ -16,13 +16,13 @@
       </template>
     </a-table>
     <sys-menu-edit :visible="showEditDrawer" :options="editItem" @close="handleEditDrawClose"></sys-menu-edit>
-    <sys-menu-config :visible="showConfigDrawer" @close="handleConfigDrawClose"></sys-menu-config>
+    <sys-menu-templates :visible="showTemplatesDrawer" :menu-id="templatesMenuId" @close="handleTemplatesClose"></sys-menu-templates>
   </div>
 </template>
 <script>
   import {Table, Icon, Button, Popconfirm} from 'ant-design-vue'
   import SysMenuEdit from '../sys-menu-edit/sys-menu-edit'
-  import SysMenuConfig from '../sys-menu-config/sys-menu-config'
+  import SysMenuTemplates from '../sys-menu-templates/sys-menu-templates'
   export default {
     name: 'sys-menu-table',
     components: {
@@ -31,7 +31,7 @@
       APopconfirm: Popconfirm,
       AButton: Button,
       SysMenuEdit,
-      SysMenuConfig
+      SysMenuTemplates
     },
     props: {
       searchParams: Object,
@@ -60,8 +60,9 @@
     data() {
       return {
         showEditDrawer: false,
-        showConfigDrawer: false,
+        showTemplatesDrawer: false,
         editItem: {},
+        templatesMenuId: '',
         data: [],
         baseMenus: ['首页','系统管理', '菜单管理', '角色管理', '用户管理'],
         loading: false,
@@ -117,17 +118,23 @@
     },
     methods: {
       // 配置菜单
-      configMenu (record) {
-        console.log('配置菜单', record)
-        this.showConfigDrawer = true;
+      configMenu (item) {
+        // console.log('配置菜单', item)
+        this.showTemplatesDrawer = true;
+        this.templatesMenuId = item.record_id;
       },
-      isInBaseMenus(menuName){
+      isInBaseMenus(record){
+        // console.log(record.name, record.children)
+        if(record.children) return true;
+        let menuName = record.name;
         for(let i=0; i<this.baseMenus.length; i++) {
           if(menuName == this.baseMenus[i]) {
             return true;
           }
         }
         return false;
+
+
       },
       onEdit(item){
         console.log(item)
@@ -140,8 +147,8 @@
           this.fetch()
         }
       },
-      handleConfigDrawClose () {
-        this.showConfigDrawer = false;
+      handleTemplatesClose (action) {
+        this.showTemplatesDrawer = false;
       },
       onDelete (record_id) {  //点击删除
         console.log(record_id)

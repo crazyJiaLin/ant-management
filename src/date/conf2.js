@@ -144,7 +144,7 @@ let conf = {
 					jsonobj.visible("id",true);
 					jsonobj.disable("id",true);
 
-					
+
 					//专属方法
 					jsonobj.submit("id");//表单提交
 					jsonobj.refresh("id");//刷新数据表格
@@ -207,7 +207,8 @@ let conf = {
 
 					//之后json模块 都需要 isRemote:"true 是否远程获取数据" 来判定data是否是url
 					//需要 关联post数据 返回显示区域
-					{"id":"inputSearch1",text:"搜索输入框","placeholder":"提示信息",default:"默认值",isRemote:"true 是否远程获取数据",data:"远程获取内容",type:"inputSearch""attribute":{
+
+					{"id":"inputSearch1","text":"搜索输入框","placeholder":"提示信息","default":"默认值","isRemote":"true 是否远程获取数据","data":"远程获取内容","type":"inputSearch","attribute":{
 							"icon":"user","size":"small",
 							"width":"宽度",
 							"enterButton":"看 ant 中属性",
@@ -341,7 +342,7 @@ let conf = {
 
 
 
-					//布局类  
+					//布局类
 					//搜索区域  展开收起
 					{"id":"query1","type":"query","method":"POST or GET",data:"post or get 数据地址","attribute"{
 						"an":true,//是否展开
@@ -395,7 +396,7 @@ let conf = {
 								"xs":6,"sm":6,"md":6,"lg":6,"xl":6,"xxl":6,
 								"scroolX":true,//显示滚动条
 								"scroolY":false,
-								"height":"auto"//auto 撑满屏幕 
+								"height":"auto"//auto 撑满屏幕
 								"children":[
 									......//同上json插件  按数组顺序
 								]
