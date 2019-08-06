@@ -151,8 +151,14 @@
     methods: {
       handleSubmit(e) {
         e.preventDefault();
+        let roleList = [];
         this.form.validateFields((error, values) => {
           if (error) return;
+          if (values.role_id) {
+            for (let i = 0; i < values.role_id.length; i++) {
+              roleList.push({"role_id": values.role_id[i]})
+            }
+          }
           let params = {
             "created_at": new Date(),
             "creator": this.$getLocalStorage('username'),
@@ -161,9 +167,7 @@
             "password": md5(values.password),
             "phone": values.phone,
             "real_name": values.real_name,
-            "roles": [{
-              "role_id": values.role_id
-            }],
+            "roles": roleList,
             "status": values.status,
             "updated_at": new Date()
           }

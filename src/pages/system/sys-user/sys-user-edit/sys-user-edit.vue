@@ -127,6 +127,7 @@
     Select, Radio, Cascader, Tooltip, Icon, Notification
   } from 'ant-design-vue'
   import md5 from 'md5'
+
   export default {
     name: "sys-user-edit",
     components: {
@@ -171,21 +172,26 @@
     methods: {
       handleSubmit(e) {
         e.preventDefault();
+        let roleList = [];
         this.form.validateFields((error, values) => {
           if (error) return;
+          if (values.role_id) {
+            for (let i = 0; i < values.role_id.length; i++) {
+              roleList.push({"role_id": values.role_id[i]})
+            }
+          }
           let params = {
-            "created_at": new Date(),
-            "creator": this.$getLocalStorage('username'),
+            // "created_at": new Date(),
+            // "creator": this.$getLocalStorage('username'),
             "user_name": values.user_name,
             "email": values.email,
             "phone": values.phone,
             "real_name": values.real_name,
-            // TODO 请求参数错误 这里应该是role是数据格式出错了
-            "roles": [{
-              "role_id": values.role_id
-            }],
+            "password":"",
+            "roles": roleList,
             "status": values.status,
-            "updated_at": new Date()
+            "record_id":this.options.record_id
+            // "updated_at": new Date()
           }
           values.password && (params.password = md5(values.password))
           console.log(params)
