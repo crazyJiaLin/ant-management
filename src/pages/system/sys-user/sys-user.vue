@@ -11,7 +11,7 @@
       <!--      <a-button type="danger" icon="delete" v-show="hasSelected">删除</a-button>-->
     </div>
     <div class="table-wrap">
-      <sys-user-table :search-params="searchParams" :create-menu-times="createMenuTimes"></sys-user-table>
+      <sys-user-table :search-params="searchParams" :create-times="createMenuTimes"></sys-user-table>
     </div>
   </div>
 </template>

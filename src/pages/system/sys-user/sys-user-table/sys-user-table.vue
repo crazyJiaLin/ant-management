@@ -147,7 +147,7 @@
       },
       handleEditDrawClose(action) {
         this.showEditDrawer = false;
-        if (action && action === 'update') {
+        if (action && action === 'updated') {
           this.fetch()
         }
       },
