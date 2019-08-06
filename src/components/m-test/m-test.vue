@@ -1,31 +1,54 @@
 <template>
   <div class="test-wrap">
-    <a-checkbox-group :options="optionsWithDisabled" :defaultValue="['Apple']" @change="onChange">
-      <span slot="label" slot-scope="{name, code}">{{name + code}}</span>
-    </a-checkbox-group>
+    <json-editor ref="JsonEditor" :schema="schema" v-model="model">
+      <a-button @click="submit">submit</a-button>
+      <a-button @click="reset">Reset</a-button>
+    </json-editor>
+    <pre>{{JSON.stringify({name:"cjl",children:[
+      {name: 'hello'}
+      ]},null, 2)}}</pre>
   </div>
 </template>
 
 <script>
-  import {Checkbox} from 'ant-design-vue'
+  import JsonEditor from 'vue-json-ui-editor'
+  import {Checkbox, Button} from 'ant-design-vue'
   export default {
     name: "m-test",
     components: {
-      ACheckboxGroup: Checkbox.Group
+      ACheckboxGroup: Checkbox.Group,
+      AButton: Button,
+      JsonEditor
     },
     data() {
       return {
-        optionsWithDisabled : [
-          { value: 'Apple',  name: '1231', code:'value1' },
-          { label: 'Pear', value: 'Pear' },
-          { label: 'Orange', value: 'Orange', disabled: false },
-        ]
+
+        // init json schma file ( require('@/schema/newsletter') )
+        schema: {
+          type: 'object',
+          title: 'vue-json-editor demo',
+          properties: {
+            name: {
+              type: 'string',
+            },
+            email: {
+              type: 'string',
+            },
+          },
+        },
+        // data
+        model: {
+          name: 'Yourtion',
+        },
       }
     },
     methods : {
-      onChange (value) {
-        console.log(value)
-      }
+      submit(_e) {
+        alert(JSON.stringify(this.model));
+      },
+      reset() {
+        this.$refs.JsonEditor.reset();
+      },
     }
   }
 </script>
