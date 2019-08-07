@@ -42,6 +42,10 @@
         // this.setCurRouter();
         //监听vuex中menuList变化，从而对导航栏进行重置
         this.menuList = newVal;
+      },
+      '$route' (newVal, oldVal) {
+        // console.log('m-nav监听变化', newVal)
+        this.setCurRouter()
       }
     },
     methods: {
