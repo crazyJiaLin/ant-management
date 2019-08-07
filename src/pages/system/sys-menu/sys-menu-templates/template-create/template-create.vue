@@ -10,7 +10,7 @@
     <div class="template-input">
       <div class="tool-btn">
         <div class="switch-btn">
-          <a-switch checkedChildren="启用" unCheckedChildren="停用" defaultChecked v-model="status"/>
+          <a-switch checkedChildren="启用" unCheckedChildren="停用" defaultChecked v-model="status" disabled/>
         </div>
         <div class="format-btn">
           <a-button type="primary" @click="formatJSON"> 格式化 </a-button>
@@ -74,6 +74,9 @@
             Notification['success']({
               message: '创建成功'
             })
+            // 创建成功后将本组件内容置空
+            this.template = '';
+            this.status = false;
             this.$emit('close', 'created')
           }
         }).catch(err => {
@@ -83,11 +86,10 @@
         })
       },
       handleCancel(e) {
-        console.log('Clicked cancel button');
         this.$emit('close')
       },
       //格式化template为json格式字符串并显示到view中，如果传参，按照参数来格式化，如果不传参，按照文本框中的数据格式化
-      formatJSON (jsonStr) {
+      formatJSON () {
         try{
           let json = JSON.parse(this.template);
           // console.log(json)
