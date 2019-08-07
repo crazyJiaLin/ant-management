@@ -1,29 +1,32 @@
 <template>
   <div class="query-wrap">
-    query-wrap2
     <a-form :form="form" @submit="handleSearch">
-      <a-form-item v-for="(item,index) in children" :label="item.label"
-                   :labelCol="item.labelCol" :wrapperCol="item.wrapperCol" :key="item.id">
-        <a-input v-if="item.type === 'text'" :placeholder="item.placeholder"
-                 :allowClear="item.allowClear" :addonBefore="item.addonBefore"
-                 :addonAfter="item.addonAfter" v-decorator="[
-                     item.id,
-                     item.decorator
-                 ]"/>
-      </a-form-item>
+      <a-row>
+        <a-col v-for="(item,index) in children" :span="item.width" :key="item.id">
+          <m-input  v-if="item.type && (item.type.toLowerCase() === 'text')" :options="item"></m-input>
+          <m-textarea v-if="item.type && (item.type.toLowerCase() === 'textarea')" :options="item"></m-textarea>
+        </a-col>
+      </a-row>
     </a-form>
   </div>
 </template>
 
 <script>
-  import {Form, Button, Icon} from 'ant-design-vue'
+  import {Form, Button, Row, Col, Input, Icon} from 'ant-design-vue'
+  import MInput from '@/components/m-form/m-input/m-input'
+  import MTextarea from '@/components/m-form/m-textarea/m-textarea'
   export default {
     name: "m-query",
     components: {
       AForm: Form,
       AFormItem: Form.Item,
+      AInput: Input,
+      ARow: Row,
+      ACol: Col,
       AButton: Button,
-      AIcon: Icon
+      AIcon: Icon,
+      MInput,
+      MTextarea
     },
     props: {
       options: Object
@@ -50,6 +53,6 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  @import "m-query";
 </style>

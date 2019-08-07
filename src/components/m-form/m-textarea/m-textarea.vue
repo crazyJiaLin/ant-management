@@ -1,20 +1,19 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-input v-if="!options.attribute.Tooltip" :placeholder="options.attribute.placeholder" :size="options.attribute.size"
-             :allowClear="options.attribute.allowClear" :addonBefore="options.attribute.addonBefore"
-             :addonAfter="options.attribute.addonAfter" v-decorator="[
+    <a-textarea v-if="!options.attribute.Tooltip" :autosize="options.attribute.autosize"
+                :placeholder="options.attribute.placeholder" v-decorator="[
                      options.id,
                      options.attribute.decorator
-                 ]"/>
+                 ]">
+    </a-textarea>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
-      <a-input :placeholder="options.attribute.placeholder" :size="options.attribute.size"
-               :allowClear="options.attribute.allowClear" :addonBefore="options.attribute.addonBefore"
-               :addonAfter="options.attribute.addonAfter" v-decorator="[
+      <a-textarea :autosize="options.attribute.autosize"
+                  :placeholder="options.attribute.placeholder" v-decorator="[
                      options.id,
                      options.attribute.decorator
-                 ]"/>
+                 ]"></a-textarea>
     </a-tooltip>
   </a-form-item>
 </template>
@@ -22,10 +21,10 @@
 <script>
   import {Form, Input, Tooltip} from 'ant-design-vue'
   export default {
-    name: "m-input",
+    name: "m-textarea",
     components: {
       AFormItem: Form.Item,
-      AInput: Input,
+      ATextarea: Input.TextArea,
       ATooltip: Tooltip
     },
     props: {
