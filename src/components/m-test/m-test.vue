@@ -1,12 +1,5 @@
 <template>
   <div class="test-wrap">
-<!--    <json-editor ref="JsonEditor" :schema="schema" v-model="model">-->
-<!--      <a-button @click="submit">submit</a-button>-->
-<!--      <a-button @click="reset">Reset</a-button>-->
-<!--    </json-editor>-->
-<!--    <pre>{{JSON.stringify({name:"cjl",children:[-->
-<!--      {name: 'hello'}-->
-<!--      ]},null, 2)}}</pre>-->
   </div>
 </template>
 
@@ -23,38 +16,71 @@
     data() {
       return {
 
-        // init json schma file ( require('@/schema/newsletter') )
-        schema: {
-          type: 'object',
-          title: 'vue-json-editor demo',
-          properties: {
-            name: {
-              type: 'string',
-            },
-            email: {
-              type: 'string',
-            },
-          },
-        },
-        // data
-        model: {
-          name: 'Yourtion',
-        },
       }
     },
-    methods : {
-      submit(_e) {
-        alert(JSON.stringify(this.model));
-      },
-      reset() {
-        this.$refs.JsonEditor.reset();
-      },
-    },
     mounted() {
-      const Base64 = require('js-base64').Base64;
-      let res = Base64.decode('eyJuYW1lIjoiY2hlbiJ9')
+      let t = {
+        "id": "timepicker",
+        "type":"TimePicker",
+        "label": '时间选择器',
+        "width": 8,
+        "labelCol": {"span":7},
+        "wrapperCol": {"span":16, "offset": 1},
+        "attribute":{
+          "placeholder":"hh:mm:ss",
+          format: "hh:mm:ss",
+          size: 'small',
+          "Tooltip":{"title":"请选择时间","placement":"bottom"},
+          "decorator":{
+            "rules":[
+              {"required":false,"message":""},
+            ],
+            "initialValue": ""
+          }
+        },
+        methods: {
+          hello: 123,
+          "onChange"(time, timeString) {
+            console.log(time, timeString)
+          },
+        }
+      }
+      let res = {};
+      let str = this.serialize(t, 'res')
+      console.log(str)
+      eval(str)
       console.log(res)
-    }
+    },
+    methods : {
+      //带函数序列化
+      serialize(obj, name){
+        var result = "";
+        function serializeInternal(o, path) {
+          for (let p in o) {
+            var value = o[p];
+            if (typeof value != "object") {
+              if (typeof value == "string") {
+                result += "\n" + path + "[" + (isNaN(p)?"\""+p+"\"":p) + "] = " + "\"" + value.replace(/\"/g,"\\\"") + "\""+";";
+              }else {
+                result += "\n" + path + "[" + (isNaN(p)?"\""+p+"\"":p) + "] = " + value+";";
+              }
+            }
+            else {
+              if (value instanceof Array) {
+                result += "\n" + path +"[" + (isNaN(p)?"\""+p+"\"":p) + "]"+"="+"new Array();";
+                serializeInternal(value, path + "[" + (isNaN(p)?"\""+p+"\"":p) + "]");
+              } else {
+                result += "\n" + path  + "[" + (isNaN(p)?"\""+p+"\"":p) + "]"+"="+"new Object();";
+                serializeInternal(value, path +"[" + (isNaN(p)?"\""+p+"\"":p) + "]");
+              }
+            }
+          }
+        }
+        serializeInternal(obj, name);
+        return result;
+      }
+    },
+
   }
 </script>
 

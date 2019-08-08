@@ -208,13 +208,16 @@ let conf = {
 					//之后json模块 都需要 isRemote:"true 是否远程获取数据" 来判定data是否是url
 					//需要 关联post数据 返回显示区域
 
-					{"id":"inputSearch1","text":"搜索输入框","placeholder":"提示信息","default":"默认值","isRemote":"true 是否远程获取数据","data":"远程获取内容","type":"inputSearch","attribute":{
-							"icon":"user","size":"small",
+					{"id":"inputSearch1","text":"搜索输入框","placeholder":"提示信息","default":"默认值","isRemote":"true 是否远程获取数据",
+					"data":"远程获取内容","type":"inputSearch",
+					"attribute":{
+							"icon":"user",
+							"size":"small",
 							"width":"宽度",
 							"enterButton":"看 ant 中属性",
 							"Tooltip":{"title":"提示文本","placement":"top"},//提示信息  默认无
 							"decorator":{"required":true},//校验
-							"inner":"jsonobj.submit('form1')"//change关联
+							"inner":"jsonobj.submit('form1')" //change关联
 					}},
 
 					{"id":"region1",text:"级联选择","placeholder":"",default:["aaaa","bbb","ccc"],data:"data",type:"Cascader","attribute":{

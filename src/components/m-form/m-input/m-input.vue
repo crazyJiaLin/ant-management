@@ -1,7 +1,8 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-input v-if="!options.attribute.Tooltip" :placeholder="options.attribute.placeholder" :size="options.attribute.size"
+    <a-input v-if="!options.attribute.Tooltip" :placeholder="options.attribute.placeholder"
+             :size="options.attribute.size" :disabled="options.attribute.disabled"
              :allowClear="options.attribute.allowClear" :addonBefore="options.attribute.addonBefore"
              :addonAfter="options.attribute.addonAfter" v-decorator="[
                      options.id,
@@ -10,6 +11,7 @@
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
       <a-input :placeholder="options.attribute.placeholder" :size="options.attribute.size"
+               :disabled="options.attribute.disabled"
                :allowClear="options.attribute.allowClear" :addonBefore="options.attribute.addonBefore"
                :addonAfter="options.attribute.addonAfter" v-decorator="[
                      options.id,

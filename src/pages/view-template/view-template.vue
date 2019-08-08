@@ -1,5 +1,6 @@
 <template>
   <div class="view-template-wrap">
+<!--    <m-test></m-test>-->
     <div class="loading-wrap" v-if="loading">
       <a-icon type="loading" />
     </div>
@@ -19,12 +20,13 @@
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
   import MQuery from '@/components/m-form/m-query/m-query'
-  // import MTest from '@/components/m-test/m-test'
+  import MTest from '@/components/m-test/m-test'
   export default {
     name: "view-template",
     components: {
       AIcon: Icon,
-      MQuery
+      MQuery,
+      MTest
     },
     watch : {
       '$store.state.curMenu' (newVal, oldVal) {
