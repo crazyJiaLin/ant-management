@@ -9,24 +9,28 @@
     </div>
     <div class="template-input" v-if="!loading && template">
       <div v-for="(item, index) in this.template" :key="item.id">
-        <m-query v-if="item.type === 'query'"
-                 :options="item" />
+        <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  // TODO： 假数据
+  import TemplateData from './test-data'
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
   import MQuery from '@/components/m-form/m-query/m-query'
+  import MA from '@/components/m-a/m-a'
   import MTest from '@/components/m-test/m-test'
   export default {
     name: "view-template",
     components: {
       AIcon: Icon,
       MQuery,
-      MTest
+      MTest,
+      'm-a': MA
     },
     watch : {
       '$store.state.curMenu' (newVal, oldVal) {
@@ -41,6 +45,22 @@
       }
     },
     methods: {
+      handleSubmitEvent(value) {
+        console.log('template 父组件接收到命令', value)
+        // let fnName = value.match(/jsonobj.(\S*)\(/)[1]
+        // let args = value.match(/\((\S*)\)/)[1]
+        // console.log(value, fnName, args)
+        // let code = `this.template.${fnName}(${args})`
+        //将inner中的jsonObj用当前template代替，这样就能够执行JsonObj的指定方法了
+        let code = value.replace(/jsonobj/g, 'this.template')
+        try {
+          console.log('执行子组件提交的命令',code)
+          eval(code)
+        }catch (e) {
+          console.log(e)
+          Message.error('执行命令出错,请检查配置的公共方法是否正确')
+        }
+      },
       // 根据菜单id查询模板数据
       getTemplates () {
         let menuId = this.$store.state.curMenu.record_id;
@@ -50,8 +70,10 @@
           console.log(res)
           if(res.data){
             //数据库中有对应于本菜单的template数据
-            let jsonStr = Base64.decode(res.data.data)
-            this.parseJSON(jsonStr)
+            // let jsonStr = Base64.decode(res.data.data)
+            // this.parseJSON(jsonStr)
+            // TODO 这里是个假数据，稍后吧前两行注释打开弄成真数据
+            this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {
           console.log(err.response)
@@ -59,7 +81,7 @@
             //如果返回状态为404，说明资源不存在
             // err.response.data.error.message
             Message.info('该菜单未创建模板')
-            this.template = ''
+            this.template = null;
           }
         }).finally(() => {
           this.loading = false;
@@ -67,7 +89,7 @@
       },
       parseJSON (jsonStr) {
         try{
-          this.template = JSON.parse(jsonStr);
+          this.template = new JsonObj(JSON.parse(jsonStr));
           console.log(this.template)
         }catch (e) {
           console.log('转化错误',e.toString())

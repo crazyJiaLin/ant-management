@@ -2,7 +2,7 @@
   <div class="query-wrap">
     <a-form :form="form" @submit="handleSearch">
       <a-row>
-        <a-col v-for="(item,index) in children" :span="item.width" :key="item.id">
+        <a-col v-for="(item,index) in children" :span="item.width" :offset="item.offset" :key="item.id">
           <m-input  v-if="item.type && (item.type.toLowerCase() === 'inputtext')" :options="item"></m-input>
           <m-textarea v-if="item.type && (item.type.toLowerCase() === 'textarea')" :options="item"></m-textarea>
           <m-time-picker v-if="item.type && (item.type.toLowerCase() === 'timepicker')" :options="item"></m-time-picker>
@@ -11,6 +11,13 @@
           <m-month-picker v-if="item.type && (item.type.toLowerCase() === 'monthpicker')" :options="item"></m-month-picker>
           <m-input-number v-if="item.type && (item.type.toLowerCase() === 'inputnumber')" :options="item"></m-input-number>
           <m-input-search v-if="item.type && (item.type.toLowerCase() === 'inputsearch')" :options="item"></m-input-search>
+          <m-cascader v-if="item.type && (item.type.toLowerCase() === 'cascader')" :options="item"></m-cascader>
+          <m-radio v-if="item.type && (item.type.toLowerCase() === 'radio')" :options="item" @submitEvent="handleSubmitEvent"></m-radio>
+          <m-checkbox v-if="item.type && (item.type.toLowerCase() === 'checkbox')" :options="item" @submitEvent="handleSubmitEvent"></m-checkbox>
+          <m-button v-if="item.type && (item.type.toLowerCase() === 'button')" :options="item" @submitEvent="handleSubmitEvent"></m-button>
+          <m-switch v-if="item.type && (item.type.toLowerCase() === 'switch')" :options="item" @submitEvent="handleSubmitEvent"></m-switch>
+          <m-select v-if="item.type && (item.type.toLowerCase() === 'select')" :options="item"></m-select>
+          <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
         </a-col>
       </a-row>
       <a-row>
@@ -33,6 +40,13 @@
   import MMonthPicker from '../m-month-picker/m-month-picker'
   import MInputNumber from '../m-input-number/m-input-number'
   import MInputSearch from '../m-input-search/m-input-search'
+  import MCascader from '../m-cascader/m-cascader'
+  import MRadio from '../m-radio/m-radio'
+  import MCheckbox from '../m-checkbox/m-checkbox'
+  import MButton from '../m-button/m-button'
+  import MSwitch from '../m-switch/m-switch'
+  import MSelect from '../m-select/m-select'
+  import MA from '@/components/m-a/m-a'
   export default {
     name: "m-query",
     components: {
@@ -50,14 +64,21 @@
       MRangePicker,
       MMonthPicker,
       MInputNumber,
-      MInputSearch
+      MInputSearch,
+      MCascader,
+      MRadio,
+      MCheckbox,
+      MButton,
+      MSwitch,
+      MSelect,
+      'm-a': MA
     },
     props: {
       options: Object
     },
     computed : {
       children() {
-        return this.options.attribute.children
+        return this.options.children
       }
     },
     data () {
@@ -76,6 +97,9 @@
       handleReset (e) {
         // this.form.resetFields();
         this.form.resetFields();
+      },
+      handleSubmitEvent (value) {
+        this.$emit('submitEvent', value)
       }
     }
   }

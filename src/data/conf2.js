@@ -220,26 +220,11 @@ let conf = {
 							"inner":"jsonobj.submit('form1')" //change关联
 					}},
 
-					{"id":"region1",text:"级联选择","placeholder":"",default:["aaaa","bbb","ccc"],data:"data",type:"Cascader","attribute":{
+					{"id":"region1",text:"级联选择","placeholder":"",default:["aaaa","bbb","ccc"],data:"data",type:"Cascader",
+					"attribute":{
 						"icon":"选择框后缀图标 同ant级联中的suffixIcon属性","allowClear":true,//是否支持清除
 						"size":"small",
 					}},
-
-
-					{"id":"tree1",text:"单选|多选树","placeholder":"",default:"0",data:"tree",type:"TreeSelect","attribute":{
-						"icon":"单选|多选树后缀图标 同ant中TreeSelect的suffixIcon属性",
-						"size":"small","mode":"multiple",
-					}},
-
-					{"id":"state1",text:"单选|多选框","placeholder":"",isRemote:"true 是否远程获取数据",default:"-1",data:[
-							{"全部状态":"","inner":"jsonobj.visible('tree1',true)"}, //关联 tree 单选树 状态为隐藏
-							{"禁用":-1,"inner":"jsonobj.visible('tree1',true)"},
-							{"启用":0,"inner":"jsonobj.visible('tree1',false)"}//关联 tree 单选树 状态为显示  选中关联
-						],type:"Select","attribute":{
-						"size":"small","mode":"multiple",
-					}},
-
-
 
 					{"id":"radio1",text:"单选",default:"value1",isRemote:"true 是否远程获取数据",data:[
 							{"选项1":"value1","inner":"jsonobj.set('tree1','disable',true)"},//控制 state1 显示/隐藏
@@ -256,7 +241,24 @@ let conf = {
 						"size":"small",
 					}},
 
+          {"id":"button1",text:"按钮",data:"",type:"Button",
+          "attribute":{
+						"loading":true,//是否显示进度 状态
+						"size":"small",shape:"circle",type:"primary","icon":"图标",
+						"inner":"jsonobj.visible('modal1',true);"
+					},
 
+
+					{"id":"a1",text:"链接",href:"#",type:"A","attribute":{
+						"inner":"jsonobj.visible('modal1',true);"
+					}},
+
+
+					//这里是否考虑选中后直接上传？在表单如何提交
+					{"id":"upload1",text:"上传",default:"",type:"Upload","attribute":{
+						"mode":"multiple",//是否允许上传多个
+						"size":"small"
+					}},
 					{"id":"transfer1",text:"穿梭框",default:["aaaa","bbb","ccc"],data:["穿梭框源 数据","穿梭目标 数据"],type:"Transfer","attribute":{
 						"titles":['穿梭框源', '穿梭目标'],//穿梭框标题
 						"pageSize":10,//分页条数  不设置则不分页显示
@@ -276,6 +278,20 @@ let conf = {
 						"status":"processing",//Success Error Default processing warning
 						"count":""
 					}},
+
+						{"id":"tree1",text:"单选|多选树","placeholder":"",default:"0",data:"tree",type:"TreeSelect","attribute":{
+						"icon":"单选|多选树后缀图标 同ant中TreeSelect的suffixIcon属性",
+						"size":"small","mode":"multiple",
+					}},
+
+					{"id":"state1",text:"单选|多选框","placeholder":"",isRemote:"true 是否远程获取数据",default:"-1",data:[
+							{"全部状态":"","inner":"jsonobj.visible('tree1',true)"}, //关联 tree 单选树 状态为隐藏
+							{"禁用":-1,"inner":"jsonobj.visible('tree1',true)"},
+							{"启用":0,"inner":"jsonobj.visible('tree1',false)"}//关联 tree 单选树 状态为显示  选中关联
+						],type:"Select","attribute":{
+						"size":"small","mode":"multiple",
+					}},
+
 
 
 
@@ -297,23 +313,7 @@ let conf = {
 
 
 
-					{"id":"button1",text:"按钮",data:"",type:"Button","attribute":{
-						"loading":true,//是否显示进度 状态
-						"size":"small",shape:"circle",type:"primary","icon":"图标",
-						"inner":"jsonobj.visible('modal1',true);"
-					},
 
-
-					{"id":"a1",text:"链接",href:"#",type:"A","attribute":{
-						"inner":"jsonobj.visible('modal1',true);"
-					}},
-
-
-					//这里是否考虑选中后直接上传？在表单如何提交
-					{"id":"upload1",text:"上传",default:"",type:"Upload","attribute":{
-						"mode":"multiple",//是否允许上传多个
-						"size":"small"
-					}},
 
 
 

@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 
 //全局工具方法引入
+import '@/assets/js/JsonObj.js'
 import '@/assets/js/tool.js'
 //axios引入
 import './server/server'

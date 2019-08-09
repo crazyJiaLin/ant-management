@@ -34,7 +34,7 @@
                     <a-row>
                         <a-col :span="15">
                             <a-form-item :wrapper-col="wrapperCol" has-feedback>
-                                <a-input  ref="captchaCodeInput" placeholder="请输入验证码" type="text" size="large" autocomplete="off"
+                                <a-input ref="captchaCodeInput" placeholder="请输入验证码" type="text" size="large" autocomplete="off"
                                     v-decorator="[
                                         'captchaCode',
                                         { rules: [{ required: true, message: '验证码不能为空' }] }
@@ -130,6 +130,10 @@ export default {
               this.btnLoading = false;
               //如果登陆失败，则重新获取验证码
               this.getCaptchaId();
+              this.form.resetFields('captchaCode');
+              if(err.response.data.error.message == "无效的验证码"){
+                this.$refs.captchaCodeInput.focus();
+              }
             })
         },
         getCaptchaId () {

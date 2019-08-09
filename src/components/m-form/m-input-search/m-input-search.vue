@@ -28,7 +28,7 @@
 <script>
   import {Form, Input, Tooltip, Icon} from 'ant-design-vue'
   export default {
-    name: "m-input-number",
+    name: "m-input-search",
     components: {
       AFormItem: Form.Item,
       AInputSearch: Input.Search,
@@ -39,7 +39,7 @@
       options: Object
     },
     mounted() {
-      console.log(this.options)
+      // console.log(this.options)
     }
   }
 </script>
