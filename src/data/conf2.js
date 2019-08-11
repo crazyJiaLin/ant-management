@@ -296,7 +296,11 @@ let conf = {
 
 
 					//只支持水平垂直居中显示
-					{"id":"modal1",text:"窗口",data:"可以获取json数据地址 为空使用children",type:"Modal","attribute":{
+				{
+					"id":"modal1",text:"窗口",
+					data:"可以获取json数据地址 为空使用children",
+					type:"Modal",
+					"attribute":{
 						"zIndex":10000,
 						"closable":true,//是否显示右上角的关闭按钮
 						"keyboard":true,//是否支持键盘esc关闭
@@ -317,7 +321,8 @@ let conf = {
 
 
 
-					{"id":"table1",text:"记录表格",data:"数据源",type:"table","attribute":{
+					{"id":"table1",text:"记录表格",data:"数据源",type:"table",
+					"attribute":{
 						"width":500,"heght":600,//默认宽高 百分比
 						"isCheckbox":true,//是否显示多选
 						"inner":{"buttonajax":"display"},//关联对象 的样式

@@ -9,7 +9,8 @@
     </div>
     <div class="template-input" v-if="!loading && template">
       <div v-for="(item, index) in this.template" :key="item.id">
-        <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
+                 @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
       </div>
     </div>
@@ -45,6 +46,10 @@
       }
     },
     methods: {
+      handleSearch(tableId, params) {
+        console.log('start search', tableId, params)
+        // 通过自定义方法吧param
+      },
       handleSubmitEvent(value) {
         console.log('template 父组件接收到命令', value)
         // let fnName = value.match(/jsonobj.(\S*)\(/)[1]

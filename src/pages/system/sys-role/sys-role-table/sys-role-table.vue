@@ -60,8 +60,10 @@
             title: '角色名称',
             dataIndex: 'name',
             align: 'center',
-            width: '200px'
-
+            width: '200px',
+            // customRender: (text, row, index) =>{
+            //   return <a-button type='primary' size='small'>{text}</a-button>;
+            // }
           }, {
             title: '排序值',
             dataIndex: 'sequence',

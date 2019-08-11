@@ -294,6 +294,92 @@ export default [
         }
       },
       {
+        "id": "switch1",
+        "type":"Switch",
+        label: '开关',
+        "width": 4,
+        offset: 0,
+        "labelCol": {"span":6},
+        "wrapperCol": {"span":16, "offset": 1},
+        "attribute":{
+          "checkedChildren":'开',
+          unCheckedChildren: '关',
+          "size":"default",
+          disabled: false,
+          // 打开开关时执行的事件
+          "checkEvent":"jsonobj.set('button1','attribute.type','danger')",
+          // 关闭开关执行的事件
+          "unCheckEvent":"jsonobj.set('button1','attribute.type','primary')",
+        }
+      },
+      {
+        id: 'select1',
+        type: "select",
+        label: "select",
+        width: 8,    // 4-24
+        labelCol: {span: 6},   // 文案长度
+        wrapperCol: {span: 15, offset: 1},// 输入框长度
+        isRemote: false,
+        dataUrl: '',
+        data: [          // 选项数组
+          {
+            label: 'Apple',
+            value: 'Apple',
+            // disabled: false
+          },
+          {
+            label: 'Pear',
+            value: 'Pear',
+            // disabled: true
+          },
+          {
+            label: 'Orange'
+            , value: 'Orange',
+            disabled: false
+          },
+          {
+            label: 'Banana'
+            , value: 'Banana'
+            , disabled: false
+          },
+          {
+            label: 'Blueberry',
+            value: 'Blueberry',
+            disabled: false
+          },
+          {
+            label: 'Cherry',
+            value: 'Cherry',
+            disabled: false
+          },
+          {
+            label: 'Nuts',
+            value: 'Nuts',
+            disabled: false
+          },
+          {
+            label: 'Grape',
+            value: 'Grape',
+            disabled: false
+          },
+        ],
+       attribute: {
+          size:'default',
+         allowClear: true,
+         placeholder: "please select",
+         // 参考antd 文档中select-mode属性
+         mode:"multiple",
+         disabled: false,
+         // "Tooltip":{"title":"提示文本","placement":"top"},
+         "decorator":{
+           "rules":[
+             {"required":false,"message":""},
+           ],
+           "initialValue": 'Apple'
+         }
+       }
+      },
+      {
         "id": "selectSearch1",
         "type":"selectSearch",
         "label": '搜索输入框',
@@ -323,8 +409,48 @@ export default [
             "initialValue": ""
           }
         }
+      },
+      {
+        id: 'a1',
+        type: "A",
+        width: 8,
+        offset: 0,
+        text: '这是一个链接',
+        href: 'https://www.baidu.com',
+        icon: 'user',
+        _blank: true,
+      },
+      {
+        id: 'upload1',
+        type: 'Upload',
+        text: '点击上传',
+        action: '/',  // 上传地址
+        name: '123',     // 发到后台的文件参数名
+        headers: {
+          authorization: 'authorization-text',
+        },
+        withCredentials: false, // 上传请求时是否携带 cookie
+        label: '上传',
+        "width": 8,
+        "labelCol": {"span":6},
+        "wrapperCol": {"span":16, "offset": 1},
+        attribute: {
+          directory: false, // 支持上传文件夹
+          accept: '',       // 接受上传的文件类型
+          multiple: false,  // 是否支持多选文件
+          icon: 'windows'
+        }
       }
     ]
-  }
+  },
+  {
+    id: 'a1',
+    type: "A",
+    text: '这是一个链接',
+    href: 'https://www.baidu.com',
+    icon: 'user',
+    _blank: true,
+  },
+
 ]
 

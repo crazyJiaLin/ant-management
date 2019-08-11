@@ -1,54 +1,38 @@
 <template>
-  <a-table :columns="columns"
-           :rowKey="record => record.login.uuid"
-           :dataSource="data"
+  <a-table :columns="options.columns"
+           :rowKey="eval(options.rowKeys)"
+           :dataSource="dataList"
            :pagination="pagination"
            :loading="loading"
            @change="handleTableChange"
   >
-    <template slot="name" slot-scope="name">
-      {{name.first}} {{name.last}}
-    </template>
   </a-table>
 </template>
 <script>
   import {Table} from 'ant-design-vue'
-  const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-    sorter: true,
-    width: '20%',
-    scopedSlots: { customRender: 'name' },
-  }, {
-    title: 'Gender',
-    dataIndex: 'gender',
-    filters: [
-      { text: 'Male2', value: 'male' },
-      { text: 'Female2', value: 'female' },
-    ],
-    render: '<div>{"12123"}</div>',
-    width: '20%',
-  }, {
-    title: 'Email',
-    dataIndex: 'email',
-  }];
-
   export default {
-    mounted() {
-      this.fetch();
+    name: 'm-table',
+    components: {
+      ATable: Table
+    },
+    props: {
+      options: Object
+    },
+    computed: {
+      dataList() {
+        return this.options.isRemote ? this.data : this.options.data;
+      }
     },
     data() {
       return {
         data: [],
-        pagination: {
-          pageSize: 3
-        },
+        pagination: this.options.pagination,
         loading: false,
-        columns,
+        // columns: this.options.columns,
       }
     },
-    components: {
-      ATable: Table
+    mounted() {
+      this.fetch();
     },
     methods: {
       handleTableChange (pagination, filters, sorter) {

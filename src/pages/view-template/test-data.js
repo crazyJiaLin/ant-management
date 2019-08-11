@@ -1,14 +1,17 @@
 // jsonObj.set(id, attr. value)方法 id为要匹配控件的id， attr是属性名称，如果带嵌套的话，请用'.'进行分割（attribute.disabled）, value为要修改的值
 //不管有没有组件，最外层请用方括号，让template作为数组的形式传入
+/**
+ * 目前属性值中碰到函数的，只能吧函数转为字符串，然后存入，关于解析只支持部分，有待完善
+ * */
 export default [
   {
     "id":"query1",
     "type":"query",
     "method":"POST or GET",
     "data":"post or get 数据地址",
+    "tableId": "table1",//搜索数据显示表格id
     "attribute": {
       "an":true,//是否展开
-      "showTable": "table1",//搜索数据显示表格
     },
     "children": [
       {
@@ -17,7 +20,7 @@ export default [
         "label": '手机号',
         "labelCol": {"span":6},
         "wrapperCol": {"span":16, "offset": 1},
-        "width": 8,
+        "width": 6,
         "attribute":{
           "icon":"user",
           "size":"default",
@@ -40,55 +43,10 @@ export default [
         }
       },
       {
-        "id": "textarea",
-        "type":"Textarea",
-        "label": '多行文本输入框',
-        "width": 8,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "placeholder":"提示信息textarea",
-          "autosize": { minRows: 1, maxRows: 2 },
-          "Tooltip":{"title":"请输入多行文本","placement":"bottom"},//提示信息  默认无
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": ""
-          }
-        }
-      },
-      {
-        "id": "timePicker1",
-        "type":"TimePicker",
-        "label": '时间选择器',
-        "width": 8,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "placeholder":"hh:mm:ss",
-          format: "hh:mm:ss",
-          size: 'default',
-          "Tooltip":{"title":"请选择时间","placement":"bottom"},
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": ""
-          }
-        },
-        methods: {
-          //因为JSON.stringfy不能转化function，如果必须的话可以采用m-test中的强制序列化方式
-          "onChange"(time, timeString) {
-            console.log(time, timeString)
-          },
-        }
-      },
-      {
         "id": "datePicker1",
         "type":"DatePicker",
         "label": '日期选择器',
-        "width": 8,
+        "width": 6,
         "labelCol": {"span":6},
         "wrapperCol": {"span":16, "offset": 1},
         "attribute":{
@@ -109,7 +67,7 @@ export default [
         "id": "rangePicker1",
         "type":"RangePicker",
         "label": '日期范围',
-        "width": 8,
+        "width": 6,
         "labelCol": {"span":6},
         "wrapperCol": {"span":16, "offset": 1},
         "attribute":{
@@ -128,30 +86,10 @@ export default [
         }
       },
       {
-        "id": "monthPicker1",
-        "type":"MonthPicker",
-        "label": '月选择',
-        "width": 8,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "placeholder":"YYYY-MM-DD",
-          format: "YYYY-MM",
-          size: 'default',
-          "Tooltip":{"title":"请选择月份","placement":"top"},
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": ""
-          }
-        }
-      },
-      {
         "id": "number1",
         "type":"InputNumber",
         "label": '数字输入框',
-        "width": 8,
+        "width": 6,
         "labelCol": {"span":6},
         "wrapperCol": {"span":16, "offset": 1},
         "attribute":{
@@ -164,78 +102,6 @@ export default [
               {"required":false,"message":""},
             ],
             "initialValue": ""
-          }
-        }
-      },
-      {
-        "id": "inputSearch1",
-        "type":"inputSearch",
-        "label": '搜索输入框',
-        // 若果isRemote为true时，说明需要从远程获取数据，
-        isRemote: false,
-        data: '', //
-        "width": 8,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "icon":"user",
-          "size":"default",
-          "enterButton": true,
-          "Tooltip":{"title":"提示文本","placement":"top"},
-          "inner":"jsonobj.submit('form1')", //change关联
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": ""
-          }
-        }
-      },
-      {
-        "id": "radio1",
-        "type":"Radio",
-        "label": '单选',
-        // 若果isRemote为true时，说明需要从远程获取数据，
-        isRemote: false,
-        data: [
-          {label:"选项1", value: "value1","inner":"jsonobj.set('mobile','attribute.disabled',true)"},//控制 state1 显示/隐藏
-          {label:"选项2", value: "value2","inner":"jsonobj.set('mobile','attribute.disabled',false)"}//选中关联
-        ],
-        dataUrl : '',
-        "width": 8,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "Tooltip":{"title":"提示文本","placement":"top"},
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": ""
-          }
-        }
-      },
-      {
-        "id": "checkbox1",
-        "type":"Checkbox",
-        "label": '多选',
-        // 若果isRemote为true时，说明需要从远程获取数据，
-        isRemote: false,
-        data: [
-          {label:"多选1", value: "value1","inner":"jsonobj.set('mobile','attribute.disabled',true)"},//控制 state1 显示/隐藏
-          {label:"多选2", value: "value2","inner":"jsonobj.set('mobile','attribute.disabled',false)"}//选中关联
-        ],
-        dataUrl : '',
-        "width": 8,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "Tooltip":{"title":"提示文本","placement":"top"},
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": []
           }
         }
       },
@@ -262,7 +128,7 @@ export default [
           value: 'record_id',
           children: 'children'
         },
-        "width": 8,
+        "width": 6,
         "labelCol": {"span":6},
         "wrapperCol": {"span":16, "offset": 1},
         "attribute":{
@@ -279,46 +145,12 @@ export default [
         }
       },
       {
-        "id": "button1",
-        "type":"Button",
-        text: '我是按钮1',
-        "width": 4,
-        offset: 0,
-        "attribute":{
-          "size":"default",
-          disabled: false,
-          loading: false,
-          type: 'primary',
-          icon: 'user',
-          "inner":"jsonobj.set('datePicker1','attribute.disabled',true)",
-        }
-      },
-      {
-        "id": "switch1",
-        "type":"Switch",
-        label: '开关',
-        "width": 4,
-        offset: 0,
-        "labelCol": {"span":6},
-        "wrapperCol": {"span":16, "offset": 1},
-        "attribute":{
-          "checkedChildren":'开',
-          unCheckedChildren: '关',
-          "size":"default",
-          disabled: false,
-          // 打开开关时执行的事件
-          "checkEvent":"jsonobj.set('button1','attribute.type','danger')",
-          // 关闭开关执行的事件
-          "unCheckEvent":"jsonobj.set('button1','attribute.type','primary')",
-        }
-      },
-      {
         id: 'select1',
         type: "select",
         label: "select",
-        width: 8,    // 4-24
+        width: 6,    // 4-24
         labelCol: {span: 6},   // 文案长度
-        wrapperCol: {span: 15, offset: 1},// 输入框长度
+        wrapperCol: {span: 16, offset: 1},// 输入框长度
         isRemote: false,
         dataUrl: '',
         data: [          // 选项数组
@@ -363,45 +195,38 @@ export default [
             disabled: false
           },
         ],
-       attribute: {
+        attribute: {
           size:'default',
-         allowClear: true,
-         placeholder: "please select",
-         // 参考antd 文档中select-mode属性
-         mode:"multiple",
-         disabled: false,
-         // "Tooltip":{"title":"提示文本","placement":"top"},
-         "decorator":{
-           "rules":[
-             {"required":false,"message":""},
-           ],
-           "initialValue": 'Apple'
-         }
-       }
+          allowClear: true,
+          placeholder: "please select",
+          // 参考antd 文档中select-mode属性
+          mode:"multiple",
+          disabled: false,
+          // "Tooltip":{"title":"提示文本","placement":"top"},
+          "decorator":{
+            "rules":[
+              {"required":false,"message":""},
+            ],
+            "initialValue": 'Apple'
+          }
+        }
       },
       {
-        "id": "selectSearch1",
-        "type":"selectSearch",
-        "label": '搜索输入框',
+        "id": "radio1",
+        "type":"Radio",
+        "label": '单选',
+        // 若果isRemote为true时，说明需要从远程获取数据，
         isRemote: false,
-        // isRemote为false时，说明采用本地数据（data为数组，text和value作为每一项的key格式）
         data: [
-          { text: "hello", value: "hello"},
-          { text: "asd", value: "asd"},
-          { text: "123", value: "123"},
-          { text: "333", value: "456"}
+          {label:"选项1", value: "value1","inner":"jsonobj.set('mobile','attribute.disabled',true)"},//控制 state1 显示/隐藏
+          {label:"选项2", value: "value2","inner":"jsonobj.set('mobile','attribute.disabled',false)"}//选中关联
         ],
-        // 如果isRemote为true时，说明需要从远程获取数据(dataUrl不为空)，
-        dataUrl: '',
-        "width": 8,
+        dataUrl : '',
+        "width": 6,
         "labelCol": {"span":6},
         "wrapperCol": {"span":16, "offset": 1},
         "attribute":{
-          filterOption: true,
-          "size":"default",
-          "enterButton": true,
           "Tooltip":{"title":"提示文本","placement":"top"},
-          "inner":"jsonobj.submit('form1')", //change关联
           "decorator":{
             "rules":[
               {"required":false,"message":""},
@@ -411,24 +236,49 @@ export default [
         }
       },
       {
-        id: 'a1',
-        type: "A",
-        width: 8,
-        offset: 0,
-        text: '这是一个链接',
-        href: 'https://www.baidu.com',
-        icon: 'user',
-        _blank: true,
-      }
+        "id": "checkbox1",
+        "type":"Checkbox",
+        "label": '多选',
+        // 若果isRemote为true时，说明需要从远程获取数据，
+        isRemote: false,
+        data: [
+          {label:"多选1", value: "value1","inner":"jsonobj.set('mobile','attribute.disabled',true)"},//控制 state1 显示/隐藏
+          {label:"多选2", value: "value2","inner":"jsonobj.set('mobile','attribute.disabled',false)"}//选中关联
+        ],
+        dataUrl : '',
+        "width": 6,
+        "labelCol": {"span":6},
+        "wrapperCol": {"span":16, "offset": 1},
+        "attribute":{
+          "Tooltip":{"title":"提示文本","placement":"top"},
+          "decorator":{
+            "rules":[
+              {"required":false,"message":""},
+            ],
+            "initialValue": []
+          }
+        }
+      },
     ]
   },
   {
-    id: 'a1',
-    type: "A",
-    text: '这是一个链接',
-    href: 'https://www.baidu.com',
-    icon: 'user',
-    _blank: true,
+    id: 'table1',
+    type: 'Table',
+    isRemote: true,
+    data: [],
+    dataUrl: 'roles?q=page',
+    params: {},
+    // TODO 对于render中解决不了的function问题，可以吧function当做字符串存储，然后在组件中获取的时候eval（）
+    columns : [], // 列表字段--渲染方式
+    rowKeys: 'record => record.record_id',
+    pagination: {},
+    attribute: {
+      width: 500,
+      height: 600,
+      "isCheckbox":true, //是否显示多选
+      bordered: false,
+      size : 'default'
+    }
   }
 ]
 

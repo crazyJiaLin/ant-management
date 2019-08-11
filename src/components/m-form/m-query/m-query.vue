@@ -18,6 +18,7 @@
           <m-switch v-if="item.type && (item.type.toLowerCase() === 'switch')" :options="item" @submitEvent="handleSubmitEvent"></m-switch>
           <m-select v-if="item.type && (item.type.toLowerCase() === 'select')" :options="item"></m-select>
           <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
+          <m-upload v-if="item.type && (item.type.toLowerCase() === 'upload')" :options="item" @submitEvent="handleSubmitEvent"/>
         </a-col>
       </a-row>
       <a-row>
@@ -46,6 +47,7 @@
   import MButton from '../m-button/m-button'
   import MSwitch from '../m-switch/m-switch'
   import MSelect from '../m-select/m-select'
+  import MUpload from '../m-upload/m-upload'
   import MA from '@/components/m-a/m-a'
   export default {
     name: "m-query",
@@ -71,6 +73,7 @@
       MButton,
       MSwitch,
       MSelect,
+      MUpload,
       'm-a': MA
     },
     props: {
@@ -87,17 +90,22 @@
       }
     },
     methods: {
+      // 点击搜索
       handleSearch (e) {
         e.preventDefault();
         this.form.validateFields((error, values) => {
           console.log('error', error);
           console.log('Received values of form: ', values);
+          if(error) return;
+          // 通知父组件，让父组件去修改table中的请求参数params值
+          this.$emit('search', values);
         });
       },
       handleReset (e) {
         // this.form.resetFields();
         this.form.resetFields();
       },
+      // 子组件中带动作的，需要template对配置json数据进行操作
       handleSubmitEvent (value) {
         this.$emit('submitEvent', value)
       }
