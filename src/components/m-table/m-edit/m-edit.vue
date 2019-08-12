@@ -38,11 +38,6 @@
       options: Object,
       record: Object
     },
-    watch : {
-      record (newVal, oldVal) {
-        console.log('edit组件获取到record', newVal)
-      }
-    },
     computed: {
       editForm(){
         // 在这里将record中的值合并到form中去
@@ -68,7 +63,7 @@
           }
           res.push(item)
         }
-        console.log(res)
+        console.log('通过原始配置项与编辑行传值的结合结果', res)
         return res;
       }
     },

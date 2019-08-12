@@ -50,20 +50,16 @@
     },
     methods: {
       handleSearch(tableId, params) {
-        console.log('start search', tableId, params)
+        // console.log('start search', tableId, params)
         // 通过自定义方法吧params设置到对应的table中去
         this.template.set(tableId, 'params', params)
       },
       handleSubmitEvent(value) {
-        console.log('template 父组件接收到命令', value)
-        // let fnName = value.match(/jsonobj.(\S*)\(/)[1]
-        // let args = value.match(/\((\S*)\)/)[1]
-        // console.log(value, fnName, args)
-        // let code = `this.template.${fnName}(${args})`
+        // console.log('template 父组件接收到命令', value)
         //将inner中的jsonObj用当前template代替，这样就能够执行JsonObj的指定方法了
         let code = value.replace(/jsonobj/g, 'this.template')
         try {
-          console.log('执行子组件提交的命令',code)
+          // console.log('执行子组件提交的命令',code)
           eval(code)
         }catch (e) {
           console.log(e)
@@ -76,7 +72,7 @@
         if(!menuId) return;
         this.loading = true;
         this.$axios.get('/gettemplates/'+menuId).then(res => {
-          console.log('获取到当前菜单的模板数据',res.data)
+          // console.log('获取到当前菜单的模板数据',res.data)
           if(res.data){
             //数据库中有对应于本菜单的template数据
             let jsonStr = Base64.decode(res.data.data)
@@ -101,7 +97,7 @@
           this.template = new JsonObj(JSON.parse(jsonStr));
           console.log(this.template)
         }catch (e) {
-          console.log('转化错误',e.toString())
+          // console.log('转化错误',e.toString())
           Message.error('数据不能转化为json格式')
         }
       },

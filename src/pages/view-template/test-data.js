@@ -14,7 +14,13 @@ export default [
       values.role_ids = values.role_ids ? values.role_ids.join(',') : '';
     }`,
     "attribute": {
-      "an":true,//是否展开
+      "an":true, // 是否展开
+      searchBtn: { // TODO 操作按钮配置
+        hasReset: true,
+        span: 24,
+        offset: 0
+      }
+
     },
     "children": [
       {
