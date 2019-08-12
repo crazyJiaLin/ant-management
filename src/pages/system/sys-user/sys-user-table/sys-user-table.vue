@@ -74,7 +74,6 @@
             dataIndex: 'user_name',
             align: 'center',
             width: '200px'
-
           },
           {
             title: '真实姓名',

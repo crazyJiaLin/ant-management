@@ -11,6 +11,7 @@
       <div v-for="(item, index) in this.template" :key="item.id">
         <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
                  @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
+        <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
       </div>
     </div>
@@ -23,6 +24,7 @@
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
   import MQuery from '@/components/m-form/m-query/m-query'
+  import MTable from '@/components/m-table/m-table'
   import MA from '@/components/m-a/m-a'
   import MTest from '@/components/m-test/m-test'
   export default {
@@ -31,6 +33,7 @@
       AIcon: Icon,
       MQuery,
       MTest,
+      MTable,
       'm-a': MA
     },
     watch : {
@@ -48,7 +51,8 @@
     methods: {
       handleSearch(tableId, params) {
         console.log('start search', tableId, params)
-        // 通过自定义方法吧param
+        // 通过自定义方法吧params设置到对应的table中去
+        this.template.set(tableId, 'params', params)
       },
       handleSubmitEvent(value) {
         console.log('template 父组件接收到命令', value)

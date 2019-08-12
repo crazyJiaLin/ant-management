@@ -46,7 +46,7 @@
     methods : {
       onChange (e) {
         let curVal = e.target.value
-        console.log('radio checked', curVal)
+        // console.log('radio checked', curVal)
         // 拿到选择的value值，需要遍历数组，获取到当前选中的inner，提交给父组件执行
         for(let i=0; i<this.dataList.length; i++){
           if(this.dataList[i].value == curVal) {

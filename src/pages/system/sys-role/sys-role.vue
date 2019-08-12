@@ -5,7 +5,7 @@
           <sys-role-form @search="onSearch"></sys-role-form>
         </div>
     <sys-role-create :visible="showCreateDraw" @close="handleCreateDrawClose"></sys-role-create>
-    <div style="margin-bottom: 16px" :style="{ textAlign: 'right' }">
+    <div style="margin-bottom: 16px; text-align: right;">
       <a-button type="primary" icon="plus" @click="onClickCreateBtn">新增</a-button>
       <!--      <a-button icon="edit" v-show="hasSelected">编辑</a-button>-->
       <!--      <a-button type="danger" icon="delete" v-show="hasSelected">删除</a-button>-->
