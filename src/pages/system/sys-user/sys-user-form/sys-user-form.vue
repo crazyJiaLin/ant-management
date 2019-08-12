@@ -27,16 +27,18 @@
         </a-col>
         <a-col :span="8">
           <a-form-item label="所属角色" colon :labelCol="labelCol" :wrapperCol="wrapperCol">
-            <a-input
+            <a-select mode="multiple"
               v-decorator="[
                 `role_ids`,
                 { rules: [{ required: false, message: '' }]}
               ]"
               placeholder="请输入所属角色"
-            />
+            >
+              <a-select-option v-for="(item, index) in roleList" :key="item.record_id">{{item.name}}</a-select-option>
+            </a-select>
           </a-form-item>
         </a-col>
-        <a-row>
+<!--        <a-row>-->
           <a-col :span="8">
             <a-form-item label="用户状态" colon :labelCol="labelCol" :wrapperCol="wrapperCol">
               <a-radio-group name="status"
@@ -53,11 +55,11 @@
               </a-radio-group>
             </a-form-item>
           </a-col>
-          <a-col :span="3" :offset="13">
+          <a-col :span="4" :offset="12">
             <a-button type="primary" html-type="submit"> 查询</a-button>
             <a-button :style="{ marginLeft: '8px' }" @click="handleReset"> 重置</a-button>
           </a-col>
-        </a-row>
+<!--        </a-row>-->
       </a-row>
     </a-form>
   </div>
@@ -85,6 +87,7 @@
       return {
         form: this.$form.createForm(this),
         labelCol: {span: 5},
+        roleList: [],
         wrapperCol: {span: 15, offset: 2},
       }
     },
@@ -97,14 +100,25 @@
           let params = {};
           values.user_name && (params.user_name = values.user_name);
           values.real_name && (params.real_name = values.real_name);
-          values.role_ids && (params.role_ids = values.role_ids);
+          values.role_ids && (params.role_ids = values.role_ids.join(','));
           values.status && (params.status = values.status);
           this.$emit('search', params);
         });
       },
       handleReset() {
         this.form.resetFields();
+      },
+      getRoleList () {
+        this.$axios.get('/roles?q=select').then(res => {
+          console.log('get roles list', res.data)
+          this.roleList = res.data.list;
+        }).catch(err => {
+
+        })
       }
+    },
+    mounted() {
+      this.getRoleList()
     }
   }
 </script>

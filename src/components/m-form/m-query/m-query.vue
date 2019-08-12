@@ -97,6 +97,10 @@
           console.log('error', error);
           console.log('Received values of form: ', values);
           if(error) return;
+          //执行搜索前的钩子函数
+          let beforeSearch = this.options.beforeSearch ? eval(this.options.beforeSearch) : ()=>{};
+          console.log(beforeSearch)
+          beforeSearch(values);
           // 通知父组件，让父组件去修改table中的请求参数params值
           this.$emit('search', values);
         });
@@ -109,6 +113,9 @@
       handleSubmitEvent (value) {
         this.$emit('submitEvent', value)
       }
+    },
+    mounted() {
+      // console.log(this.options)
     }
   }
 </script>

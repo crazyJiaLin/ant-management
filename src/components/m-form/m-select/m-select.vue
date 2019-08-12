@@ -1,23 +1,23 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-select v-if="!options.attribute.Tooltip" :size="options.attribute.size"
+    <a-select v-if="!options.attribute.Tooltip" :size="options.attribute.size" :placeholder="options.attribute.placeholder"
                 :allowClear="options.attribute.allowClear" :mode="options.attribute.mode"
                 v-decorator="[
                   options.id,
                   options.attribute.decorator
                 ]">
-      <a-select-option v-for="(item, index) in dataList" :key="index" :value="item.value">{{item.label}}</a-select-option>
+      <a-select-option v-for="(item, index) in dataList" :key="index" :value="item[options.fieldsName.value]">{{item[options.fieldsName.label]}}</a-select-option>
     </a-select>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
-      <a-select :size="options.attribute.size"
+      <a-select :size="options.attribute.size" :placeholder="options.attribute.placeholder"
                 :allowClear="options.attribute.allowClear" :mode="options.attribute.mode"
                 v-decorator="[
                   options.id,
                   options.attribute.decorator
                 ]">
-        <a-select-option v-for="(item, index) in dataList" :key="index" :value="item.value">{{item.label}}</a-select-option>
+        <a-select-option v-for="(item, index) in dataList" :key="index" :value="item[options.fieldsName.value]">{{item[options.fieldsName.label]}}</a-select-option>
       </a-select>
     </a-tooltip>
   </a-form-item>
@@ -50,7 +50,7 @@
     methods: {
       getData () {
         if(!this.options.isRemote) return;
-        this.$axios.get(this.options.dataUrl).then(res => {
+        this.$axios.get(this.options.dataUrl, this.options.params).then(res => {
           console.log(res)
           if(res.data) {
             this.data = res.data.list
