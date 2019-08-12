@@ -8,8 +8,6 @@ export default [
   {
     "id":"query1",
     "type":"query",
-    "method":"POST or GET",
-    "data":"post or get 数据地址",
     "tableId": "table1",//搜索数据显示表格id
     // 搜索前的钩子函数，请用字符串保存，values为搜索条件的集合，字段名称以children中每个组件的id为准
     "beforeSearch" : `(values) => {
@@ -188,7 +186,7 @@ export default [
       create: {
         showBtn: true,
         title: '新建用户',
-        width: 500,
+        width: 550,
         form: {
           method: 'post',
           url: '/users',
@@ -355,23 +353,25 @@ export default [
       edit: {
         showBtn: true,
         title: '编辑用户',
-        width: 500,
+        width: 550,
         form: {
           method: 'put',
-          url: '/users',
-          beforeSubmit : `(values) => {
-            if(!values.role_ids) return;
+          // 在用这块的时候记得用正则替换掉占位符{id}
+          url: '/users/{id}',
+          beforeSubmit : `(values, record) => {
+            if(!values.roles) return;
             let roles = [];
-            for(let i=0; i<values.role_ids.length; i++) {
+            for(let i=0; i<values.roles.length; i++) {
               roles.push({
-                role_id: values.role_ids[i]
+                role_id: values.roles[i]
               })
             }
             values.roles = roles;
-            console.log('创建请求钩子函数执行后的参数', values);
+            values.record_id = record.record_id;
+            console.log('编辑请求钩子函数执行后的参数', values);
           }`,
-          // 创建时表单内容
-          children : [
+          // 编辑表单需要展示的字段配置 --- 通过配置好id跟点击行对应的record的key值一致来做初始值
+          children: [
             {
               "id": "user_name",
               "type":"InputText",
@@ -400,10 +400,10 @@ export default [
               "attribute":{
                 type: 'password', // 这里的type指的是input的type
                 "allowClear":true,//是否支持清除
-                "placeholder":"请输入密码",
+                "placeholder":"如果不输入密码代表不修改",
                 "decorator":{
                   "rules":[
-                    {"required":true,"message":"请输入密码"},
+                    {"required":false,"message":"请输入密码"},
                   ],
                   "validateTrigger":"blur",
                 }
@@ -464,7 +464,7 @@ export default [
               }
             },
             {
-              id: 'role_ids',
+              id: 'roles',
               type: "select",
               label: "所属角色",
               width: 24,    // 4-24
@@ -484,6 +484,15 @@ export default [
                 // 参考antd 文档中select-mode属性
                 mode:"multiple",
                 disabled: false,
+                // 如果存在初始值render方法的时候，会按照函数的方式执行，而不是直接命名 --- 参数为table每列中的对应值
+                initialValueRender : `(value) => {
+                  if(!value || value.length <=0) return;
+                  let res = [];
+                  for(let i=0; i<value.length; i++){
+                    res.push(value[i].record_id)
+                  }
+                  return res;
+                }`,
                 "decorator":{
                   "rules":[
                     {"required":true,"message":"请选择角色"},
@@ -520,8 +529,7 @@ export default [
       delete: {
         showBtn: true
       }
-    },
-
+    }
   }
 ]
 

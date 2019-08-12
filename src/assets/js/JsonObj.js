@@ -22,8 +22,7 @@ window.JsonObj = (function(options){
   Obj.prototype = {
     // 通过id和attr设置对应属性值
     set (id, attr, value) {
-      console.log(attr)
-      let msg = `未找到 id=${id} 匹配项`;
+      let msg = `没有找到 id=${id} 匹配项`;
       attr = attr.split('.');
 
       // 递归查找到id对应的值
@@ -39,7 +38,7 @@ window.JsonObj = (function(options){
             // list[i][attr] = value;
             // console.log('要执行的代码', evalStr)
             eval(evalStr)
-            msg = `找到匹配项, id=${id}`;
+            msg = `找到匹配项, id=${id}, 匹配属性为 ${attr}`;
             return;
           }
           if(list[i].children && list[i].children.length > 0) {

@@ -51,7 +51,7 @@
       getData () {
         if(!this.options.isRemote) return;
         this.$axios.get(this.options.dataUrl, this.options.params).then(res => {
-          console.log(res)
+          // console.log(res)
           if(res.data) {
             this.data = res.data.list
           }

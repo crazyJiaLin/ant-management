@@ -1,10 +1,13 @@
 <template>
   <div>
     <div style="margin: 15px 0; text-align: right;">
-      <a-button v-if="options.operation.create.showBtn" type="primary" icon="plus"
+      <a-button v-if="options.operation && options.operation.create && options.operation.create.showBtn" type="primary" icon="plus"
                 @click="onCreate">新增</a-button>
     </div>
-    <m-create :visible="showCreateDrawer" :options="options.operation.create" @close="handleCreateDrawClose"></m-create>
+    <m-create :visible="showCreateDrawer" :options="options.operation ? options.operation.create : {}"
+              @close="handleCreateDrawClose"></m-create>
+    <m-edit :visible="showEditDrawer" :options="options.operation ? options.operation.edit : {}"
+            :record="editRecord" @close="handleEditDrawClose"></m-edit>
     <a-table :columns="columns" :rowKey="eval(options.rowKeys)"
              :dataSource="dataList" :pagination="pagination"
              :size="options.attribute.size" :bordered="options.attribute.bordered" :scroll="options.attribute.scroll"
@@ -13,8 +16,10 @@
     >
       <template slot="operation" slot-scope="text, record">
         <!--        <a-button size="small">查看</a-button>-->
-        <a-button v-if="options.operation.edit.showBtn" size="small" @click="onEdit(record)">编辑</a-button>
-        <a-popconfirm v-if="options.operation.delete.showBtn" title="确认删除此条数据?" okText="确定" cancelText="取消"
+        <a-button v-if="options.operation && options.operation.edit && options.operation.edit.showBtn"
+                  size="small" @click="onEdit(record)">编辑</a-button>
+        <a-popconfirm v-if="options.operation && options.operation.delete && options.operation.delete.showBtn"
+                      title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
@@ -58,7 +63,7 @@
     },
     watch: {
       'options.params' (newVal) {
-        console.log('table 得到通知', newVal);
+        // console.log('table 得到通知', newVal);
         this.fetch(newVal);
       }
     },
@@ -70,6 +75,7 @@
         loading: false,
         showCreateDrawer: false,
         showEditDrawer: false,
+        editRecord: {}
       }
     },
     mounted() {
@@ -81,14 +87,21 @@
         this.showCreateDrawer = true;
       },
       onEdit (record) {
-        console.log(record)
+        // console.log(record)
+        this.showEditDrawer = true;
+        this.editRecord = record;
       },
       onDelete (record_id) {},
       handleCreateDrawClose (action) {
-        console.log('action', action)
         this.showCreateDrawer = false;
         if(action && action == 'created') {
           //如果是创建完成，刷新列表
+          this.fetch(this.options.params);
+        }
+      },
+      handleEditDrawClose (action) {
+        this.showEditDrawer = false;
+        if(action && action == 'updated') {
           this.fetch(this.options.params);
         }
       },

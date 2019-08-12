@@ -8,7 +8,7 @@
       wrapClassName="sys-menu-create-wrap">
 <!--      <m-form :options="options.form" @submit="handleSubmit"></m-form>-->
       <a-form :form="form" @submit="handleSubmit">
-        <m-form-content :options="options.form" @submitEvent="handleSubmitEvent"></m-form-content>
+        <m-form-content :formList="options.form.children" @submitEvent="handleSubmitEvent"></m-form-content>
         <div class="btn-wrap">
           <a-button :style="{marginRight: '8px'}" @click="onClose"> 取消</a-button>
           <a-button type="primary" html-type="submit" :loading="btnLoading"> 确认</a-button>

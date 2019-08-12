@@ -1,7 +1,7 @@
 <template>
   <div class="query-wrap">
     <a-form :form="form" @submit="handleSearch">
-      <m-form-content :options="options" @submitEvent="handleSubmitEvent"></m-form-content>
+      <m-form-content :formList="options.children" @submitEvent="handleSubmitEvent"></m-form-content>
       <a-row>
         <a-col :span="24" class="query-btns">
           <a-button type="primary" @click="handleSearch">搜索</a-button>
@@ -45,8 +45,8 @@
       handleSearch (e) {
         e.preventDefault();
         this.form.validateFields((error, values) => {
-          console.log('error', error);
-          console.log('Received values of form: ', values);
+          // console.log('error', error);
+          // console.log('Received values of form: ', values);
           if(error) return;
           //执行搜索前的钩子函数
           let beforeSearch = this.options.beforeSearch ? eval(this.options.beforeSearch) : ()=>{};

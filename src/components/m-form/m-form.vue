@@ -1,6 +1,6 @@
 <template>
   <a-form :form="form" @submit="handleSubmit">
-    <m-form-content :options="options" @submitEvent="handleSubmitEvent"></m-form-content>
+    <m-form-content :formList="options.children" @submitEvent="handleSubmitEvent"></m-form-content>
   </a-form>
 </template>
 

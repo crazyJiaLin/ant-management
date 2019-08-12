@@ -1,6 +1,6 @@
 <template>
     <a-row>
-      <a-col v-for="(item,index) in children" :span="item.width" :offset="item.offset" :key="item.id">
+      <a-col v-for="(item,index) in formList" :span="item.width" :offset="item.offset" :key="item.id">
         <m-input  v-if="item.type && (item.type.toLowerCase() === 'inputtext')" :options="item"></m-input>
         <m-textarea v-if="item.type && (item.type.toLowerCase() === 'textarea')" :options="item"></m-textarea>
         <m-time-picker v-if="item.type && (item.type.toLowerCase() === 'timepicker')" :options="item"></m-time-picker>
@@ -55,12 +55,13 @@
       'm-a': MA
     },
     props: {
-      options: Object
+      options: Object,
+      formList: Array
     },
     computed : {
-      children() {
-        return this.options.children
-      }
+      // children() {
+      //   return this.options.children
+      // }
     },
     data () {
       return {
