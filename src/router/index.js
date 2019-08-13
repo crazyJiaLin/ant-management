@@ -1,22 +1,22 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-// import Login from '@/pages/login/login'
-// import Index from '@/pages/index/index'
-// import Dashboard from '@/pages/dashboard/dashboard'
-// import System from '@/pages/system/system'
-// import SysMenu from '@/pages/system/sys-menu/sys-menu'
-// import SysRole from '@/pages/system/sys-role/sys-role'
-// import SysUser from '@/pages/system/sys-user/sys-user'
-// import ViewTemplate from '@/pages/view-template/view-template'
+import Login from '@/pages/login/login'
+import Index from '@/pages/index/index'
+import Dashboard from '@/pages/dashboard/dashboard'
+import System from '@/pages/system/system'
+import SysMenu from '@/pages/system/sys-menu/sys-menu'
+import SysRole from '@/pages/system/sys-role/sys-role'
+import SysUser from '@/pages/system/sys-user/sys-user'
+import ViewTemplate from '@/pages/view-template/view-template'
 // 路由懒加载
-const Login = () => import('@/pages/login/login')
-const Index = () => import('@/pages/index/index')
-const Dashboard = () => import('@/pages/dashboard/dashboard')
-const System = () => import('@/pages/system/system')
-const SysMenu = () => import('@/pages/system/sys-menu/sys-menu')
-const SysRole = () => import('@/pages/system/sys-role/sys-role')
-const SysUser = () => import('@/pages/system/sys-user/sys-user')
-const ViewTemplate = () => import('@/pages/view-template/view-template')
+// const Login = resolve => require(['@/pages/login/login'], resolve)
+// const Index = resolve => require(['@/pages/index/index'], resolve)
+// const Dashboard = resolve => require(['@/pages/dashboard/dashboard'], resolve)
+// const System = resolve => require(['@/pages/system/system'], resolve)
+// const SysMenu = resolve => require(['@/pages/system/sys-menu/sys-menu'], resolve)
+// const SysRole = resolve => require(['@/pages/system/sys-role/sys-role'], resolve)
+// const SysUser = resolve => require(['@/pages/system/sys-user/sys-user'], resolve)
+// const ViewTemplate = resolve => require(['@/pages/view-template/view-template'], resolve)
 
 Vue.use(Router)
 

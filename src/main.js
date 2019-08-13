@@ -27,7 +27,7 @@ router.beforeEach((to, from, next) =>{
     // console.log(username)
     if(!username) {
       // console.log('跳转到login')
-      Message.warn('登陆超时,请重新登录！')
+      Message.warn('您还没有登陆，请登录！')
       return next({
         path: '/login',
         query : {
