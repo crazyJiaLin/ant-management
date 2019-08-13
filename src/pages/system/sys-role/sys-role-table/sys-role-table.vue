@@ -1,8 +1,9 @@
 <template>
   <div>
-    <a-table :columns="columns" :rowKey="record => record.record_id" :pagination="pagination"
+    <a-table :columns="columns" :rowKey="record => record.record_id"
+             :pagination="pagination" size="middle"
              :dataSource="data" :loading="loading"  @change="handleTableChange"
-             :scroll="{ y: 350 }">
+             :scroll="{ y: 250 }">
       <template slot="operation" slot-scope="text, record">
 <!--        <a-button size="small">查看</a-button>-->
         <a-button size="small" @click="onEdit(record)">编辑</a-button>

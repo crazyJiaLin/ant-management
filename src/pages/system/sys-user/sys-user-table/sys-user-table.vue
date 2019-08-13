@@ -1,8 +1,9 @@
 <template>
   <div>
-    <a-table :columns="columns" :rowKey="record => record.record_id" :pagination="pagination"
+    <a-table :columns="columns" :rowKey="record => record.record_id"
+             :pagination="pagination" size="middle"
              :dataSource="data" :loading="loading" @change="handleTableChange"
-             :scroll="{ y: 350 }">
+             :scroll="{ y: 230 }">
       <template slot="roles" slot-scope="text, record">
         <span v-for="(item, index) in text" :key="index"> {{item.name}}</span>
       </template>

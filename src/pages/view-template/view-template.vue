@@ -17,9 +17,8 @@
     </div>
   </div>
 </template>
-
 <script>
-  // TODO： 假数据
+  // 假数据
   import TemplateData from './test-data'
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
