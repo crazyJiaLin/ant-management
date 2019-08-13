@@ -53,7 +53,7 @@
           // console.log(res)
           let data = res.data;
           if(data){
-            store.commit('setUserInfo', res.data)
+            this.$store.commit('setUserInfo', res.data)
           }
         }).catch(err => {
           console.log(err)

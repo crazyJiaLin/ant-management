@@ -14,12 +14,10 @@
           <a-button type="primary" html-type="submit" :loading="btnLoading"> 确认</a-button>
         </div>
       </a-form>
-
     </a-drawer>
   </div>
 </template>
 <script>
-  import md5 from 'md5'
   import { Button, Form, Drawer, Icon, Notification, Message } from 'ant-design-vue'
   import MFormContent from '@/components/m-form/m-form-content'
 

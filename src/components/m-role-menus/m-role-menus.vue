@@ -127,84 +127,72 @@
     },
     methods: {
       onTableChange(selectedRowKeys, selectedRows) {
-        // console.log('选择的数据', selectedRowKeys, selectedRows);
-        // console.log('组件原始data', this.selectedRowKeys, this.checkboxSelectedKeys)
+        console.log('选择的数据', selectedRowKeys, selectedRows);
+        console.log('组件原始data', this.selectedRowKeys, this.checkboxSelectedKeys)
         /**
          * 点击选择后，只有最后一层是当前新增的，不要修改其他层的； 点击取消后，只有最后一层的数据去掉，其他的不需要动
          * 1 当选择的数据比原始数据长度大的时，说明是新增，
          * 2 当选择的数据比原始数据长度小，说明是取消全选操作
          */
         if (selectedRowKeys.length >= this.selectedRowKeys.length) {
-          // 新增最后一条数据
+          // console.log('添加数据')
+          // 找到新添加的项
+          let items = this.diffItems(selectedRowKeys, this.selectedRowKeys);
+          // 新增
+          for(let i=0; i<items.length; i++) {
+            // items中的每一项为id，用这个id去selectRows中去找，然后让actions和resources的checkbox变化
+            let item = this.findItemById(items[i], selectedRows);
+            // console.log('新增的选项', selectedRowKeys[selectedRowKeys.length-1], item)
+            this.checkboxSelectedKeys[item.record_id] = {
+              menu_id: item.record_id,
+              actions: item.actions ? this.getCodeArr(item.actions) : [],
+              resources: item.resources ? this.getCodeArr(item.resources) : []
+            };
+          }
 
-          //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
-          // let temp = this.checkboxSelectedKeys;
-          // this.checkboxSelectedKeys = {};
-          // this.checkboxSelectedKeys = temp;
-          this.selectedRowKeys = selectedRowKeys;
-           // item 有问题，selectedRows不是最后一个, 但是selectRowKeys新增的是最后一个，所以用keys最后一个座位key值去rows里边找到对应项
-          let item = this.findItemById(selectedRowKeys[selectedRowKeys.length - 1], selectedRows);
-          // console.log('新增的选项', selectedRowKeys[selectedRowKeys.length-1], item)
-          this.checkboxSelectedKeys[item.record_id] = {
-            menu_id: item.record_id,
-            actions: item.actions ? this.getCodeArr(item.actions) : [],
-            resources: item.resources ? this.getCodeArr(item.resources) : []
-          };
         } else {
+          // console.log('删除数据')
+          // 找到删除的数据
+          let items = this.diffItems(this.selectedRowKeys, selectedRowKeys);
+          // console.log('删除diff', items)
           // 删除数据
-          // 根据selectedRowKeys 和 this.selectedRowKeys进行比对，看看少了哪一项，吧少了的清空
-          let cancelId = this.findMissedItem(selectedRowKeys, this.selectedRowKeys);
-          // console.log('取消的选项', cancelId)
-          if(cancelId) {
-            this.selectedRowKeys = selectedRowKeys;
+          for (let i=0; i<items.length; i++) {
             // 删除checkbox中的选项
-            delete  this.checkboxSelectedKeys[cancelId];
-            // this.checkboxSelectedKeys[cancelId] = {
-            //   menu_id: cancelId,
-            //   actions: [],
-            //   resources: []
-            // }
+            delete  this.checkboxSelectedKeys[items[i]];
           }
         }
-        //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
-        // let temp = this.checkboxSelectedKeys;
-        // this.checkboxSelectedKeys = {};
-        // this.checkboxSelectedKeys = temp;
-        // // 选中当前行的时候，将actions和resources设置为选中状态
-        // for(let i=0; i<selectedRows.length; i++){
-        //   let item = selectedRows[i]
-        //   this.checkboxSelectedKeys[item.record_id] = {
-        //     menu_id: item.record_id,
-        //     actions: item.actions ? this.getCodeArr(item.actions) : [],
-        //     resources: item.resources ? this.getCodeArr(item.resources) : []
-        //   };
-        //   // console.log(this.checkboxSelectedKeys)
-        //   // 原始方法，如果onSelect参数中没有选中行全部数据的时候，需要我们通过id去查询，这样就用到了下边的递归方法
-        //   // this.checkboxSelectedKeys[id].actions = this.findSthWithId(id, 'actions', this.dataSource);
-        //   // this.checkboxSelectedKeys[id].resources = this.findSthWithId(id, 'resources', this.dataSource);
-        // }
+        // 同步table选项
+        this.selectedRowKeys = selectedRowKeys;
         //向父组件提交最新数据
         this.$emit('change', this.checkboxSelectedKeys)
+      },
+      diffItems (more, less) {
+        if(more.length < less.length){return []}
+        let res = [];
+        // console.log('开始diff', more, less)
+        for(let i=0; i<more.length; i++) {
+          let isInLess = false;
+          for(let j=0; i<less.length; j++) {
+            if(less[j] === more[i]) {
+              //说明存在了，不用保存
+              isInLess = true;
+              // console.log('匹配到less在more中', i, more[i])
+              break;
+            }
+          }
+          if(!isInLess) {
+            // 如果more[i] 不在less中，则在res中添加本项
+            // console.log('没有匹配到的项', i, more[i])
+            res.push(more[i]);
+          }
+        }
+        // console.log('diff', res)
+        return res;
       },
       findItemById (id, arr) {
         for(let i=0; i<arr.length; i++){
           if(arr[i].record_id == id) {
             return arr[i]
-          }
-        }
-        return null;
-      },
-      //查找点击取消的id
-      findMissedItem(arr1, arr2) {
-        //循环长度大的，进行比对
-        let temp = arr1.concat(arr2);
-        let rel = {};
-        for(let i = 0;i < temp.length; i ++){
-          temp[i] in rel ? rel[temp[i]] ++ : rel[temp[i]] = 1;
-        }
-        for(let x in rel){
-          if(rel[x] == 1){
-            return x;
           }
         }
         return null;
@@ -216,28 +204,6 @@
         }
         return res;
       },
-      // findSthWithId (id, action, list) {
-      //   let result = []
-      //   if(!list) return;
-      //   for (let i=0; i<list.length; i++) {
-      //     if(list[i].record_id == id) {
-      //       // console.log('匹配到', list[i])
-      //       result = [];
-      //       //如果本节点有actions或者resources，并且没有子节点（即为叶子节点）
-      //       if(list[i][action] && !list[i].children) {
-      //         for(let j=0; j<list[i][action].length; j++) {
-      //           result.push(list[i][action][j].code);
-      //         }
-      //       }
-      //       // console.log(list[i][action], result);
-      //       return result;
-      //     }
-      //     if(list[i].children) {
-      //       result = this.findSthWithId(id,action, list[i].children)
-      //     }
-      //   }
-      //   return result;
-      // },
       onCheckboxChange(record, action, checkedValues) {
         // console.log(record, action, checkedValues)
         //  想办法让value能够深度监听 --- 自己封装组件？
