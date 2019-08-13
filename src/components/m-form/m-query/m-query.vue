@@ -3,9 +3,9 @@
     <a-form :form="form" @submit="handleSearch">
       <m-form-content :formList="options.children" @submitEvent="handleSubmitEvent"></m-form-content>
       <a-row>
-        <a-col :span="24" class="query-btns">
-          <a-button type="primary" @click="handleSearch">搜索</a-button>
-          <a-button @click="handleReset">重置</a-button>
+        <a-col :span="searchBtn.span" :offset="searchBtn.offset" class="query-btns">
+          <a-button v-if="searchBtn.showSearch" type="primary" @click="handleSearch">{{searchBtn.searchText}}</a-button>
+          <a-button v-if="searchBtn.showReset" @click="handleReset">{{searchBtn.resetText}}</a-button>
         </a-col>
       </a-row>
     </a-form>
@@ -31,8 +31,22 @@
       options: Object
     },
     computed : {
-      children() {
-        return this.options.children
+      searchBtn () {
+        // 配置按钮默认配置项
+        let defaultConf = {
+          showReset: true,  // 显示重置按钮
+          showSearch: true, // 显示搜索按钮
+          span: 24,         // 操作按钮宽度
+          offset: 0,        // 操作按钮偏移量
+          resetText: '重置', // 重置按钮文本
+          searchText: '搜索' // 搜索按钮文本
+        }
+        if(!this.options.attribute.searchBtn) {
+          return defaultConf;
+        }
+        let res = Object.assign(defaultConf, this.options.attribute.searchBtn);
+        // console.log('操作按钮最终配置', res)
+        return res;
       }
     },
     data () {
