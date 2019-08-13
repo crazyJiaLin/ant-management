@@ -148,8 +148,12 @@
         if(hasUseTemplate) return
         const newData = [{
           key: ++count,
+          name: '查询',
+          code: 'query',
+        },{
+          key: ++count,
           name: '新建',
-          code: 'add',
+          code: 'create',
         },{
           key: ++count,
           name: '编辑',
@@ -157,11 +161,15 @@
         },{
           key: ++count,
           name: '删除',
-          code: 'del',
+          code: 'delete',
         },{
           key: ++count,
-          name: '查询',
-          code: 'query',
+          name: '禁用',
+          code: 'disable',
+        },{
+          key: ++count,
+          name: '启用',
+          code: 'enable',
         }]
         this.dataSource = [...dataSource, ...newData]
         this.count = count

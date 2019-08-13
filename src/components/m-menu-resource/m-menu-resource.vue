@@ -232,7 +232,7 @@
           path: value.resourceRouter
         },{
           key: ++count,
-          code: 'update',
+          code: 'edit',
           name: '更新' + value.resourceName,
           method: 'PUT',
           path: value.resourceRouter + '/:id'
