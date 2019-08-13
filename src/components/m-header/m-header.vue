@@ -42,9 +42,9 @@
     props: {
       collapsed: Boolean
     },
-    data () {
-      return {
-        realName: '管理员'
+    computed: {
+      realName(){
+        return this.$store.state.userInfo.real_name ? this.$store.state.userInfo.real_name : '未登录';
       }
     },
     methods: {
@@ -52,8 +52,8 @@
         this.$axios.get('/current/user').then(res => {
           // console.log(res)
           let data = res.data;
-          if(data.real_name){
-            this.realName = data.real_name;
+          if(data){
+            store.commit('setUserInfo', res.data)
           }
         }).catch(err => {
           console.log(err)
