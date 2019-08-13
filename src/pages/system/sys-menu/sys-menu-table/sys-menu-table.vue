@@ -174,7 +174,8 @@
           console.log('get menu page',res.data)
           if(res.data) {
             this.data = res.data.list;
-            this.$store.commit('setMenuList',res.data.list);
+            // 不更新了，因为在n-nav中我们的菜单是通过current/menutree请求拿到的针对当前用户的菜单树，而不是所有菜单树
+            // this.$store.commit('setMenuList',res.data.list);
           }
         }).catch(err => {
           console.log(err)

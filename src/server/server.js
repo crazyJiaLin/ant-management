@@ -39,7 +39,7 @@ axios.interceptors.response.use(data=> {
   return data;
 }, err=> {
   // console.error('响应拦截器', err.response.status)
-  if(err.response.status == 401 || err.response.status == 403){
+  if(err.response.status == 401){
     Message.error(err.response.data.error.message);
     let hash = location.hash.split('?')[0];
     let path = hash.slice(1, hash.length);
@@ -47,6 +47,8 @@ axios.interceptors.response.use(data=> {
     if(path != '/login'){
       location.hash = '#/login?redirect='+path
     }
+  }else if(err.response.status == 403) {
+    Message.error('您还没有访问权限，请联系管理员！');
   }else if (err.response.status == 504) {
     Message.error('服务器被吃了⊙﹏⊙∥');
   }else if(err.response.status == 404){

@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-wrap">
     <div class="hello-wrap animated bounceInRight">
-      <h1>超级管理员 ：</h1>
+      <h1>{{realName}} ：</h1>
       <p>欢迎回来! 祝您开心每一天！</p>
     </div>
   </div>
@@ -9,7 +9,12 @@
 
 <script>
   export default {
-    name: "dashboard"
+    name: "dashboard",
+    computed: {
+      realName(){
+        return this.$store.state.userInfo.real_name ? this.$store.state.userInfo.real_name : '亲爱的用户';
+      }
+    }
   }
 </script>
 

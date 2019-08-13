@@ -77,7 +77,7 @@
     },
     props: {
       visible: Boolean,
-      options: Object
+      options: Object // 这里的options是父组件传进来的editItem
     },
     watch: {
       options (newVal, oldVal) {
@@ -102,12 +102,12 @@
         // 去掉数组为空的数据, 将正确的数据转化到表单中去
         this.menus = [];
         for(let key in menu){
-          //在这里过滤掉acitons和resources长度都为0的数据
-          if(menu[key].actions.length > 0 && menu[key].resources.length > 0) {
+          // ----放弃---//在这里过滤掉acitons和resources长度都为0的数据
+          // if(menu[key].actions.length > 0 && menu[key].resources.length > 0) {
             this.menus.push(menu[key])
-          }
+          // }
         }
-        console.log('转化完成', this.menus)
+        console.log('role-edit转化完成', this.menus)
       },
       handleSubmit (e) {
         e.preventDefault();

@@ -43,6 +43,14 @@
         btnLoading: false
       }
     },
+    computed: {
+      actions(){
+        return this.$store.state.curMenu.actions;
+      },
+      resources(){
+        return this.$store.state.curMenu.resources;
+      }
+    },
     methods: {
       handleSubmit(e) {
         e.preventDefault();

@@ -65,8 +65,8 @@
         this.checkboxSelectedKeys = {};
         for (let i = 0; i < newVal.length; i++) {
           let item = newVal[i];
-          // 如果这条数据里actions和resources都没有的话，直接进入下一次循环
-          if (!item.actions && !item.resources) continue;
+          // ---放弃---（因为一些菜单没有actions和resources也需要展示） // 如果这条数据里actions和resources都没有的话，直接进入下一次循环
+          // if (!item.actions && !item.resources) continue;
           // 设置table选中状态
           this.selectedRowKeys.push(item.menu_id);
           // 设置checkbox选中状态
@@ -114,7 +114,8 @@
             // console.log(record)  //这里的record虽然是本行的数据，但是table会自动吧children去掉，让单条数据只显示本条的基本数据，children直接干到下一层
             return {
               props: {
-                disabled: !record.actions && !record.resources, // Column configuration not to be checked
+                // 这样首页没有配置acitons而不可选，所以不采用disabled
+                // disabled: !record.actions && !record.resources, // Column configuration not to be checked
               }
             }
           }
@@ -141,7 +142,7 @@
           // this.checkboxSelectedKeys = {};
           // this.checkboxSelectedKeys = temp;
           this.selectedRowKeys = selectedRowKeys;
-           // item 有问题，不是最后一个
+           // item 有问题，selectedRows不是最后一个, 但是selectRowKeys新增的是最后一个，所以用keys最后一个座位key值去rows里边找到对应项
           let item = this.findItemById(selectedRowKeys[selectedRowKeys.length - 1], selectedRows);
           // console.log('新增的选项', selectedRowKeys[selectedRowKeys.length-1], item)
           this.checkboxSelectedKeys[item.record_id] = {
@@ -156,11 +157,13 @@
           // console.log('取消的选项', cancelId)
           if(cancelId) {
             this.selectedRowKeys = selectedRowKeys;
-            this.checkboxSelectedKeys[cancelId] = {
-              menu_id: cancelId,
-              actions: [],
-              resources: []
-            }
+            // 删除checkbox中的选项
+            delete  this.checkboxSelectedKeys[cancelId];
+            // this.checkboxSelectedKeys[cancelId] = {
+            //   menu_id: cancelId,
+            //   actions: [],
+            //   resources: []
+            // }
           }
         }
         //先置空checkbox选项-- 让checkbox-group的value值能够监听到数据变化
