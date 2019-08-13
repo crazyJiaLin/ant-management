@@ -129,6 +129,7 @@
       onDelete (key) {
         const dataSource = [...this.dataSource]
         this.dataSource = dataSource.filter(item => item.key !== key)
+        this.$emit('change', this.dataSource);
       },
       handleAdd () {
         //点击添加

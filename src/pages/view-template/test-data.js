@@ -536,7 +536,8 @@ export default [
         }
       },
       delete: {
-        showBtn: true
+        showBtn: true,
+
       }
     }
   }

@@ -8,6 +8,7 @@ import store from './store'
 //全局工具方法引入
 import '@/assets/js/JsonObj.js'
 import '@/assets/js/tool.js'
+import '@/assets/js/global.js'
 //axios引入
 import './server/server'
 import '@/assets/css/reset.css'

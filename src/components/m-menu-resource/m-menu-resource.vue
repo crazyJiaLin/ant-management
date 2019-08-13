@@ -192,6 +192,7 @@
       onDelete (key) {
         const dataSource = [...this.dataSource]
         this.dataSource = dataSource.filter(item => item.key !== key)
+        this.$emit('change', this.dataSource);
       },
       handleAdd () {
         //点击添加
@@ -216,7 +217,7 @@
           code: 'query',
           name: '查询' + value.resourceName,
           method: 'GET',
-          path: value.resourceRouter
+          path: value.resourceRouter + '?q=page'
         },{
           key: ++count,
           code: 'get',
@@ -241,6 +242,18 @@
           name: '删除' + value.resourceName,
           method: 'DELETE',
           path: value.resourceRouter + '/:id'
+        },{
+          key: ++count,
+          code: 'disable',
+          name: '禁用' + value.resourceName,
+          method: 'PATCH',
+          path: value.resourceRouter + '/:id/disable'
+        },{
+          key: ++count,
+          code: 'enable',
+          name: '启用' + value.resourceName,
+          method: 'PATCH',
+          path: value.resourceRouter + '/:id/enable'
         }]
         this.dataSource = [...dataSource, ...newData]
         this.count = count

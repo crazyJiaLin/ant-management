@@ -164,7 +164,7 @@
       },
       fetch (params = {}) {
         this.loading = true;
-        this.$axios.get('/menus?q=tree',{
+        this.$axios.get('menus?q=tree',{
           params: {
             include_actions: 1,
             include_resources: 1,

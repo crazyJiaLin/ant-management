@@ -9,7 +9,7 @@
         <div class="logo-img">
           <img src="/static/img/logo.svg" alt="logo">
         </div>
-        <div class="logo-title" v-if="!collapsed">后台管理系统</div>
+        <div class="logo-title" v-if="!collapsed">权限管理脚手架</div>
       </div>
       <m-nav></m-nav>
     </a-layout-sider>
