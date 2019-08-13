@@ -1,7 +1,9 @@
 <template>
   <div>
     <div style="margin: 15px 0; text-align: right;">
-      <a-button v-if="options.operation && options.operation.create && options.operation.create.showBtn" type="primary" icon="plus"
+      <a-button v-if="options.operation && options.operation.create && options.operation.create.showBtn"
+                :disabled="!isInActions('create')"
+                type="primary" icon="plus"
                 @click="onCreate">新增</a-button>
     </div>
     <m-create :visible="showCreateDrawer" :options="options.operation ? options.operation.create : {}"
@@ -16,9 +18,17 @@
     >
       <template slot="operation" slot-scope="text, record">
         <!--        <a-button size="small">查看</a-button>-->
+        <a-button v-if="options.operation && options.operation.enable && options.operation.enable.showBtn"
+                  :disabled="!isInActions('enable')" @click="onEnable(record)"
+                  size="small" type="primary">启用</a-button>
+        <a-button v-if="options.operation && options.operation.disabled && options.operation.disabled.showBtn"
+                  :disabled="!isInActions('edit')" @click="onDisable(record)"
+                  size="small" type="danger">停用</a-button>
         <a-button v-if="options.operation && options.operation.edit && options.operation.edit.showBtn"
+                  :disabled="!isInActions('edit')"
                   size="small" @click="onEdit(record)">编辑</a-button>
         <a-popconfirm v-if="options.operation && options.operation.delete && options.operation.delete.showBtn"
+                      :disabled="!isInActions('delete')"
                       title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
           <a-button type="danger" ghost size="small">删除</a-button>
@@ -59,6 +69,12 @@
           res.push(newItem)
         }
         return res;
+      },
+      actions(){
+        return this.$store.state.curMenu.actions;
+      },
+      resources(){
+        return this.$store.state.curMenu.resources;
       }
     },
     watch: {
@@ -81,8 +97,18 @@
     mounted() {
       // 参数params为query组件传进来的搜索条件或者配置文件里边给出的
       this.options.isRemote && this.fetch(this.options.params);
+      console.log('actions', this.actions)
     },
     methods: {
+      isInActions (action) {
+        if(!this.action) return false;
+        for(let i=0; i<this.actions.length; i++) {
+          if(action === this.actions[i].code) {
+            return true;
+          }
+        }
+        return false;
+      },
       onCreate () {
         this.showCreateDrawer = true;
       },

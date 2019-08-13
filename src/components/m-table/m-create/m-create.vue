@@ -22,7 +22,7 @@
   import MFormContent from '@/components/m-form/m-form-content'
 
   export default {
-    name: "view-template-create",
+    name: "m-create",
     components: {
       AButton: Button,
       AForm: Form,
