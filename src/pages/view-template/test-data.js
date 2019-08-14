@@ -112,6 +112,19 @@ export default [
       bordered: false,
       size : 'default',
       showHeader: true,
+      // scroll:{           // table scroll
+      //   x: 300,
+      //   y: 100
+      // },
+      // wrapperStyle: {    // 最外层容器的样式，包括新增按钮
+      //   width: '800px',
+      //   height: '300px',
+      //   overflow: 'auto'
+      // },
+      // tableStyle: {      // table的样式
+      //   width: '200px',
+      //   overflow: 'hidden'
+      // }
     },
     // 这里isRemote为true的话，会直接从当前菜单的resources中找到code为query的url进行请求
     isRemote: true,

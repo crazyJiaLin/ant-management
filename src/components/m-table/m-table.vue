@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div style="margin: 15px 0; text-align: right;">
+  <div :style="options.attribute.wrapperStyle">
+    <div style="width: 100%; margin: 15px 0; text-align: right;">
       <a-button v-if="options.operation && options.operation.create && options.operation.create.showBtn"
                 :disabled="!isInActions('create')"
                 type="primary" icon="plus"
@@ -10,9 +10,10 @@
               @close="handleCreateDrawClose"></m-create>
     <m-edit :visible="showEditDrawer" :options="options.operation ? options.operation.edit : {}"
             :record="editRecord" @close="handleEditDrawClose"></m-edit>
-    <a-table :columns="columns" :rowKey="rowKey"
+    <a-table :columns="columns" :rowKey="rowKey" :style="options.attribute.tableStyle"
              :dataSource="dataList" :pagination="pagination"
-             :size="options.attribute.size" :bordered="options.attribute.bordered" :scroll="options.attribute.scroll"
+             :size="options.attribute.size" :bordered="options.attribute.bordered"
+             :scroll="options.attribute.scroll"
              :showHeader="options.attribute.showHeader === undefined ? true : options.attribute.showHeader"
              :loading="loading" @change="handleTableChange"
     >
