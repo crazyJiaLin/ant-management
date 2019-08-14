@@ -16,13 +16,19 @@
              :showHeader="options.attribute.showHeader === undefined ? true : options.attribute.showHeader"
              :loading="loading" @change="handleTableChange"
     >
+      <template slot="status" slot-scope="text, record">
+        <div class="status_circle1" v-if="text===1"></div>
+        <div class="status_circle2" v-if="text===2"></div>
+        <span v-if="text===1">启用</span>
+        <span v-if="text===2">停用</span>
+      </template>
       <template slot="operation" slot-scope="text, record">
         <!--        <a-button size="small">查看</a-button>-->
         <a-button v-if="record.status === 2 && options.operation && options.operation.enable && options.operation.enable.showBtn"
-                  :disabled="!isInActions('enable')" :loading="enableBtnLoading" @click="onEnable(record.record_id)"
+                  :disabled="!isInActions('enable')" :loading="enableBtnLoading[record.record_id]" @click="onEnable(record.record_id)"
                   size="small" type="primary">启用</a-button>
         <a-button v-if="record.status === 1 && options.operation && options.operation.disable && options.operation.disable.showBtn"
-                  :disabled="!isInActions('edit')" :loading="disableBtnLoading" @click="onDisable(record.record_id)"
+                  :disabled="!isInActions('edit')" :loading="disableBtnLoading[record.record_id]" @click="onDisable(record.record_id)"
                   size="small" type="danger">停用</a-button>
         <a-button v-if="options.operation && options.operation.edit && options.operation.edit.showBtn"
                   :disabled="!isInActions('edit')"
@@ -31,7 +37,7 @@
                       :disabled="!isInActions('delete')"
                       title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
-          <a-button type="danger" ghost size="small">删除</a-button>
+          <a-button :loading="deleteBtnLoading[record.record_id]" type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
       </template>
     </a-table>
@@ -92,8 +98,9 @@
         data: [],
         pagination: this.options.pagination,
         loading: false,
-        enableBtnLoading: false,
-        disableBtnLoading: false,
+        enableBtnLoading: {},
+        disableBtnLoading: {},
+        deleteBtnLoading: {},
         showCreateDrawer: false,
         showEditDrawer: false,
         editRecord: {}
@@ -117,7 +124,7 @@
         let url = resource.path.replace(/:id/g, record_id)
         let method = resource.method.toLowerCase()
         console.log('开始发请求enable', method, url)
-        this.enableBtnLoading = true
+        this.enableBtnLoading[record_id] = true
         this.$axios[method](url).then(res => {
           console.log(res)
           if(res.data) {
@@ -129,7 +136,7 @@
         }).catch(err => {
           console.log(err)
         }).finally((() => {
-          this.enableBtnLoading = false;
+          this.enableBtnLoading[record_id] = false;
         }))
       },
       onDisable (record_id) {
@@ -143,7 +150,7 @@
         let url = resource.path.replace(/:id/g, record_id)
         let method = resource.method.toLowerCase()
         console.log('开始发请求disable', method, url)
-        this.disableBtnLoading = true;
+        this.disableBtnLoading[record_id] = true;
         this.$axios[method](url).then(res => {
           console.log(res)
           if(res.data) {
@@ -155,7 +162,7 @@
         }).catch(err => {
           console.log(err)
         }).finally(() => {
-          this.disableBtnLoading = false;
+          this.disableBtnLoading[record_id] = false;
         })
       },
       onCreate () {
@@ -178,6 +185,7 @@
         let url = resource.path.replace(/:id/g, record_id)
         let method = resource.method.toLowerCase()
         // console.log('开始发请求', method, url)
+        this.deleteBtnLoading[record_id] = true;
         this.$axios[method](url).then(res => {
           console.log(res)
           if(res.data) {
@@ -188,6 +196,8 @@
           }
         }).catch(err => {
           console.log(err)
+        }).finally(() => {
+          this.deleteBtnLoading[record_id] = false;
         })
       },
       handleCreateDrawClose (action) {
@@ -212,6 +222,7 @@
         let url = resource.path
         let method = resource.method.toLowerCase()
         this.loading = true
+        console.log('开始请求table数据', method, url)
         this.$axios[method](url,{
           params: {
             results: 10,
@@ -265,3 +276,20 @@
     },
   }
 </script>
+<style lang="less" scoped>
+  .status_circle1{
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #52c41a;
+    display: inline-block;
+  }
+  .status_circle2{
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: #f5222d;
+    display: inline-block;
+  }
+
+</style>

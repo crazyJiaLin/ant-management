@@ -154,13 +154,14 @@ export default [
         dataIndex: 'status',
         align: 'center',
         width: '200px',
-        customRender: `(text, record, index)=>{
-          if(text === 1){
-            return '启用'
-          }else {
-            return '停用'
-          }
-        }`
+        // customRender: `(text, record, index)=>{
+        //   if(text === 1){
+        //     return '启用'
+        //   }else {
+        //     return '停用'
+        //   }
+        // }`,
+        scopedSlots: {customRender: 'status'},
       },
       {
         title: '邮箱',
