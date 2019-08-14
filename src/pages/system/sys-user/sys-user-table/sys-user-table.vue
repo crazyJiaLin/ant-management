@@ -18,10 +18,16 @@
       </template>
       <template slot="operation" slot-scope="text, record">
         <!--        <a-button size="small">查看</a-button>-->
+        <a-button v-if="record.status === 2" :loading="enableBtnLoading[record.record_id]"
+                  @click="onEnable(record.record_id)"
+                  size="small" type="primary">启用</a-button>
+        <a-button v-if="record.status === 1" :loading="disableBtnLoading[record.record_id]"
+                  @click="onDisable(record.record_id)"
+                  size="small" type="danger">停用</a-button>
         <a-button size="small" @click="onEdit(record)">编辑</a-button>
         <a-popconfirm v-if="data.length" title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
-          <a-button type="danger" ghost size="small">删除</a-button>
+          <a-button :loading="deleteBtnLoading[record.record_id]" type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
       </template>
       <!--      <p slot="expandedRowRender" slot-scope="record" style="margin: 0">{{record.record_id}}</p>-->
@@ -68,6 +74,9 @@
         data: [],
         pagination: {},
         loading: false,
+        enableBtnLoading: {},
+        disableBtnLoading: {},
+        deleteBtnLoading: {},
         tableHeight: 0,
         columns: [
           {
@@ -134,6 +143,40 @@
       // this.tableHeight = wrapHeight - 115;
     },
     methods: {
+      onEnable (record_id) {
+        this.enableBtnLoading[record_id] = true;
+        this.$axios.patch(`users/${record_id}/enable`).then(res => {
+          console.log(res)
+          if(res.data) {
+            this.fetch(this.searchParams);
+            notification.success({
+              message: '启用成功'
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        }).finally((() => {
+          console.log('启用请求结束')
+          this.enableBtnLoading[record_id] = false;
+        }))
+      },
+      onDisable (record_id) {
+        this.disableBtnLoading[record_id] = true;
+        this.$axios.patch(`users/${record_id}/disable`).then(res => {
+          console.log(res)
+          if(res.data) {
+            this.fetch(this.searchParams);
+            notification.success({
+              message: '停用成功'
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+          console.log('停用请求结束')
+          this.disableBtnLoading[record_id] = false;
+        })
+      },
       onEdit(item) {
         console.log(item)
         this.showEditDrawer = true;
@@ -152,7 +195,8 @@
         }
       },
       onDelete(record_id) {  //点击删除
-        console.log(record_id)
+        // console.log(record_id)
+        this.deleteBtnLoading[record_id] = true;
         this.$axios.delete('users/' + record_id).then(res => {
           console.log(res)
           if (res.data) {
@@ -161,6 +205,8 @@
           }
         }).catch(err => {
           console.log(err)
+        }).finally(() => {
+          this.deleteBtnLoading[record_id] = false;
         })
       },
       fetch(params = {}) {

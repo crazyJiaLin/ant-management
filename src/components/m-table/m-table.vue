@@ -25,10 +25,12 @@
       <template slot="operation" slot-scope="text, record">
         <!--        <a-button size="small">查看</a-button>-->
         <a-button v-if="record.status === 2 && options.operation && options.operation.enable && options.operation.enable.showBtn"
-                  :disabled="!isInActions('enable')" :loading="enableBtnLoading[record.record_id]" @click="onEnable(record.record_id)"
+                  :disabled="!isInActions('enable')" :loading="enableBtnLoading[record.record_id]"
+                  @click="onEnable(record.record_id)"
                   size="small" type="primary">启用</a-button>
         <a-button v-if="record.status === 1 && options.operation && options.operation.disable && options.operation.disable.showBtn"
-                  :disabled="!isInActions('edit')" :loading="disableBtnLoading[record.record_id]" @click="onDisable(record.record_id)"
+                  :disabled="!isInActions('edit')" :loading="disableBtnLoading[record.record_id]"
+                  @click="onDisable(record.record_id)"
                   size="small" type="danger">停用</a-button>
         <a-button v-if="options.operation && options.operation.edit && options.operation.edit.showBtn"
                   :disabled="!isInActions('edit')"

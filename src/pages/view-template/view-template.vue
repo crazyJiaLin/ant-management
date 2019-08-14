@@ -37,7 +37,6 @@
     },
     watch : {
       '$store.state.curMenu' (newVal, oldVal) {
-        // console.log('当前menu', newVal)
         this.getTemplates()
       }
     },
