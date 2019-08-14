@@ -113,9 +113,9 @@ export default [
       size : 'default',
       showHeader: true,
     },
+    // 这里isRemote为true的话，会直接从当前菜单的resources中找到code为query的url进行请求
     isRemote: true,
     data: [],
-    dataUrl: 'users?q=page',
     params: {},
     // 对于render中解决不了的function问题，可以吧function当做字符串存储，然后在组件中获取的时候eval（）
     // TODO 问题所在，这里如果使用eval执行函数的话，会不支持jsx语法，所以只能在函数中返回字符串，不能返回jsx语法标签
@@ -197,8 +197,6 @@ export default [
         title: '新建用户',
         width: 550,
         form: {
-          method: 'post',
-          url: '/users',
           // 这里吧role_ids进行转化，并添加其想要修改的内容---
           // 注意这里不能使用不能使用this指向vue或者使用import的东西（如md5)---- TODO 密码提交怎么办？
           beforeSubmit : `(values) => {
@@ -364,9 +362,6 @@ export default [
         title: '编辑用户',
         width: 550,
         form: {
-          method: 'put',
-          // 在用这块的时候记得用正则替换掉占位符{id}
-          url: '/users/{id}',
           beforeSubmit : `(values, record) => {
             if(!values.roles) return;
             let roles = [];
