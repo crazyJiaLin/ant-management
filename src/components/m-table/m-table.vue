@@ -10,7 +10,7 @@
               @close="handleCreateDrawClose"></m-create>
     <m-edit :visible="showEditDrawer" :options="options.operation ? options.operation.edit : {}"
             :record="editRecord" @close="handleEditDrawClose"></m-edit>
-    <a-table :columns="columns" :rowKey="eval(options.rowKeys)"
+    <a-table :columns="columns" :rowKey="rowKey"
              :dataSource="dataList" :pagination="pagination"
              :size="options.attribute.size" :bordered="options.attribute.bordered" :scroll="options.attribute.scroll"
              :showHeader="options.attribute.showHeader === undefined ? true : options.attribute.showHeader"
@@ -55,6 +55,9 @@
       options: Object
     },
     computed: {
+      rowKey () {
+        return $eval(this.options.rowKeys, 'rowKeyRender')
+      },
       dataList() {
         return this.options.isRemote ? this.data : this.options.data;
       },
@@ -64,7 +67,7 @@
           let oldItem = this.options.columns[i];
           let newItem  = oldItem;
           if(oldItem.customRender) {
-            newItem.customRender = eval(oldItem.customRender);
+            newItem.customRender = $eval(oldItem.customRender, 'customRender');
           }
           res.push(newItem)
         }
@@ -98,17 +101,9 @@
       // 参数params为query组件传进来的搜索条件或者配置文件里边给出的
       this.options.isRemote && this.fetch(this.options.params);
       console.log('actions', this.actions)
+      console.log('resources', this.resources)
     },
     methods: {
-      isInActions (action) {
-        if(!this.action) return false;
-        for(let i=0; i<this.actions.length; i++) {
-          if(action === this.actions[i].code) {
-            return true;
-          }
-        }
-        return false;
-      },
       onCreate () {
         this.showCreateDrawer = true;
       },
@@ -117,7 +112,28 @@
         this.showEditDrawer = true;
         this.editRecord = record;
       },
-      onDelete (record_id) {},
+      onDelete (record_id) {
+        let beforeDelete = $eval(this.options.operation.delete.form.beforeSubmit, 'beforeDelete');
+        beforeDelete(record_id);
+        let resource = this.findResourceByCode('delete');
+        if (!resource) return message.warn('您还没有配置delete资源');
+        // console.log('找到delete匹配项', resource)
+        // 替换id
+        let url = resource.path.replace(/:id/g, record_id)
+        let method = resource.method.toLowerCase()
+        // console.log('开始发请求', method, url)
+        this.$axios[method](url).then(res => {
+          console.log(res)
+          if(res.data) {
+            this.fetch(this.options.params);
+            notification.success({
+              message: '删除成功'
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       handleCreateDrawClose (action) {
         this.showCreateDrawer = false;
         if(action && action == 'created') {
@@ -131,23 +147,16 @@
           this.fetch(this.options.params);
         }
       },
-      handleTableChange (pagination, filters, sorter) {
-        console.log(pagination);
-        const pager = { ...this.pagination };
-        pager.current = pagination.current;
-        this.pagination = pager;
-        this.fetch({
-          results: pagination.pageSize,
-          page: pagination.current,
-          sortField: sorter.field,
-          sortOrder: sorter.order,
-          ...filters,
-        });
-      },
       fetch (params = {}) {
-        console.log('params:', params);
+        // console.log('params:', params);
+        let resource = this.findResourceByCode('query');
+        if (!resource) return message.warn('您还没有配置query资源');
+        // console.log('找到delete匹配项', resource)
+        // 替换id
+        let url = resource.path
+        let method = resource.method.toLowerCase()
         this.loading = true
-        this.$axios.get(this.options.dataUrl,{
+        this.$axios[method](url,{
           params: {
             results: 10,
             ...params,
@@ -161,17 +170,42 @@
           this.pagination = data.pagination;
         });
       },
-      eval(code) {
-        let res = null
-        try{
-          res = eval(code);
-        }catch (e) {
-          Notification.error({
-            message: 'rowKeys函数配置错误'
-          })
+      // 根据code查找resources
+      findResourceByCode (code) {
+        if(!code || !this.resources) return null;
+        for(let i=0; i<this.resources.length; i++) {
+          let item = this.resources[i];
+          if(item.code === code) {
+            return item;
+          }
         }
-        return res;
-      }
+        return null;
+      },
+      // 判断参数action是否是本菜单actions的code中一项
+      isInActions (action) {
+        if(!this.actions) return false;
+        for(let i=0; i<this.actions.length; i++) {
+          if(action === this.actions[i].code) {
+            return true;
+          }
+        }
+        return false;
+      },
+      eval(code) {
+        return window.$eval(code)
+      },
+      handleTableChange (pagination, filters, sorter) {
+        const pager = { ...this.pagination };
+        pager.current = pagination.current;
+        this.pagination = pager;
+        this.fetch({
+          results: pagination.pageSize,
+          page: pagination.current,
+          sortField: sorter.field,
+          sortOrder: sorter.order,
+          ...filters,
+        });
+      },
     },
   }
 </script>

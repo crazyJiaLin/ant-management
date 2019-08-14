@@ -48,7 +48,7 @@
       let res = {};
       let str = this.serialize(t, 'res')
       console.log(str)
-      eval(str)
+      $eval(str)
       console.log(res)
     },
     methods : {

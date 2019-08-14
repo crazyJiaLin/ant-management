@@ -42,9 +42,6 @@
       }
     },
     computed: {
-      actions(){
-        return this.$store.state.curMenu.actions;
-      },
       resources(){
         return this.$store.state.curMenu.resources;
       }
@@ -57,18 +54,18 @@
           if (error) return;
           console.log('校验成功开始提交')
           // 执行请求前的钩子函数
-          try {
-            let beforeSubmit = this.options.form.beforeSubmit ? eval(this.options.form.beforeSubmit) : ()=>{};
-            beforeSubmit(values);
-          }catch (e) {
-            Notification.error({
-              message: 'beforeSubmit函数执行出错'
-            });
-          }
-          let method = this.options.form.method ? this.options.form.method.toLowerCase() : 'post';
-          console.log('开始发请求', method)
+          let beforeSubmit = $eval(this.options.form.beforeSubmit, 'beforeCreate');
+          beforeSubmit(values);
+
+          // 在resources中查找create的资源
+          let resource = this.findResourceByCode('create');
+          if (!resource) return message.warn('您还没有配置create资源');
+          // 替换id
+          let url = resource.path
+          let method = resource.method.toLowerCase()
+          // console.log('开始发请求', method, url)
           this.btnLoading = true;
-          this.$axios[method](this.options.form.url, values).then(res => {
+          this.$axios[method](url, values).then(res => {
             console.log(res)
             if(res.data) {
               Notification['success']({
@@ -84,6 +81,17 @@
             this.btnLoading = false;
           })
         });
+      },
+      // 根据code查找resources
+      findResourceByCode (code) {
+        if(!code || !this.resources) return null;
+        for(let i=0; i<this.resources.length; i++) {
+          let item = this.resources[i];
+          if(item.code === code) {
+            return item;
+          }
+        }
+        return null;
       },
       onClose() {
         this.$emit('close');

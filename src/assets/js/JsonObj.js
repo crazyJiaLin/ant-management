@@ -37,7 +37,7 @@ window.JsonObj = (function(options){
             evalStr += ' = value';
             // list[i][attr] = value;
             // console.log('要执行的代码', evalStr)
-            eval(evalStr)
+            $eval(evalStr, 'jsonObj.set')
             msg = `找到匹配项, id=${id}, 匹配属性为 ${attr}`;
             return;
           }
@@ -65,7 +65,7 @@ window.JsonObj = (function(options){
             // list[i][attr] = value;
             // console.log('要执行的代码', evalStr)
             msg = `找到匹配项, id=${id}`;
-            eval(evalStr)
+            $eval(evalStr, 'jsonObj.get')
           }
           if(list[i].children && list[i].children.length > 0) {
             find(list[i].children)

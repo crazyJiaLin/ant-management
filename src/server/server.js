@@ -53,7 +53,8 @@ axios.interceptors.response.use(data=> {
     Message.error('服务器被吃了⊙﹏⊙∥');
   }else if(err.response.status == 404){
     //这里进行404页面跳转
-    Message.error('页面找不到了')
+    // Message.error('资源不存在')
+    Message.error(err.response.data.error.message);
   } else {
     console.log(err.response)
     Message.error(err.response.data.error.message);

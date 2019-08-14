@@ -37,7 +37,7 @@
     },
     watch : {
       '$store.state.curMenu' (newVal, oldVal) {
-        console.log('当前menu', newVal)
+        // console.log('当前menu', newVal)
         this.getTemplates()
       }
     },
@@ -57,13 +57,7 @@
         // console.log('template 父组件接收到命令', value)
         //将inner中的jsonObj用当前template代替，这样就能够执行JsonObj的指定方法了 --- 同时支持message.error()等方法
         let code = value.replace(/jsonobj/g, 'this.template')
-        try {
-          // console.log('执行子组件提交的命令',code)
-          eval(code)
-        }catch (e) {
-          console.log(e)
-          Message.error('执行命令出错,请检查配置的公共方法是否正确')
-        }
+        $eval(code, 'submitEvent')
       },
       // 根据菜单id查询模板数据
       getTemplates () {

@@ -41,9 +41,9 @@
           console.log('Received values of form: ', values);
           if(error) return;
           //执行搜索前的钩子函数
-          let beforeSearch = this.options.beforeSearch ? eval(this.options.beforeSearch) : ()=>{};
-          // console.log(beforeSearch)
-          beforeSearch(values);
+          let beforeSubmit = $eval(this.options.beforeSubmit, 'beforeSubmit');
+          // console.log(beforeSubmit)
+          beforeSubmit(values);
           // 提交表单到父组件执行
           this.$emit('submit', values);
         });

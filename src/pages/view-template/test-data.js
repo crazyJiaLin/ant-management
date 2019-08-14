@@ -537,7 +537,11 @@ export default [
       },
       delete: {
         showBtn: true,
-
+        form: {
+          beforeSubmit : `delId => {
+           console.log('删除前的钩子函数', delId);
+          }`,
+        }
       }
     }
   }

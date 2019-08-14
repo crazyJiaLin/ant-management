@@ -51,7 +51,7 @@
     methods: {
       getUserMenuTree () {
         this.$axios.get('/current/menutree').then(res => {
-          console.log('get menu tree', res.data)
+          // console.log('get menu tree', res.data)
           if(res.data){
             this.menuList = res.data.list;
             //设置默认展开项和默认选中项

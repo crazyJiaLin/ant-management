@@ -39,6 +39,7 @@
       record: Object
     },
     computed: {
+      // 通过editItem对decorator设置initVal
       editForm(){
         // 在这里将record中的值合并到form中去
         let res = [];
@@ -50,12 +51,8 @@
             let tempDecorator = item.attribute.decorator;
             if(item.attribute.initialValueRender){
               // 如果存在初始化render，则按照render中的进行
-              try{
-                let initialValueRender = eval(item.attribute.initialValueRender);
-                tempDecorator.initialValue = initialValueRender(value);
-              }catch (e) {
-                console.error('执行initialValueRender函数出错',e);
-              }
+              let initialValueRender = $eval(item.attribute.initialValueRender, 'initialValueRender');
+              tempDecorator.initialValue = initialValueRender(value);
             }else{
               tempDecorator.initialValue = value;
             }
@@ -63,8 +60,11 @@
           }
           res.push(item)
         }
-        console.log('通过原始配置项与编辑行传值的结合结果', res)
+        // console.log('通过editItem对decorator设置initVal', res)
         return res;
+      },
+      resources(){
+        return this.$store.state.curMenu.resources;
       }
     },
     data() {
@@ -79,21 +79,18 @@
         this.form.validateFields((error, values) => {
           console.log(error, values)
           if (error) return;
-          console.log('校验成功开始提交')
+          // console.log('校验成功开始提交')
           // 执行请求前的钩子函数
-          try {
-            let beforeSubmit = this.options.form.beforeSubmit ? eval(this.options.form.beforeSubmit) : ()=>{};
-            beforeSubmit(values, this.record);
-          }catch (e) {
-            console.log(e)
-            Notification.error({
-              message: 'beforeSubmit函数执行出错'
-            });
-          }
-          let method = this.options.form.method ? this.options.form.method.toLowerCase() : 'post';
-          // 因为这里涉及到一个url的id替换，在配置中我们用{id}作为占位符，这里吧占位符替换为真实id
-          let url = (this.options.form.url).replace(/{id}/g, this.record.record_id);
-          console.log('开始发请求', method, url)
+          let beforeSubmit = $eval(this.options.form.beforeSubmit, 'beforeEdit');
+          beforeSubmit(values, this.record);
+
+          // 在resources中查找edit的资源
+          let resource = this.findResourceByCode('edit');
+          if (!resource) return message.warn('您还没有配置edit资源');
+          // 替换id
+          let url = resource.path.replace(/:id/g, this.record.record_id)
+          let method = resource.method.toLowerCase()
+          // console.log('开始发请求', method, url)
           this.btnLoading = true;
           this.$axios[method](url, values).then(res => {
             console.log(res)
@@ -102,7 +99,7 @@
                 message: '更新成功'
               })
               // 置空表单，向父组件提交动作，更新表格
-              this.form.resetFields();
+              // this.form.resetFields(); --- 编辑不用置空
               this.$emit('close', 'updated');
             }
           }).catch(err => {
@@ -117,7 +114,18 @@
       },
       handleSubmitEvent (value) {
         this.$emit('submitEvent', value)
-      }
+      },
+      // 根据code查找resources
+      findResourceByCode (code) {
+        if(!code || !this.resources) return null;
+        for(let i=0; i<this.resources.length; i++) {
+          let item = this.resources[i];
+          if(item.code === code) {
+            return item;
+          }
+        }
+        return null;
+      },
     },
     mounted() {
     }
