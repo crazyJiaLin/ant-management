@@ -46,8 +46,11 @@
                         </a-col>
                         <a-col :span="8" :offset="1">
                             <div class="captcha-img" title="点击刷新" @click="reloadCaptcha">
+                              <div v-if="captchaLoading" class="captcha-loading">
+                                <a-icon type="loading"></a-icon>
+                              </div>
                                 <!-- {{captchaImg}} -->
-                                <img :src="captchaImg" alt="验证码">
+                                <img v-if="!captchaLoading" :src="captchaImg" alt="验证码">
                             </div>
                         </a-col>
                     </a-row>
@@ -81,6 +84,7 @@ export default {
         captchaId: '',
         captchaImg: '',
         captchaCode: '',
+        captchaLoading: false,
         btnLoading: false,
         redirectPath: this.$route.query.redirect ? this.$route.query.redirect : '/',
         form: this.$form.createForm(this),
@@ -138,39 +142,45 @@ export default {
         },
         getCaptchaId () {
             //获取验证码
-            this.$axios.get('/login/captchaid').then((res) => {
-                console.log(res.data)
-                let data = res.data;
-                if(data.captcha_id) {
-                    this.captchaId = data.captcha_id;
-                    this.getCaptchaImg()
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
+          this.$axios.get('/login/captchaid').then((res) => {
+              console.log(res.data)
+              let data = res.data;
+              if(data.captcha_id) {
+                  this.captchaId = data.captcha_id;
+                  this.getCaptchaImg()
+              }
+          }).catch((err) => {
+              console.log(err)
+          })
         },
         reloadCaptcha () {
             //重新加载验证码图片
-            this.getCaptchaId();
+            this.getCaptchaImg('reload');
         },
         getCaptchaImg (action) {
-            let params = {
-                    id: this.captchaId,
-                };
-            action === 'reload' && (params.reload = 1);
-            this.$axios.get('/login/captcha',{
-                responseType : 'blob',  //一定要设置响应数据类型为blob，不然数据就是一群乱码，此处可以写份采坑记录
-                params: params
-            }).then((res) => {
-                // console.log(res);
-                if(res.data){
-                this.blobToDataURL(res.data,(img) => {
-                    this.captchaImg =img;
-                })
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
+          let params = {
+                  id: this.captchaId,
+              };
+          if(action === 'reload') {
+            params.reload = Math.random()
+          }
+          this.captchaLoading = true;
+          this.$axios.get('/login/captcha',{
+              responseType : 'blob',  //一定要设置响应数据类型为blob，不然数据就是一群乱码，此处可以写份采坑记录
+              params: params
+          }).then((res) => {
+              // console.log(res);
+              if(res.data){
+              this.blobToDataURL(res.data,(img) => {
+                this.captchaImg =img;
+                this.captchaLoading = false;
+              })
+              }
+          }).catch((err) => {
+              console.log(err)
+          }).finally(() => {
+
+          })
         },
        blobToDataURL(blob, callback) {
             var a = new FileReader();
