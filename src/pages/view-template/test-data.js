@@ -537,6 +537,15 @@ export default [
            console.log('删除前的钩子函数', delId);
           }`,
         }
+      },
+      enable: {
+        showBtn: true,
+        form: {
+          beforeSubmit : ``
+        }
+      },
+      disable: {
+        showBtn: true,
       }
     }
   }

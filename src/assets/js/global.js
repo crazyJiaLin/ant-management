@@ -4,7 +4,7 @@ window.confirm = Modal.confirm;
 window.notification = Notification;
 window.$eval = function(code, fnName) {
   // eval错误处理
-  if(!code) return () => {};
+  if(!code || code == '') return () => {};
   let res = () => {};
   try{
     // console.log('开始执行', code)

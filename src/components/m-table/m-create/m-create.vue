@@ -54,9 +54,10 @@
           if (error) return;
           console.log('校验成功开始提交')
           // 执行请求前的钩子函数
-          let beforeSubmit = $eval(this.options.form.beforeSubmit, 'beforeCreate');
-          beforeSubmit(values);
-
+          if(this.options.form) {
+            let beforeSubmit = $eval(this.options.form.beforeSubmit, 'beforeCreate');
+            beforeSubmit(values);
+          }
           // 在resources中查找create的资源
           let resource = this.findResourceByCode('create');
           if (!resource) return message.warn('您还没有配置create资源');

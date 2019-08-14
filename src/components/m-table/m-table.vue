@@ -18,11 +18,11 @@
     >
       <template slot="operation" slot-scope="text, record">
         <!--        <a-button size="small">查看</a-button>-->
-        <a-button v-if="options.operation && options.operation.enable && options.operation.enable.showBtn"
-                  :disabled="!isInActions('enable')" @click="onEnable(record)"
+        <a-button v-if="record.status === 2 && options.operation && options.operation.enable && options.operation.enable.showBtn"
+                  :disabled="!isInActions('enable')" :loading="enableBtnLoading" @click="onEnable(record.record_id)"
                   size="small" type="primary">启用</a-button>
-        <a-button v-if="options.operation && options.operation.disabled && options.operation.disabled.showBtn"
-                  :disabled="!isInActions('edit')" @click="onDisable(record)"
+        <a-button v-if="record.status === 1 && options.operation && options.operation.disable && options.operation.disable.showBtn"
+                  :disabled="!isInActions('edit')" :loading="disableBtnLoading" @click="onDisable(record.record_id)"
                   size="small" type="danger">停用</a-button>
         <a-button v-if="options.operation && options.operation.edit && options.operation.edit.showBtn"
                   :disabled="!isInActions('edit')"
@@ -92,6 +92,8 @@
         data: [],
         pagination: this.options.pagination,
         loading: false,
+        enableBtnLoading: false,
+        disableBtnLoading: false,
         showCreateDrawer: false,
         showEditDrawer: false,
         editRecord: {}
@@ -104,6 +106,58 @@
       console.log('resources', this.resources)
     },
     methods: {
+      onEnable (record_id) {
+        if(this.options.operation.enable && this.options.operation.enable.form) {
+          let beforeEnable = $eval(this.options.operation.enable.form.beforeSubmit, 'beforeEnable');
+          beforeEnable(record_id);
+        }
+        let resource = this.findResourceByCode('enable');
+        if (!resource) return message.warn('您还没有配置enable资源');
+        // 替换id
+        let url = resource.path.replace(/:id/g, record_id)
+        let method = resource.method.toLowerCase()
+        console.log('开始发请求enable', method, url)
+        this.enableBtnLoading = true
+        this.$axios[method](url).then(res => {
+          console.log(res)
+          if(res.data) {
+            this.fetch(this.options.params);
+            notification.success({
+              message: '启用成功'
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        }).finally((() => {
+          this.enableBtnLoading = false;
+        }))
+      },
+      onDisable (record_id) {
+        if(this.options.operation.disable && this.options.operation.disable.form){
+          let beforeDisable = $eval(this.options.operation.disable.form.beforeSubmit, 'beforeDisable');
+          beforeDisable(record_id);
+        }
+        let resource = this.findResourceByCode('disable');
+        if (!resource) return message.warn('您还没有配置disable资源');
+        // 替换id
+        let url = resource.path.replace(/:id/g, record_id)
+        let method = resource.method.toLowerCase()
+        console.log('开始发请求disable', method, url)
+        this.disableBtnLoading = true;
+        this.$axios[method](url).then(res => {
+          console.log(res)
+          if(res.data) {
+            this.fetch(this.options.params);
+            notification.success({
+              message: '停用成功'
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+          this.disableBtnLoading = false;
+        })
+      },
       onCreate () {
         this.showCreateDrawer = true;
       },
@@ -113,8 +167,10 @@
         this.editRecord = record;
       },
       onDelete (record_id) {
-        let beforeDelete = $eval(this.options.operation.delete.form.beforeSubmit, 'beforeDelete');
-        beforeDelete(record_id);
+        if(this.options.operation.delete && this.options.operation.delete.form) {
+          let beforeDelete = $eval(this.options.operation.delete.form.beforeSubmit, 'beforeDelete');
+          beforeDelete(record_id);
+        }
         let resource = this.findResourceByCode('delete');
         if (!resource) return message.warn('您还没有配置delete资源');
         // console.log('找到delete匹配项', resource)
