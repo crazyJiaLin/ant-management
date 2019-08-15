@@ -20,10 +20,9 @@ export default [
         showSearch: true, // 显示搜索按钮
         span: 24,         // 操作按钮宽度
         offset: 0,        // 操作按钮偏移量
-        resetText: 'reset', // 重置按钮文本
+        resetText: 'clear', // 重置按钮文本
         searchText: 'search'  // 搜索按钮文本
       }
-
     },
     "children": [
       {

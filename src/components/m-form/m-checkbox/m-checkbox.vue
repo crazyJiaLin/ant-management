@@ -1,22 +1,29 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-checkbox-group v-if="!options.attribute.Tooltip" :options="dataList"
+    <a-checkbox-group v-if="!options.attribute.Tooltip"
                       @change="onChange" :disabled="options.attribute.disabled"
                       v-decorator="[
                         options.id,
                         options.attribute.decorator
                       ]">
+      <a-checkbox v-for="(item, index) in dataList" :key="index"
+                       :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+        {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+      </a-checkbox>
 <!--      <a-radio  :value="item.value" v-for="(item, index) in dataList" :key="index">{{item.label}}</a-radio>-->
     </a-checkbox-group>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
-      <a-checkbox-group @change="onChange" :options="dataList"
+      <a-checkbox-group @change="onChange"
                         :disabled="options.attribute.disabled"  v-decorator="[
                           options.id,
                           options.attribute.decorator
                         ]">
-<!--        <a-radio  :value="item.value" v-for="(item, index) in dataList" :key="index">{{item.label}}</a-radio>-->
+        <a-checkbox v-for="(item, index) in dataList" :key="index"
+                    :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+          {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+        </a-checkbox>
       </a-checkbox-group>
     </a-tooltip>
   </a-form-item>
@@ -38,13 +45,13 @@
     },
     computed: {
       dataList() {
-        // return this.options.isRemote ? this.data : this.options.data
-        return ['a', 'b', 'c']
+        return this.options.isRemote ? this.data : this.options.data
+        // return ['a', 'b', 'c']
       }
     },
     data () {
       return {
-        data: this.options.data,
+        data: [],
       }
     },
     methods : {

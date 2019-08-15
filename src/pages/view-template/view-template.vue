@@ -11,6 +11,8 @@
       <div v-for="(item, index) in this.template" :key="item.id">
         <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
                  @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
+        <m-form v-if="item.type && (item.type.toLowerCase() === 'form')" :options="item"
+                 @submitEvent="handleSubmitEvent"/>
         <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
       </div>
@@ -19,10 +21,11 @@
 </template>
 <script>
   // 假数据
-  import TemplateData from './test-data'
+  import TemplateData from './test-data/test-data'
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
   import MQuery from '@/components/m-form/m-query/m-query'
+  import MForm from '@/components/m-form/m-form'
   import MTable from '@/components/m-table/m-table'
   import MA from '@/components/m-a/m-a'
   import MTest from '@/components/m-test/m-test'
@@ -31,6 +34,7 @@
     components: {
       AIcon: Icon,
       MQuery,
+      MForm,
       MTest,
       MTable,
       'm-a': MA
@@ -56,7 +60,13 @@
         // console.log('template 父组件接收到命令', value)
         //将inner中的jsonObj用当前template代替，这样就能够执行JsonObj的指定方法了 --- 同时支持message.error()等方法
         let code = value.replace(/jsonobj/g, 'this.template')
-        $eval(code, 'submitEvent')
+        try {
+          // console.log('执行子组件提交的命令',code)
+          eval(code)
+        }catch (e) {
+          console.log(e)
+          Message.error('执行命令出错,请检查配置的公共方法是否正确')
+        }
       },
       // 根据菜单id查询模板数据
       getTemplates () {
@@ -67,10 +77,10 @@
           // console.log('获取到当前菜单的模板数据',res.data)
           if(res.data){
             //数据库中有对应于本菜单的template数据
-            let jsonStr = Base64.decode(res.data.data)
-            this.parseJSON(jsonStr)
+            // let jsonStr = Base64.decode(res.data.data)
+            // this.parseJSON(jsonStr)
             // TODO 这里是个假数据，稍后吧前两行注释打开弄成真数据
-            // this.template = new JsonObj(TemplateData)
+            this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {
           console.log(err.response)

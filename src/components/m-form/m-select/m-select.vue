@@ -7,7 +7,10 @@
                   options.id,
                   options.attribute.decorator
                 ]">
-      <a-select-option v-for="(item, index) in dataList" :key="index" :value="item[options.fieldsName.value]">{{item[options.fieldsName.label]}}</a-select-option>
+      <a-select-option v-for="(item, index) in dataList" :key="index"
+                       :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+        {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+      </a-select-option>
     </a-select>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
@@ -17,7 +20,10 @@
                   options.id,
                   options.attribute.decorator
                 ]">
-        <a-select-option v-for="(item, index) in dataList" :key="index" :value="item[options.fieldsName.value]">{{item[options.fieldsName.label]}}</a-select-option>
+        <a-select-option v-for="(item, index) in dataList" :key="index"
+                         :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+          {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+        </a-select-option>
       </a-select>
     </a-tooltip>
   </a-form-item>

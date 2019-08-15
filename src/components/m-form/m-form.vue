@@ -1,7 +1,10 @@
 <template>
-  <a-form :form="form" @submit="handleSubmit">
-    <m-form-content :formList="options.children" @submitEvent="handleSubmitEvent"></m-form-content>
-  </a-form>
+  <div :style="options.attribute.wrapperStyle">
+    <a-form :form="form" @submit="handleSubmit"
+            :layout="options.attribute.layout" :style="options.attribute.formStyle">
+          <m-form-content :formList="options.children" @submitEvent="handleSubmitEvent"></m-form-content>
+    </a-form>
+  </div>
 </template>
 
 <script>
@@ -21,11 +24,6 @@
     },
     props: {
       options: Object
-    },
-    computed : {
-      children() {
-        return this.options.children
-      }
     },
     data () {
       return {

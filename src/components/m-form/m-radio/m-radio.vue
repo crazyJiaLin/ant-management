@@ -5,7 +5,10 @@
                   options.id,
                   options.attribute.decorator
                 ]">
-      <a-radio  :value="item.value" v-for="(item, index) in dataList" :key="index">{{item.label}}</a-radio>
+      <a-radio v-for="(item, index) in dataList" :key="index"
+                  :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+        {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+      </a-radio>
     </a-radio-group>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
@@ -13,7 +16,10 @@
                   options.id,
                   options.attribute.decorator
                 ]">
-        <a-radio  :value="item.value" v-for="(item, index) in dataList" :key="index">{{item.label}}</a-radio>
+        <a-radio v-for="(item, index) in dataList" :key="index"
+                 :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+          {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+        </a-radio>
       </a-radio-group>
     </a-tooltip>
   </a-form-item>

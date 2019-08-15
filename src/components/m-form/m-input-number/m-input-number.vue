@@ -4,7 +4,8 @@
     <a-input-number v-if="!options.attribute.Tooltip" :placeholder="options.attribute.placeholder"
                     :size="options.attribute.size" :disabled="options.attribute.disabled"
                     :max="options.attribute.max" :min="options.attribute.min"
-                    :formatter="value => `${options.attribute.formatter} ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" v-decorator="[
+                    :formatter="value => `${options.attribute.formatter} ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                    v-decorator="[
                      options.id,
                      options.attribute.decorator
                  ]"/>
@@ -13,10 +14,11 @@
       <a-input-number :placeholder="options.attribute.placeholder"
                       :size="options.attribute.size" :disabled="options.attribute.disabled"
                       :max="options.attribute.max" :min="options.attribute.min"
-                      :formatter="value => `${options.attribute.formatter} ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" v-decorator="[
-                     options.id,
-                     options.attribute.decorator
-                 ]"/>
+                      :formatter="value => `${options.attribute.formatter} ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                      v-decorator="[
+                         options.id,
+                         options.attribute.decorator
+                     ]"/>
     </a-tooltip>
   </a-form-item>
 </template>

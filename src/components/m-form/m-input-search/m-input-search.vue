@@ -8,7 +8,7 @@
                      options.id,
                      options.attribute.decorator
                  ]">
-      <a-icon v-if="options.attribute.icon" slot="enterButton"></a-icon>
+      <a-icon v-if="options.attribute.icon" slot="enterButton" :type="options.attribute.icon"></a-icon>
     </a-input-search>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
@@ -19,7 +19,7 @@
                      options.id,
                      options.attribute.decorator
                  ]">
-        <a-icon v-if="options.attribute.icon" slot="enterButton"></a-icon>
+        <a-icon v-if="options.attribute.icon" slot="enterButton" :type="options.attribute.icon"></a-icon>
       </a-input-search>
     </a-tooltip>
   </a-form-item>
