@@ -9,6 +9,7 @@
         <m-month-picker v-if="item.type && (item.type.toLowerCase() === 'monthpicker')" :options="item"></m-month-picker>
         <m-input-number v-if="item.type && (item.type.toLowerCase() === 'inputnumber')" :options="item"></m-input-number>
         <m-input-search v-if="item.type && (item.type.toLowerCase() === 'inputsearch')" :options="item"></m-input-search>
+        <m-input-group v-if="item.type && (item.type.toLowerCase() === 'inputgroup')" :options="item"></m-input-group>
         <m-cascader v-if="item.type && (item.type.toLowerCase() === 'cascader')" :options="item"></m-cascader>
         <m-radio v-if="item.type && (item.type.toLowerCase() === 'radio')" :options="item" @submitEvent="handleSubmitEvent"></m-radio>
         <m-checkbox v-if="item.type && (item.type.toLowerCase() === 'checkbox')" :options="item" @submitEvent="handleSubmitEvent"></m-checkbox>
@@ -22,34 +23,35 @@
 </template>
 
 <script>
-  import {Form, Button, Row, Col, Input, Icon} from 'ant-design-vue'
+  import {Row, Col} from 'ant-design-vue'
   import MInput from '@/components/m-form/m-input/m-input'
-  import MTextarea from '@/components/m-form/m-textarea/m-textarea'
-  import MTimePicker from '@/components/m-form/m-time-picker/m-time-picker'
+  import MInputNumber from '@/components/m-form/m-input/m-input-number'
+  import MInputSearch from '@/components/m-form/m-input/m-input-search'
+  import MInputGroup from '@/components/m-form/m-input/m-input-group'
+  import MTextarea from '@/components/m-form/m-input/m-textarea'
+
+  import MTimePicker from '@/components/m-form/m-date-picker/m-time-picker'
   import MDatePicker from '@/components/m-form/m-date-picker/m-date-picker'
-  import MRangePicker from '@/components/m-form/m-range-picker/m-range-picker'
-  import MMonthPicker from '@/components/m-form/m-month-picker/m-month-picker'
-  import MInputNumber from '@/components/m-form/m-input-number/m-input-number'
-  import MInputSearch from '@/components/m-form/m-input-search/m-input-search'
-  import MCascader from '@/components/m-form/m-cascader/m-cascader'
+  import MRangePicker from '@/components/m-form/m-date-picker/m-range-picker'
+  import MMonthPicker from '@/components/m-form/m-date-picker/m-month-picker'
+
+  import MSelect from '@/components/m-form/m-select/m-select'
+  import MCascader from '@/components/m-form/m-select/m-cascader'
+
   import MRadio from '@/components/m-form/m-radio/m-radio'
   import MCheckbox from '@/components/m-form/m-checkbox/m-checkbox'
+
   import MButton from '@/components/m-form/m-button/m-button'
   import MSwitch from '@/components/m-form/m-switch/m-switch'
-  import MSelect from '@/components/m-form/m-select/m-select'
+
   import MUpload from '@/components/m-form/m-upload/m-upload'
   import MA from '@/components/m-a/m-a'
   export default {
-    name: "m-form",
+    name: "m-form-content",
     components: {
-      AForm: Form,
-      AFormItem: Form.Item,
-      AInput: Input,
       ARow: Row,
       ACol: Col,
-      AButton: Button,
-      AIcon: Icon,
-      MInput, MTextarea, MTimePicker, MDatePicker, MRangePicker, MMonthPicker,
+      MInput, MTextarea, MInputGroup, MTimePicker, MDatePicker, MRangePicker, MMonthPicker,
       MInputNumber, MInputSearch, MCascader, MRadio, MCheckbox, MButton,
       MSwitch, MSelect, MUpload,
       'm-a': MA

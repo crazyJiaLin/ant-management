@@ -95,6 +95,59 @@ export default [
         }
       },
       {
+        "id": "inputGroup",
+        "type":"inputGroup",
+        "label": 'input-group',
+        "width": 24,
+        "labelCol": {"span":3},
+        "wrapperCol": {"span":19, "offset": 1},
+        "attribute":{
+          size: "default",
+        },
+        children: [
+          {
+            "id": "input2",
+            "type":"InputText",
+            "attribute":{
+              style: {
+                width: '20%'
+              },
+              "icon":"user",
+              "size":"default",
+              "allowClear":true,//是否支持清除
+              "placeholder":"请输入手机号",
+              "decorator":{
+                "rules":[
+                  {"required":true,"message":"请输入手机号"},
+                ],
+                "validateTrigger":"blur",
+                // "initialValue": "15699555750"
+              }
+            },
+          },
+          {
+            "id": "input3",
+            "type":"InputText",
+            "attribute":{
+              style: {
+                width: '30%'
+              },
+              "icon":"user",
+              "size":"default",
+              "allowClear":true,//是否支持清除
+              "placeholder":"请输入手机号",
+              "decorator":{
+                "rules":[
+                  {"required":true,"message":"请输入手机号"},
+                ],
+                "validateTrigger":"blur",
+                // "initialValue": "15699555750"
+              }
+            },
+          },
+        ]
+      },
+      {
         id: 'role_ids',
         type: "select",
         label: "所属角色",
