@@ -95,62 +95,9 @@ export default [
         }
       },
       {
-        "id": "inputGroup",
-        "type":"inputGroup",
-        "label": 'input-group',
-        "width": 24,
-        "labelCol": {"span":3},
-        "wrapperCol": {"span":19, "offset": 1},
-        "attribute":{
-          size: "default",
-        },
-        children: [
-          {
-            "id": "input2",
-            "type":"InputText",
-            "attribute":{
-              style: {
-                width: '20%'
-              },
-              "icon":"user",
-              "size":"default",
-              "allowClear":true,//是否支持清除
-              "placeholder":"请输入手机号",
-              "decorator":{
-                "rules":[
-                  {"required":true,"message":"请输入手机号"},
-                ],
-                "validateTrigger":"blur",
-                // "initialValue": "15699555750"
-              }
-            },
-          },
-          {
-            "id": "input3",
-            "type":"InputText",
-            "attribute":{
-              style: {
-                width: '30%'
-              },
-              "icon":"user",
-              "size":"default",
-              "allowClear":true,//是否支持清除
-              "placeholder":"请输入手机号",
-              "decorator":{
-                "rules":[
-                  {"required":true,"message":"请输入手机号"},
-                ],
-                "validateTrigger":"blur",
-                // "initialValue": "15699555750"
-              }
-            },
-          },
-        ]
-      },
-      {
         id: 'role_ids',
         type: "select",
-        label: "所属角色",
+        label: "远程select",
         width: 12,    // 4-24
         labelCol: {span: 6},   // 文案长度
         wrapperCol: {span: 14, offset: 2},// 输入框长度
@@ -342,6 +289,125 @@ export default [
             "initialValue": ""
           }
         }
+      },
+      {
+        "id": "inputGroup",
+        "type":"inputGroup",
+        "label": 'input-group',
+        "width": 24,
+        "labelCol": {"span":3},
+        "wrapperCol": {"span":19, "offset": 1},
+        "attribute":{
+          size: "default",
+        },
+        children: [
+          {
+            id: 'select-group',
+            type: "select",
+            label: "select",
+            isRemote: false,
+            dataUrl: '',
+            data: [          // 选项数组
+              {
+                label: 'Apple',
+                value: 'Apple',
+                // disabled: false
+              },
+              {
+                label: 'Pear',
+                value: 'Pear',
+                // disabled: true
+              },
+              {
+                label: 'Orange'
+                , value: 'Orange',
+                disabled: false
+              },
+              {
+                label: 'Banana'
+                , value: 'Banana'
+                , disabled: false
+              },
+              {
+                label: 'Blueberry',
+                value: 'Blueberry',
+                disabled: false
+              },
+              {
+                label: 'Cherry',
+                value: 'Cherry',
+                disabled: false
+              },
+              {
+                label: 'Nuts',
+                value: 'Nuts',
+                disabled: false
+              },
+              {
+                label: 'Grape',
+                value: 'Grape',
+                disabled: false
+              },
+            ],
+            attribute: {
+              size:'default',
+              allowClear: true,
+              placeholder: "please select",
+              // 参考antd 文档中select-mode属性
+              // mode:"multiple",
+              disabled: false,
+              style: {
+                width: "30%"
+              },
+              "decorator":{
+                "rules":[
+                  {"required":false,"message":""},
+                ],
+                "initialValue": 'Apple'
+              }
+            }
+          },
+          {
+            "id": "input2",
+            "type":"InputText",
+            "attribute":{
+              style: {
+                width: '40%'
+              },
+              "icon":"user",
+              "size":"default",
+              "allowClear":true,//是否支持清除
+              "placeholder":"请输入手机号",
+              "decorator":{
+                "rules":[
+                  {"required":true,"message":"请输入手机号"},
+                ],
+                "validateTrigger":"blur",
+                // "initialValue": "15699555750"
+              }
+            },
+          },
+          {
+            "id": "input3",
+            "type":"InputText",
+            "attribute":{
+              style: {
+                width: '30%'
+              },
+              "icon":"user",
+              "size":"default",
+              "allowClear":true,//是否支持清除
+              "placeholder":"请输入手机号",
+              "decorator":{
+                "rules":[
+                  {"required":true,"message":"请输入手机号"},
+                ],
+                "validateTrigger":"blur",
+                // "initialValue": "15699555750"
+              }
+            },
+          },
+        ]
       },
       {
         "id": "rangePicker1",

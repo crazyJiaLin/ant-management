@@ -2,7 +2,10 @@
   <div :style="options.attribute.wrapperStyle">
     <a-form :form="form" @submit="handleSubmit"
             :layout="options.attribute.layout" :style="options.attribute.formStyle">
-          <m-form-content :formList="options.children" @submitEvent="handleSubmitEvent"></m-form-content>
+          <m-form-content :formList="options.children"
+                          @submitEvent="handleSubmitEvent"
+                          @inputGroupChange="oninputGroupChange"
+          ></m-form-content>
     </a-form>
   </div>
 </template>
@@ -28,6 +31,7 @@
     data () {
       return {
         form: this.$form.createForm(this),
+        inputGroup: {}
       }
     },
     methods: {
@@ -45,6 +49,18 @@
           // 提交表单到父组件执行
           this.$emit('submit', values);
         });
+      },
+      // input-group 组件内部发生变化，将字段添加到form中
+      oninputGroupChange (name, value) {
+        // let fieldValue = this.form.getFieldsValue([name]);
+        // console.log('before', this.form.getFieldsValue([name]))
+        if(!this.form.getFieldsValue([name])[name]) {
+          this.form.getFieldDecorator([name])
+        }
+        this.inputGroup[name] = value;
+        // console.log(this.inputGroup)
+        this.form.setFieldsValue(this.inputGroup)
+        // console.log('after', this.form.getFieldsValue([name]))
       },
       handleReset (e) {
         // this.form.resetFields();

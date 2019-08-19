@@ -9,7 +9,7 @@
         <m-month-picker v-if="item.type && (item.type.toLowerCase() === 'monthpicker')" :options="item"></m-month-picker>
         <m-input-number v-if="item.type && (item.type.toLowerCase() === 'inputnumber')" :options="item"></m-input-number>
         <m-input-search v-if="item.type && (item.type.toLowerCase() === 'inputsearch')" :options="item"></m-input-search>
-        <m-input-group v-if="item.type && (item.type.toLowerCase() === 'inputgroup')" :options="item"></m-input-group>
+        <m-input-group v-if="item.type && (item.type.toLowerCase() === 'inputgroup')" :options="item" @change="onInputGroupChange"></m-input-group>
         <m-cascader v-if="item.type && (item.type.toLowerCase() === 'cascader')" :options="item"></m-cascader>
         <m-radio v-if="item.type && (item.type.toLowerCase() === 'radio')" :options="item" @submitEvent="handleSubmitEvent"></m-radio>
         <m-checkbox v-if="item.type && (item.type.toLowerCase() === 'checkbox')" :options="item" @submitEvent="handleSubmitEvent"></m-checkbox>
@@ -70,6 +70,10 @@
       }
     },
     methods: {
+      onInputGroupChange (name, value) {
+        // console.log('input-group change', name, value)
+        this.$emit('inputGroupChange', name, value);
+      },
       // 子组件中带动作的，需要template对配置json数据进行操作
       handleSubmitEvent (value) {
         this.$emit('submitEvent', value)
