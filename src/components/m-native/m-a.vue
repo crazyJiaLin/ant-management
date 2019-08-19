@@ -1,6 +1,6 @@
 <template>
-
-  <a :href="options.href" :target="options._blank ? '_blank' : '_self'">
+  <a :href="options.href" :style="options.style"
+     :target="options._blank ? '_blank' : '_self'">
     <a-icon v-if="options.icon" :type="options.icon"></a-icon>
     {{options.text}}
   </a>

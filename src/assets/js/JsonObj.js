@@ -22,7 +22,7 @@ window.JsonObj = (function(options){
   Obj.prototype = {
     // 通过id和attr设置对应属性值
     set (id, attr, value) {
-      let msg = `没有找到 id=${id} 匹配项`;
+      let msg = `set没有找到 id=${id} 匹配项`;
       attr = attr.split('.');
 
       // 递归查找到id对应的值
@@ -38,7 +38,7 @@ window.JsonObj = (function(options){
             // list[i][attr] = value;
             // console.log('要执行的代码', evalStr)
             eval(evalStr)
-            msg = `找到匹配项, id=${id}, 匹配属性为 ${attr}`;
+            msg = `set找到匹配项, id=${id}, 匹配属性为 ${attr}`;
             return;
           }
           if(list[i].children && list[i].children.length > 0) {
@@ -50,21 +50,24 @@ window.JsonObj = (function(options){
       console.log(msg)
     },
     // 通过控件id和属性名获取到属性值
-    get (id, attr) {
-      let msg = `未找到 id=${id} 匹配项`;
-      attr = attr.split('.')
+    get (id, attr2) {
+      // console.log(id, attr2.split('.'))
+      let msg = `get未找到 id=${id} 匹配项`;
+      // attr = attr.split('.')
+      let attr = attr2.split('.');
+      let res = null;
       // 递归查找到id对应的值
       (function find(list) {
         for(let i=0; i<list.length; i++) {
           // console.log(list[i].id)
           if(list[i].id == id) {
-            let evalStr = 'return list[i]';
+            let evalStr = 'res = list[i]';
             for(let i=0; i<attr.length; i++){
               evalStr += `['${attr[i]}']`;
             }
             // list[i][attr] = value;
             // console.log('要执行的代码', evalStr)
-            msg = `找到匹配项, id=${id}`;
+            msg = `get找到匹配项, id=${id}`;
             eval(evalStr)
           }
           if(list[i].children && list[i].children.length > 0) {
@@ -73,7 +76,7 @@ window.JsonObj = (function(options){
         }
       })(this)
       console.log(msg);
-      return null;
+      return res;
     },
     ajax (method, url, data, success, failed) {
       axios[method](url, data).then(res => {

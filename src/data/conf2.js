@@ -298,7 +298,7 @@ let conf = {
 					//只支持水平垂直居中显示
 				{
 					"id":"modal1",text:"窗口",
-					data:"可以获取json数据地址 为空使用children",
+					data:"可以获取json数据地址 W",
 					type:"Modal",
 					"attribute":{
 						"zIndex":10000,

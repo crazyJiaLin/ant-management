@@ -18,6 +18,7 @@
         <m-select v-if="item.type && (item.type.toLowerCase() === 'select')" :options="item"></m-select>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-upload v-if="item.type && (item.type.toLowerCase() === 'upload')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-badge v-if="item.type && (item.type.toLowerCase() === 'badge')" :options="item" @submitEvent="handleSubmitEvent"/>
       </a-col>
     </a-row>
 </template>
@@ -45,7 +46,8 @@
   import MSwitch from '@/components/m-form/m-switch/m-switch'
 
   import MUpload from '@/components/m-form/m-upload/m-upload'
-  import MA from '@/components/m-a/m-a'
+  import MA from '@/components/m-native/m-a'
+  import MBadge from '@/components/m-badge/m-badge'
   export default {
     name: "m-form-content",
     components: {
@@ -53,7 +55,7 @@
       ACol: Col,
       MInput, MTextarea, MInputGroup, MTimePicker, MDatePicker, MRangePicker, MMonthPicker,
       MInputNumber, MInputSearch, MCascader, MRadio, MCheckbox, MButton,
-      MSwitch, MSelect, MUpload,
+      MSwitch, MSelect, MUpload, MBadge,
       'm-a': MA
     },
     props: {

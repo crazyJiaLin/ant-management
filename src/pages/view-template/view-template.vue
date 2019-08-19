@@ -8,14 +8,17 @@
       该菜单未创建模板，赶快到 <router-link to="system/menu">菜单管理</router-link> 中创建吧！
     </div>
     <div class="template-input" v-if="!loading && template">
-      <div v-for="(item, index) in this.template" :key="item.id">
+      <template v-for="(item, index) in this.template" >
         <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
                  @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
         <m-form v-if="item.type && (item.type.toLowerCase() === 'form')" :options="item"
                  @submitEvent="handleSubmitEvent"/>
         <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-badge v-if="item.type && (item.type.toLowerCase() === 'badge')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
-      </div>
+        <m-div v-if="item.type && (item.type.toLowerCase() === 'div')" :options="item"/>
+        <m-pre v-if="item.type && (item.type.toLowerCase() === 'pre')" :options="item"/>
+      </template>
     </div>
   </div>
 </template>
@@ -27,8 +30,11 @@
   import MQuery from '@/components/m-form/m-query/m-query'
   import MForm from '@/components/m-form/m-form'
   import MTable from '@/components/m-table/m-table'
-  import MA from '@/components/m-a/m-a'
+  import MA from '@/components/m-native/m-a'
+  import MBadge from '@/components/m-badge/m-badge'
   import MTest from '@/components/m-test/m-test'
+  import MDiv from '@/components/m-native/m-div'
+  import MPre from '@/components/m-native/m-pre'
   export default {
     name: "view-template",
     components: {
@@ -37,7 +43,9 @@
       MForm,
       MTest,
       MTable,
-      'm-a': MA
+      'm-a': MA,
+      MBadge,
+      MDiv, MPre
     },
     watch : {
       '$store.state.curMenu' (newVal, oldVal) {
@@ -77,10 +85,10 @@
           // console.log('获取到当前菜单的模板数据',res.data)
           if(res.data){
             //数据库中有对应于本菜单的template数据
-            // let jsonStr = Base64.decode(res.data.data)
-            // this.parseJSON(jsonStr)
+            let jsonStr = Base64.decode(res.data.data)
+            this.parseJSON(jsonStr)
             // TODO 这里是个假数据，稍后吧前两行注释打开弄成真数据
-            this.template = new JsonObj(TemplateData)
+            // this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {
           console.log(err.response)
