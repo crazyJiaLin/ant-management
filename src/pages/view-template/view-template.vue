@@ -15,6 +15,7 @@
                  @submitEvent="handleSubmitEvent"/>
         <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-badge v-if="item.type && (item.type.toLowerCase() === 'badge')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-transfer v-if="item.type && (item.type.toLowerCase() === 'transfer')" :options="item"/>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-div v-if="item.type && (item.type.toLowerCase() === 'div')" :options="item"/>
         <m-pre v-if="item.type && (item.type.toLowerCase() === 'pre')" :options="item"/>
@@ -32,6 +33,7 @@
   import MTable from '@/components/m-table/m-table'
   import MA from '@/components/m-native/m-a'
   import MBadge from '@/components/m-badge/m-badge'
+  import MTransfer from '@/components/m-transfer/m-transfer'
   import MTest from '@/components/m-test/m-test'
   import MDiv from '@/components/m-native/m-div'
   import MPre from '@/components/m-native/m-pre'
@@ -44,7 +46,7 @@
       MTest,
       MTable,
       'm-a': MA,
-      MBadge,
+      MBadge, MTransfer,
       MDiv, MPre
     },
     watch : {
@@ -85,10 +87,10 @@
           // console.log('获取到当前菜单的模板数据',res.data)
           if(res.data){
             //数据库中有对应于本菜单的template数据
-            let jsonStr = Base64.decode(res.data.data)
-            this.parseJSON(jsonStr)
+            // let jsonStr = Base64.decode(res.data.data)
+            // this.parseJSON(jsonStr)
             // TODO 这里是个假数据，稍后吧前两行注释打开弄成真数据
-            // this.template = new JsonObj(TemplateData)
+            this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {
           console.log(err.response)

@@ -259,7 +259,9 @@ let conf = {
 						"mode":"multiple",//是否允许上传多个
 						"size":"small"
 					}},
-					{"id":"transfer1",text:"穿梭框",default:["aaaa","bbb","ccc"],data:["穿梭框源 数据","穿梭目标 数据"],type:"Transfer","attribute":{
+					{"id":"transfer1",text:"穿梭框", type:"Transfer",
+					default:["aaaa","bbb","ccc"],data:["穿梭框源 数据","穿梭目标 数据"],
+					"attribute":{
 						"titles":['穿梭框源', '穿梭目标'],//穿梭框标题
 						"pageSize":10,//分页条数  不设置则不分页显示
 					}},

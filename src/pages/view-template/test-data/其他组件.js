@@ -156,34 +156,34 @@ export default [
     type:"Transfer",
     dataSource:[
       {
-      key: 'a',
-      title: 'a',
-      disabled : false
-    },{
-      key: 'b',
-      title: 'b',
-      disabled : false
-    },{
-      key: 'c',
-      title: 'c',
-      disabled : false
-    },{
-      key: 'd',
-      title: 'd',
-      disabled : false
-    },{
-      key: 'e',
-      title: 'e',
-      disabled : false
-    },{
-      key: 'f',
-      title: 'f',
-      disabled : false
-    },{
-      key: 'x',
-      title: 'x',
-      disabled : false
-    }],
+        key: 'a',
+        title: 'a',
+        disabled : false
+      },{
+        key: 'b',
+        title: 'b',
+        disabled : false
+      },{
+        key: 'c',
+        title: 'c',
+        disabled : false
+      },{
+        key: 'd',
+        title: 'd',
+        disabled : false
+      },{
+        key: 'e',
+        title: 'e',
+        disabled : false
+      },{
+        key: 'f',
+        title: 'f',
+        disabled : false
+      },{
+        key: 'x',
+        title: 'x',
+        disabled : false
+      }],
     targetKeys: ['a','b', 'c'],
     selectedKeys: ['a','f'],
     render : `item => item.title`,
