@@ -28,6 +28,15 @@
     props: {
       options: Object
     },
+    watch : {
+      'options.submitTimes' : {
+        handler (newVal, oldVal) {
+          console.log('submitTimes接受到变化', newVal)
+          this.handleSubmit();
+        },
+        deep: true
+      }
+    },
     data () {
       return {
         form: this.$form.createForm(this),
@@ -37,11 +46,14 @@
     methods: {
       // 点击搜索
       handleSubmit (e) {
-        e.preventDefault();
+        e && e.preventDefault();
         this.form.validateFields((error, values) => {
           console.log('error', error);
           console.log('Received values of form: ', values);
-          if(error) return;
+          if(error) return this.$emit('afterSubmit', {
+            status: 'validFailed',
+            data: error
+          });
           //执行搜索前的钩子函数
           let beforeSubmit = $eval(this.options.beforeSubmit, 'beforeSubmit');
           // console.log(beforeSubmit)
@@ -52,10 +64,22 @@
           let method = this.options.method ? this.options.method : 'post';
           this.options.url && this.$axios[method](this.options.url, values).then(res => {
             console.log(res)
+            // 通知父组件
+            this.$emit('afterSubmit',{
+              status: 'success',
+              data: res
+            })
+            // 执行配置文件中的submitted函数
             let submitted = $eval(this.options.submitted)
             submitted(res);
           }).catch(err => {
             console.log(err)
+            // 通知父组件
+            this.$emit('afterSubmit', {
+              status: 'failed',
+              data: err
+            })
+            // 执行配置文件中的failed函数
             let failed = $eval(this.options.failed);
             failed(err)
           })

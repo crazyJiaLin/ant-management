@@ -14,6 +14,7 @@
         <m-form v-if="item.type && (item.type.toLowerCase() === 'form')" :options="item"
                  @submitEvent="handleSubmitEvent"/>
         <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-steps v-if="item.type && (item.type.toLowerCase() === 'steps')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-badge v-if="item.type && (item.type.toLowerCase() === 'badge')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-transfer v-if="item.type && (item.type.toLowerCase() === 'transfer')" :options="item"/>
         <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
@@ -25,29 +26,32 @@
 </template>
 <script>
   // 假数据
-  import TemplateData from './test-data/表单布局'
+  import TemplateData from './test-data/test-data'
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
+
   import MQuery from '@/components/m-form/m-query/m-query'
   import MForm from '@/components/m-form/m-form'
   import MTable from '@/components/m-table/m-table'
+  import MSteps from '@/components/m-steps/m-steps'
+
   import MA from '@/components/m-native/m-a'
   import MBadge from '@/components/m-badge/m-badge'
   import MTransfer from '@/components/m-transfer/m-transfer'
-  import MTest from '@/components/m-test/m-test'
+
   import MDiv from '@/components/m-native/m-div'
   import MPre from '@/components/m-native/m-pre'
+
+  import MTest from '@/components/m-test/m-test'
+
   export default {
     name: "view-template",
     components: {
       AIcon: Icon,
-      MQuery,
-      MForm,
-      MTest,
-      MTable,
-      'm-a': MA,
-      MBadge, MTransfer,
-      MDiv, MPre
+      MQuery, MForm, MTable, MSteps,
+      'm-a': MA, MBadge, MTransfer,
+      MDiv, MPre,
+      MTest
     },
     watch : {
       '$store.state.curMenu' (newVal, oldVal) {
@@ -87,10 +91,10 @@
           // console.log('获取到当前菜单的模板数据',res.data)
           if(res.data){
             //数据库中有对应于本菜单的template数据
-            // let jsonStr = Base64.decode(res.data.data)
-            // this.parseJSON(jsonStr)
+            let jsonStr = Base64.decode(res.data.data)
+            this.parseJSON(jsonStr)
             // TODO 这里是个假数据，稍后吧前两行注释打开弄成真数据
-            this.template = new JsonObj(TemplateData)
+            // this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {
           console.log(err.response)

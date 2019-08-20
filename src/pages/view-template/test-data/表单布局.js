@@ -150,7 +150,7 @@ export default [
           disabled: false,
           "decorator":{
             "rules":[
-              {"required":true,"message":"请选择"},
+              {"required":false,"message":"请选择"},
             ],
           }
         }
