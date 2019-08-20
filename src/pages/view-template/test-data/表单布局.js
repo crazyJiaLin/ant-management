@@ -18,6 +18,27 @@ export default [
   {
     id: 'form',
     type: 'Form',
+    method: 'post',
+    url: '/test',
+    // 这里的params即表单按照decorator中配置的项解析出来的参数，如果有数据变动，请在beforeSubmit钩子函数中处理
+    beforeSubmit: `(params) => {
+      notification.info({
+        message: 'beforeSubmit',
+        description: JSON.stringify(params)
+      })
+    }`,
+    submitted: `(res) => {
+       console.log(res);
+       notification.success({
+        message: '表单提交成功'
+       });
+    }`,
+    failed: `(err) => {
+      notification.error({
+        message:'表单提交失败',
+        description: err.response.data.error.message
+      })
+    }`,
     "attribute": {
       layout: 'horizontal',
       wrapperStyle:{

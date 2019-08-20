@@ -47,7 +47,18 @@
           // console.log(beforeSubmit)
           beforeSubmit(values);
           // 提交表单到父组件执行
-          this.$emit('submit', values);
+          // this.$emit('submit', values);
+          // 提交表单
+          let method = this.options.method ? this.options.method : 'post';
+          this.options.url && this.$axios[method](this.options.url, values).then(res => {
+            console.log(res)
+            let submitted = $eval(this.options.submitted)
+            submitted(res);
+          }).catch(err => {
+            console.log(err)
+            let failed = $eval(this.options.failed);
+            failed(err)
+          })
         });
       },
       // input-group 组件内部发生变化，将字段添加到form中
