@@ -1,5 +1,5 @@
 <template>
-  <div :style="options.style">
+  <div :style="options.style" v-html="options.html">
     {{options.text}}
   </div>
 </template>

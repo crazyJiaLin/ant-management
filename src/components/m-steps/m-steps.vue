@@ -15,8 +15,8 @@
     </a-steps>
 <!--    内容-->
     <div class="steps-content" :style="options.attribute.contentStyle">
-      <template v-for="(item1, index1) in steps">
-        <template v-if="index1 === current.index" v-for="(item, index) in item1.content">
+      <div v-for="(item1, index1) in steps" v-show="index1 == current.index">
+        <template  v-for="(item, index) in item1.content">
           <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
                    @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
           <m-form v-if="item.type && (item.type.toLowerCase() === 'form')" :options="item"
@@ -28,8 +28,20 @@
           <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
           <m-div v-if="item.type && (item.type.toLowerCase() === 'div')" :options="item"/>
           <m-pre v-if="item.type && (item.type.toLowerCase() === 'pre')" :options="item"/>
+          <div v-if="item.type && (item.type.toLowerCase() === 'button')" :style="item.wrapperStyle">
+            <a-button
+              :type="item.btnType" :style="item.style" :size="item.size"
+              :loading="item.loading" :disabled="item.disabled"
+            >
+              <a-icon v-if="item.icon" :type="item.icon"></a-icon>
+              {{item.text}}
+            </a-button>
+          </div>
+          <div v-if="item.type && (item.type.toLowerCase() === 'icon')" :style="item.wrapperStyle">
+            <a-icon :type="item.icon" :style="item.style" :spin="item.spin"></a-icon>
+          </div>
         </template>
-      </template>
+      </div>
 
     </div>
 <!--    操作按钮-->
@@ -40,26 +52,6 @@
                   @click="handleActionClick(item)"
         >{{item.text}}</a-button>
       </template>
-<!--      <a-button-->
-<!--        v-if="current < steps.length - 1"-->
-<!--        type="primary" @click="next"-->
-<!--      >-->
-<!--        Next-->
-<!--      </a-button>-->
-<!--      <a-button-->
-<!--        v-if="current == steps.length - 1"-->
-<!--        type="primary"-->
-<!--        @click="finish"-->
-<!--      >-->
-<!--        Done-->
-<!--      </a-button>-->
-<!--      <a-button-->
-<!--        v-if="current > 0"-->
-<!--        style="margin-left: 8px"-->
-<!--        @click="prev"-->
-<!--      >-->
-<!--        Previous-->
-<!--      </a-button>-->
     </div>
   </div>
 </template>
@@ -87,7 +79,7 @@
       AIcon: Icon,
       MQuery, MForm, MTable, MSteps,
       'm-a': MA, MBadge, MTransfer,
-      MDiv, MPre,
+      MDiv, MPre
     },
     props: {
       options: Object
@@ -145,18 +137,10 @@
           message: '操作成功'
         });
       },
-      handleSubmitEvent(value) {
-        // console.log('template 父组件接收到命令', value)
-        //将inner中的jsonObj用当前template代替，这样就能够执行JsonObj的指定方法了 --- 同时支持message.error()等方法
-        let code = value.replace(/jsonobj/g, 'this.template')
-        try {
-          // console.log('执行子组件提交的命令',code)
-          eval(code)
-        }catch (e) {
-          console.log(e)
-          Message.error('执行命令出错,请检查配置的公共方法是否正确')
-        }
-      },
+      // 子组件中带动作的，需要template对配置json数据进行操作
+      handleSubmitEvent (value) {
+        this.$emit('submitEvent', value)
+      }
     }
   }
 </script>
