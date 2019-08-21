@@ -1,8 +1,9 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-upload  v-if="!options.attribute.Tooltip" name="file" :multiple="options.attribute.multiple" :action="options.action"
-              :headers="options.headers" @change="handleChange"  v-decorator="[
+    <a-upload  v-if="!options.attribute.Tooltip" :multiple="options.attribute.multiple" :action="options.action"
+              :headers="options.headers" :name="options.name" @change="handleChange"
+               v-decorator="[
                   options.id,
                   options.attribute.decorator
                 ]">
@@ -12,6 +13,16 @@
     </a-upload>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
+      <a-upload :multiple="options.attribute.multiple" :action="options.action"
+                 :headers="options.headers" :name="options.name" @change="handleChange"
+                v-decorator="[
+                  options.id,
+                  options.attribute.decorator
+                ]">
+        <a-button>
+          <a-icon v-if="options.attribute.icon" :type="options.attribute.icon" /> {{options.text}}
+        </a-button>
+      </a-upload>
     </a-tooltip>
   </a-form-item>
 </template>

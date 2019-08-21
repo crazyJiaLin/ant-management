@@ -281,6 +281,73 @@ export default [
         }
       },
       {
+        "id": "inputSearch1",
+        "type":"inputSearch",
+        "label": '搜索输入框',
+        // 若果isRemote为true时，说明需要从远程获取数据，
+        isRemote: false,
+        data: '', //
+        width: 12,    // 4-24
+        labelCol: {span: 6},   // 文案长度
+        wrapperCol: {span: 14, offset: 2},// 输入框长度
+        "attribute":{
+          "icon":"user",
+          "size":"default",
+          "enterButton": true,
+          "Tooltip":{"title":"提示文本","placement":"top"},
+          "inner":"jsonobj.submit('form1')", //change关联
+          "decorator":{
+            "rules":[
+              {"required":false,"message":""},
+            ],
+            "initialValue": ""
+          }
+        }
+      },
+      {
+        id: 'upload1',
+        type: 'Upload',
+        text: '点击上传',
+        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',  // 上传地址
+        name: 'file',           // 发到后台的文件参数名
+        headers: {
+          authorization: 'authorization-text',
+        },
+        withCredentials: false, // 上传请求时是否携带 cookie
+        label: '上传图片',
+        width: 12,    // 4-24
+        labelCol: {span: 6},   // 文案长度
+        wrapperCol: {span: 14, offset: 2},// 输入框长度
+        attribute: {
+          directory: false, // 支持上传文件夹
+          accept: '',       // 接受上传的文件类型
+          multiple: true,  // 是否支持多选文件
+          icon: 'upload',
+        }
+      },
+      {
+        id: 'uploadImg1',
+        type: 'UploadImg',
+        text: '点击上传',
+        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',  // 上传地址
+        name: 'file',           // 发到后台的文件参数名
+        headers: {
+          authorization: 'authorization-text',
+        },
+        withCredentials: false, // 上传请求时是否携带 cookie
+        label: '上传',
+        width: 24,    // 4-24
+        labelCol: {span: 3},   // 文案长度
+        wrapperCol: {span: 18, offset: 1},// 输入框长度
+        attribute: {
+          directory: false, // 支持上传文件夹
+          accept: '',       // 接受上传的文件类型
+          multiple: false,  // 是否支持多选文件
+          icon: 'upload',
+          max: 3  //最多上传图片个数---默认1个
+        }
+      },
+      {
         "id": "datePicker1",
         "type":"DatePicker",
         "label": '日期选择器',
@@ -460,51 +527,6 @@ export default [
             ],
             "initialValue": ""
           }
-        }
-      },
-      {
-        "id": "inputSearch1",
-        "type":"inputSearch",
-        "label": '搜索输入框',
-        // 若果isRemote为true时，说明需要从远程获取数据，
-        isRemote: false,
-        data: '', //
-        width: 12,    // 4-24
-        labelCol: {span: 6},   // 文案长度
-        wrapperCol: {span: 14, offset: 2},// 输入框长度
-        "attribute":{
-          "icon":"user",
-          "size":"default",
-          "enterButton": true,
-          "Tooltip":{"title":"提示文本","placement":"top"},
-          "inner":"jsonobj.submit('form1')", //change关联
-          "decorator":{
-            "rules":[
-              {"required":false,"message":""},
-            ],
-            "initialValue": ""
-          }
-        }
-      },
-      {
-        id: 'upload1',
-        type: 'Upload',
-        text: '点击上传',
-        action: '/',  // 上传地址
-        name: '123',     // 发到后台的文件参数名
-        headers: {
-          authorization: 'authorization-text',
-        },
-        withCredentials: false, // 上传请求时是否携带 cookie
-        label: '上传',
-        width: 12,    // 4-24
-        labelCol: {span: 6},   // 文案长度
-        wrapperCol: {span: 14, offset: 2},// 输入框长度
-        attribute: {
-          directory: false, // 支持上传文件夹
-          accept: '',       // 接受上传的文件类型
-          multiple: false,  // 是否支持多选文件
-          icon: 'windows'
         }
       },
       {
