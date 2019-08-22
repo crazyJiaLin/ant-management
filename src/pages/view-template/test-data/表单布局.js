@@ -308,13 +308,14 @@ export default [
         id: 'upload1',
         type: 'Upload',
         text: '点击上传',
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',  // 上传地址
+        // test url : https://www.mocky.io/v2/5cc8019d300000980a055e76
+        action: 'http://47.244.197.84:10088/api/v1/upload/file',  // 上传地址
         name: 'file',           // 发到后台的文件参数名
         headers: {
-          authorization: 'authorization-text',
+          "Authorization":"Rds eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjY0NDA5MjksImp0aSI6InJvb3QiLCJpYXQiOjE1NjY0MzM3MjksIm5iZiI6MTU2NjQzMzcyOSwic3ViIjoid2VifDIyMy43MS45Ni4xMzcifQ.UG4UJpm2KlhAcqBjrqF6LIYX_WGWbVmUG2EaRaYFYQaCwWNyLu0uy6YWsWRtzAA3foGVJ1PA2HsAsXR3AFx8mg"
         },
         withCredentials: false, // 上传请求时是否携带 cookie
-        label: '上传图片',
+        label: '上传',
         width: 12,    // 4-24
         labelCol: {span: 6},   // 文案长度
         wrapperCol: {span: 14, offset: 2},// 输入框长度
@@ -329,13 +330,15 @@ export default [
         id: 'uploadImg1',
         type: 'UploadImg',
         text: '点击上传',
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',  // 上传地址
+        // test url : https://www.mocky.io/v2/5cc8019d300000980a055e76
+        action: 'http://47.244.197.84:10088/api/v1/upload/image',  // 上传地址
         name: 'file',           // 发到后台的文件参数名
         headers: {
-          authorization: 'authorization-text',
+          // authorization: 'authorization-text',
+          "Authorization":"Rds eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjY0NDA5MjksImp0aSI6InJvb3QiLCJpYXQiOjE1NjY0MzM3MjksIm5iZiI6MTU2NjQzMzcyOSwic3ViIjoid2VifDIyMy43MS45Ni4xMzcifQ.UG4UJpm2KlhAcqBjrqF6LIYX_WGWbVmUG2EaRaYFYQaCwWNyLu0uy6YWsWRtzAA3foGVJ1PA2HsAsXR3AFx8mg"
         },
         withCredentials: false, // 上传请求时是否携带 cookie
-        label: '上传',
+        label: '上传图片',
         width: 24,    // 4-24
         labelCol: {span: 3},   // 文案长度
         wrapperCol: {span: 18, offset: 1},// 输入框长度

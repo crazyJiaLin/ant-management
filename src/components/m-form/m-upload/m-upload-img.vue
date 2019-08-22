@@ -3,7 +3,7 @@
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
     <a-upload  listType="picture-card" :fileList="fileList"
                :multiple="options.attribute.multiple" :action="options.action"
-               :headers="options.headers" :name="options.name"
+               :headers="headers" :name="options.name"
                @preview="handlePreview"
                @change="handleChange"
                v-decorator="[
@@ -14,8 +14,8 @@
 <!--        <a-icon v-if="options.attribute.icon" :type="options.attribute.icon" /> {{options.text}}-->
 <!--      </a-button>-->
       <div v-if="fileList.length < (options.attribute.max ? options.attribute.max : 1)">
-        <a-icon type="plus" />
-        <div class="ant-upload-text">Upload</div>
+        <a-icon :type="(options.attribute && options.attribute.icon) ? options.attribute.icon : 'plus'" />
+        <div class="ant-upload-text">{{options.text}}</div>
       </div>
     </a-upload>
     <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
@@ -37,6 +37,21 @@
     },
     props: {
       options: Object
+    },
+    computed : {
+      headers () {
+        if(this.options.headers.Authorization) return this.options.headers;
+        let Authorization = ''
+        let accessToken = this.$getLocalStorage('access_token')
+        let tokenType = this.$getLocalStorage('token_type')
+        if(accessToken && tokenType) {
+          Authorization = tokenType + ' ' + accessToken
+        }
+        return {
+          ...this.options.header,
+          Authorization: Authorization
+        }
+      }
     },
     data () {
       return {
