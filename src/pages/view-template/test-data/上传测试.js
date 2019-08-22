@@ -63,7 +63,6 @@ export default [
         action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',  // 上传地址
         name: 'file',           // 发到后台的文件参数名
         headers: {
-          "Authorization":"Rds eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjY0NDA5MjksImp0aSI6InJvb3QiLCJpYXQiOjE1NjY0MzM3MjksIm5iZiI6MTU2NjQzMzcyOSwic3ViIjoid2VifDIyMy43MS45Ni4xMzcifQ.UG4UJpm2KlhAcqBjrqF6LIYX_WGWbVmUG2EaRaYFYQaCwWNyLu0uy6YWsWRtzAA3foGVJ1PA2HsAsXR3AFx8mg"
         },
         withCredentials: false, // 上传请求时是否携带 cookie
         label: '官方接口',
