@@ -3,7 +3,7 @@
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
     <a-upload  listType="picture-card" :fileList="fileList"
                :multiple="options.attribute.multiple" :action="options.action"
-               :headers="headers" :name="options.name"
+               :headers="headers" :name="options.name" :accept="options.attribute.accept"
                @preview="handlePreview"
                @change="handleChange"
                v-decorator="[
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-  import {Upload, Button, Icon, Form, Modal} from 'ant-design-vue'
+  import {Upload, Button, Icon, Form, Modal, Message} from 'ant-design-vue'
   export default {
     name: "m-upload",
     components: {
@@ -68,8 +68,16 @@
         this.previewImage = file.url || file.thumbUrl
         this.previewVisible = true
       },
-      handleChange ({ fileList }) {
-        this.fileList = fileList
+      handleChange (info) {
+        this.fileList = info.fileList;
+        if (info.file.status !== 'uploading') {
+          console.log(info.file, info.fileList);
+        }
+        if (info.file.status === 'done') {
+          Message.success(`${info.file.name} 上传成功`);
+        } else if (info.file.status === 'error') {
+          Message.error(info.file.response.error.message);
+        }
       },
       // TODO 如果需要手动上传的话，需要设置beforeUpload 钩子函数，返回 false 后，手动上传文件。
     }

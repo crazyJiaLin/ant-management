@@ -1,10 +1,10 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-upload  v-if="!options.attribute.Tooltip" :multiple="options.attribute.multiple" :loading="true"
-               :fileList="fileList" :action="options.action"
-              :headers="headers" :name="options.name"
-               @change="handleChange" :beforeUpload="beforeUpload" :remove="handleRemove"
+    <a-upload  v-if="!options.attribute.Tooltip" :multiple="options.attribute.multiple"
+               :fileList="fileList" :action="options.action" :accept="options.attribute.accept"
+              :headers="headers" :name="options.name" :showUploadList="options.attribute.showUploadList"
+               @change="handleChange" :beforeUpload="beforeUpload"
                v-decorator="[
                   options.id,
                   options.attribute.decorator
@@ -15,9 +15,11 @@
     </a-upload>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
-      <a-upload :multiple="options.attribute.multiple" :action="options.action"
-                 :headers="options.headers" :name="options.name" @change="handleChange"
-                v-decorator="[
+      <a-upload  :multiple="options.attribute.multiple"
+                 :fileList="fileList" :action="options.action" :accept="options.attribute.accept"
+                 :headers="headers" :name="options.name" :showUploadList="options.attribute.showUploadList"
+                 @change="handleChange" :beforeUpload="beforeUpload"
+                 v-decorator="[
                   options.id,
                   options.attribute.decorator
                 ]">
@@ -73,25 +75,20 @@
     },
     methods: {
       handleChange(info) {
+        this.fileList = info.fileList;
         if (info.file.status !== 'uploading') {
           console.log(info.file, info.fileList);
         }
         if (info.file.status === 'done') {
-          Message.success(`${info.file.name} file uploaded successfully`);
+          Message.success(`${info.file.name} 上传成功`);
         } else if (info.file.status === 'error') {
-          Message.error(`${info.file.name} file upload failed.`);
+          Message.error(info.file.response.error.message);
         }
       },
       beforeUpload(file) {
-        this.fileList = [...this.fileList, file]
+        if(!this.options.beforeUpload) return true; // 如果没有设置钩子函数直接return true
         let beforeUpload = $eval(this.options.beforeUpload)
         return beforeUpload(file, this.fileList);
-      },
-      handleRemove(file) {
-        const index = this.fileList.indexOf(file);
-        const newFileList = this.fileList.slice();
-        newFileList.splice(index, 1);
-        this.fileList = newFileList
       },
       // TODO 如果需要手动上传的话，需要设置beforeUpload 钩子函数，返回 false 后，手动上传文件。
     }

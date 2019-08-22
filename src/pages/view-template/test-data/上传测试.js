@@ -106,8 +106,8 @@ export default [
         type: 'Upload',
         text: '点击上传',
         // test url : https://www.mocky.io/v2/5cc8019d300000980a055e76
-        action: 'http://47.244.197.84:10088/upload/file',  // 上传地址
-        name: 'file',           // 发到后台的文件参数名
+        action: 'http://47.244.197.84:10088/api/v1/upload/file',  // 上传地址
+        name: 'field',           // 发到后台的文件参数名
         headers: {
           hhh: 1
         },
@@ -126,6 +126,10 @@ export default [
           accept: '',       // 接受上传的文件类型
           multiple: true,  // 是否支持多选文件
           icon: 'upload',
+          showUploadList: {
+            showPreviewIcon: true,
+            showRemoveIcon: false
+          }
         }
       },
       {
@@ -133,8 +137,8 @@ export default [
         type: 'UploadImg',
         text: '点击上传图片',
         // test url : https://www.mocky.io/v2/5cc8019d300000980a055e76
-        action: 'http://47.244.197.84:10088/upload/image',  // 上传地址
-        name: 'file',           // 发到后台的文件参数名
+        action: 'http://47.244.197.84:10088/api/v1/upload/image',  // 上传地址
+        name: 'field',           // 发到后台的文件参数名
         headers: {
           // authorization: 'authorization-text',
           // "Authorization":"Rds eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NjY0NDA5MjksImp0aSI6InJvb3QiLCJpYXQiOjE1NjY0MzM3MjksIm5iZiI6MTU2NjQzMzcyOSwic3ViIjoid2VifDIyMy43MS45Ni4xMzcifQ.UG4UJpm2KlhAcqBjrqF6LIYX_WGWbVmUG2EaRaYFYQaCwWNyLu0uy6YWsWRtzAA3foGVJ1PA2HsAsXR3AFx8mg"
@@ -146,7 +150,7 @@ export default [
         wrapperCol: {span: 17, offset: 2},// 输入框长度
         attribute: {
           directory: false, // 支持上传文件夹
-          accept: '',       // 接受上传的文件类型
+          accept: 'image/*',       // 接受上传的文件类型--设置仅能选择图片
           multiple: false,  // 是否支持多选文件
           icon: 'upload',
           max: 3  //最多上传图片个数---默认1个
