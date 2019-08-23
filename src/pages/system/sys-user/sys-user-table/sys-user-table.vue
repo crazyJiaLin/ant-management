@@ -8,8 +8,8 @@
         <span v-for="(item, index) in text" :key="index"> {{item.name}}</span>
       </template>
       <template slot="status" slot-scope="text, record">
-        <div class="status_circle1" v-if="text===1"></div>
-        <div class="status_circle2" v-if="text===2"></div>
+        <a-badge status="success"  v-if="text===1"/>
+        <a-badge status="default"  v-if="text===2"/>
         <span v-if="text===1">启用</span>
         <span v-if="text===2">停用</span>
       </template>
@@ -37,7 +37,7 @@
   </div>
 </template>
 <script>
-  import {Table, Icon, Button, Popconfirm} from 'ant-design-vue'
+  import {Table, Icon, Button, Badge, Popconfirm} from 'ant-design-vue'
   import SysUserEdit from '../sys-user-edit/sys-user-edit'
 
   export default {
@@ -45,6 +45,7 @@
     components: {
       ATable: Table,
       AIcon: Icon,
+      ABadge: Badge,
       APopconfirm: Popconfirm,
       AButton: Button,
       SysUserEdit
@@ -243,7 +244,3 @@
     },
   }
 </script>
-
-<style scoped>
-  @import "sys-user-table.less";
-</style>

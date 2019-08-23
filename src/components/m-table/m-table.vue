@@ -18,8 +18,10 @@
              :loading="loading" @change="handleTableChange"
     >
       <template slot="status" slot-scope="text, record">
-        <div class="status_circle1" v-if="text===1"></div>
-        <div class="status_circle2" v-if="text===2"></div>
+        <a-badge status="success"  v-if="text===1"/>
+        <a-badge status="default"  v-if="text===2"/>
+<!--        <div class="status_circle1"></div>-->
+<!--        <div class="status_circle2" v-if="text===2"></div>-->
         <span v-if="text===1">启用</span>
         <span v-if="text===2">停用</span>
       </template>
@@ -47,7 +49,7 @@
   </div>
 </template>
 <script>
-  import {Table, Button, Popconfirm, Icon, Notification} from 'ant-design-vue'
+  import {Table, Button, Popconfirm, Icon, Badge, Notification} from 'ant-design-vue'
   import MCreate from './m-create/m-create'
   import MEdit from './m-edit/m-edit'
   export default {
@@ -57,6 +59,7 @@
       AButton: Button,
       APopconfirm: Popconfirm,
       AIcon: Icon,
+      ABadge: Badge,
       MCreate,
       MEdit
     },
@@ -279,20 +282,3 @@
     },
   }
 </script>
-<style lang="less" scoped>
-  .status_circle1{
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: #52c41a;
-    display: inline-block;
-  }
-  .status_circle2{
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
-    background: #f5222d;
-    display: inline-block;
-  }
-
-</style>
