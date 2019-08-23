@@ -19,9 +19,9 @@ export default [
         showReset: true,  // 显示重置按钮
         showSearch: true, // 显示搜索按钮
         // 如果设置了showCollapse 折叠按钮，请不要再设置span和offset，组件会自动修改这两个值
-        showCollapse: true, // 展开折叠功能
-        resetText: 'clear', // 重置按钮文本
-        searchText: 'search'  // 搜索按钮文本
+        showCollapse: true, // 展开折叠功能---默认为true
+        resetText: '清空', // 重置按钮文本
+        searchText: '搜索'  // 搜索按钮文本
       }
     },
     "children": [

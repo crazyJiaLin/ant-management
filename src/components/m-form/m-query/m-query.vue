@@ -2,7 +2,7 @@
   <div class="query-wrap">
     <a-form :form="form" @submit="handleSearch">
       <a-row>
-        <a-col v-for="(item,index) in options.children" v-if="options.attribute.searchBtn.showCollapse ? (expand ? true : (index < 2)) : true"
+        <a-col v-for="(item,index) in options.children" v-if="searchBtn.showCollapse ? (expand ? true : (index < 2)) : true"
                :span="item.width" :offset="item.offset" :key="item.id">
           <m-input v-if="item.type && (item.type.toLowerCase() === 'inputtext')" :options="item"></m-input>
           <m-textarea v-if="showComponent(item, 'textarea')" :options="item"></m-textarea>
@@ -97,7 +97,7 @@
 
         // 如果用户没有设置展开按钮的话，直接显示到第二行，如果设置了的话，就根据data中的expand来判断
         let span = 0;
-        if(this.options.attribute.searchBtn.showCollapse){
+        if(res.showCollapse){
           if(this.expand) {
             span = 24
           }else {
