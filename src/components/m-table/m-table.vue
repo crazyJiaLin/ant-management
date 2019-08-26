@@ -10,10 +10,10 @@
               @close="handleCreateDrawClose"></m-create>
     <m-edit :visible="showEditDrawer" :options="options.operation ? options.operation.edit : {}"
             :record="editRecord" @close="handleEditDrawClose"></m-edit>
-    <a-table :columns="columns" :rowKey="rowKey" :style="options.attribute.tableStyle"
+    <a-table :columns="columns" :rowKey="rowKey" :style="options.attribute.tableStyle" :ref="options.id"
              :dataSource="dataList" :pagination="pagination"
              :size="options.attribute.size" :bordered="options.attribute.bordered"
-             :scroll="options.attribute.scroll"
+             :scroll="finalScroll"
              :showHeader="options.attribute.showHeader === undefined ? true : options.attribute.showHeader"
              :loading="loading" @change="handleTableChange"
     >
@@ -90,6 +90,9 @@
       },
       resources(){
         return this.$store.state.curMenu.resources;
+      },
+      finalScroll () {
+        return this.options.attribute.scroll ? this.options.attribute.scroll : this.scroll
       }
     },
     watch: {
@@ -109,16 +112,35 @@
         deleteBtnLoading: {},
         showCreateDrawer: false,
         showEditDrawer: false,
-        editRecord: {}
+        editRecord: {},
+        scroll: {}
       }
     },
     mounted() {
       // 参数params为query组件传进来的搜索条件或者配置文件里边给出的
       this.options.isRemote && this.fetch(this.options.params);
-      console.log('actions', this.actions)
-      console.log('resources', this.resources)
+      // console.log('actions', this.actions)
+      // console.log('resources', this.resources)
+
+      // 设置table的默认Scroll
+      this.setTableScroll()
+      // 监听window的resize方法，并加入防抖函数
+      window.addEventListener('resize', window.$debounce(() => {
+          this.setTableScroll();
+          console.log(this)
+        }, 200)
+      , false)
     },
     methods: {
+      // 设置table的默认Scroll
+      setTableScroll() {
+        let tableTop = this.$refs[this.options.id].$el.offsetTop  // table距离文档顶端距离
+        let viewTop = document.querySelector('.view-template-wrap').offsetTop   // router-view距离文档顶端距离
+        let viewHeight = document.querySelector('.view-template-wrap').clientHeight // router-view高度
+        this.scroll = {
+          y :  viewHeight - (tableTop - viewTop) - 54 - 65   // 减去的54为table的header高度,64为pagination高度
+        }
+      },
       onEnable (record_id) {
         if(this.options.operation.enable && this.options.operation.enable.form) {
           let beforeEnable = $eval(this.options.operation.enable.form.beforeSubmit, 'beforeEnable');

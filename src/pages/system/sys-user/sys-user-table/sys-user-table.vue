@@ -3,7 +3,7 @@
     <a-table :columns="columns" :rowKey="record => record.record_id"
              :pagination="pagination" size="middle"
              :dataSource="data" :loading="loading" @change="handleTableChange"
-             :scroll="{ y: 230 }">
+             :scroll="scroll" ref="table">
       <template slot="roles" slot-scope="text, record">
         <span v-for="(item, index) in text" :key="index"> {{item.name}}</span>
       </template>
@@ -79,6 +79,7 @@
         disableBtnLoading: {},
         deleteBtnLoading: {},
         tableHeight: 0,
+        scroll: {},
         columns: [
           {
             title: '用户名',
@@ -137,13 +138,29 @@
     },
     mounted() {
       this.fetch(this.pagination);
-      // TODO: 这几行代码是想设置table高度的，但是failed
-      // let routerWrapDOM = document.querySelector('.index-content-wrap.ant-layout-content');
-      // let wrapHeight = routerWrapDOM.clientHeight;
-      // console.log(routerWrapDOM, wrapHeight)
-      // this.tableHeight = wrapHeight - 115;
+      this.setTableScroll()
+      // 监听window的resize方法，并加入防抖函数
+      window.addEventListener('resize', window.$debounce(() => {
+          this.setTableScroll();
+          console.log(this)
+        }, 200)
+        , false)
     },
     methods: {
+      // 设置table的默认Scroll
+      setTableScroll() {
+        setTimeout(() => {
+          let tableTop = this.$refs.table.$el.offsetTop  // table距离文档顶端距离
+          let viewTop = document.querySelector('.router-wrap').offsetTop   // router-view距离文档顶端距离
+          let viewHeight = document.querySelector('.router-wrap').clientHeight // router-view高度
+          console.log(this.$refs.table.$el, tableTop)
+          console.log(document.querySelector('.router-wrap'), viewTop, viewHeight)
+          this.scroll = {
+            y :  viewHeight - (tableTop - viewTop) - 45 - 60 // 减去的45为table的header高度, 60为pagination高度
+          }
+        }, 10)
+
+      },
       onEnable (record_id) {
         this.enableBtnLoading[record_id] = true;
         this.$axios.patch(`users/${record_id}/enable`).then(res => {

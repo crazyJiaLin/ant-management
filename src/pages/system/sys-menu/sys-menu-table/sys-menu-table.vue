@@ -2,7 +2,7 @@
   <div>
     <a-table :columns="columns" :rowKey="record => record.record_id" size="middle"
              :dataSource="data" :pagination="false" :loading="loading"
-             :scroll="{ y: 450 }">
+             :scroll="scroll" ref="table">
       <template slot="icon" slot-scope="icon">
         <a-icon :type="icon"></a-icon> - {{icon}}
       </template>
@@ -67,17 +67,18 @@
         baseMenus: ['首页','系统管理', '菜单管理', '角色管理', '用户管理'],
         loading: false,
         tableHeight: 0,
+        scroll: {},
         columns: [
           {
             title: '菜单名称',
             dataIndex: 'name',
             align: 'left',
-
+            width: '230px',
           }, {
             title: '排序值',
             dataIndex: 'sequence',
             align: 'center',
-            width: '200px',
+            width: '100px',
           }, {
             title: '隐藏状态',
             dataIndex: 'hidden',
@@ -90,7 +91,6 @@
             title: '图标',
             dataIndex: 'icon',
             align: 'left',
-            width: '250px',
             scopedSlots: { customRender: 'icon' },
           },
           // {
@@ -109,14 +109,30 @@
       }
     },
     mounted() {
-      this.fetch();
-      // TODO: 这几行代码是想设置table高度的，但是failed
-      // let routerWrapDOM = document.querySelector('.index-content-wrap.ant-layout-content');
-      // let wrapHeight = routerWrapDOM.clientHeight;
-      // console.log(routerWrapDOM, wrapHeight)
-      // this.tableHeight = wrapHeight - 115;
+      this.fetch()
+      this.setTableScroll()
+      // 监听window的resize方法，并加入防抖函数
+      window.addEventListener('resize', window.$debounce(() => {
+          this.setTableScroll();
+          console.log(this)
+        }, 200)
+        , false)
     },
     methods: {
+      // 设置table的默认Scroll
+      setTableScroll() {
+        setTimeout(() => {
+          let tableTop = this.$refs.table.$el.offsetTop  // table距离文档顶端距离
+          let viewTop = document.querySelector('.router-wrap').offsetTop   // router-view距离文档顶端距离
+          let viewHeight = document.querySelector('.router-wrap').clientHeight // router-view高度
+          console.log(this.$refs.table.$el, tableTop)
+          console.log(document.querySelector('.router-wrap'), viewTop, viewHeight)
+          this.scroll = {
+            y :  viewHeight - (tableTop - viewTop) - 70 // 减去的54为table的header高度
+          }
+        }, 10)
+
+      },
       // 配置菜单
       configMenu (item) {
         // console.log('配置菜单', item)
