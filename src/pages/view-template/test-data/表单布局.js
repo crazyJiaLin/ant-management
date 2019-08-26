@@ -546,15 +546,16 @@ export default [
         data: [
           {label:"全部", value: -1},
           {label:"正常", value: 1},
-          {label:"停用", value: 2},
+          {label:"停用", value: 2, disabled: true},
           {label:"3", value: 3}
         ],
         dataUrl : '',
-        "width": 12,
-        "labelCol": {"span":6},
+        "width": 18,
+        "labelCol": {"span":4},
         "wrapperCol": {"span":16, "offset": 2},
-        "attribute":{
-          "Tooltip":{"title":"提示文本","placement":"top"},
+        attribute : {
+          isButton: true,       // 设置是否为button格式显示radio
+          buttonStyle: 'solid', // button样式---outline/solid
           "decorator":{
             "rules":[
               {"required":false,"message":""},
@@ -567,9 +568,9 @@ export default [
         "id": "switch1",
         "type":"Switch",
         label: '开关',
-        width: 12,    // 4-24
-        labelCol: {span: 6},   // 文案长度
-        wrapperCol: {span: 14, offset: 2},// 输入框长度
+        width: 6,    // 4-24
+        labelCol: {span: 9},   // 文案长度
+        wrapperCol: {span: 12, offset: 2},// 输入框长度
         "attribute":{
           "checkedChildren":'开',
           unCheckedChildren: '关',

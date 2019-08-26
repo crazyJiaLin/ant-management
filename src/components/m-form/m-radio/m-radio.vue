@@ -1,25 +1,47 @@
 <template>
   <a-form-item  :label="options.label"
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
-    <a-radio-group v-if="!options.attribute.Tooltip" @change="onChange" :disabled="options.attribute.disabled"  v-decorator="[
-                  options.id,
-                  options.attribute.decorator
-                ]">
-      <a-radio v-for="(item, index) in dataList" :key="index"
-                  :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+    <a-radio-group v-if="!options.attribute.Tooltip" @change="onChange"
+                   :disabled="options.attribute.disabled" :buttonStyle="options.attribute.buttonStyle"
+                   v-decorator="[
+                    options.id,
+                    options.attribute.decorator
+                  ]"
+    >
+      <a-radio v-if="!options.attribute.isButton" v-for="(item, index) in dataList" :key="index"
+               :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value"
+               :disabled="item.disabled"
+      >
         {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
       </a-radio>
+      <a-radio-button v-if="options.attribute.isButton" v-for="(item, index) in dataList" :key="index"
+                      :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value"
+                      :disabled="item.disabled"
+      >
+        {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+      </a-radio-button>
     </a-radio-group>
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
-      <a-radio-group @change="onChange" :disabled="options.attribute.disabled"  v-decorator="[
-                  options.id,
-                  options.attribute.decorator
-                ]">
-        <a-radio v-for="(item, index) in dataList" :key="index"
-                 :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value">
+      <a-radio-group @change="onChange" :buttonStyle="options.attribute.buttonStyle"
+                     :disabled="options.attribute.disabled"
+                     v-decorator="[
+                        options.id,
+                        options.attribute.decorator
+                      ]"
+      >
+        <a-radio v-if="!options.attribute.isButton" v-for="(item, index) in dataList" :key="index"
+                 :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value"
+                 :disabled="item.disabled"
+        >
           {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
         </a-radio>
+        <a-radio-button v-if="options.attribute.isButton" v-for="(item, index) in dataList" :key="index"
+                        :value="(options.fieldsName && options.fieldsName.value) ? item[options.fieldsName.value] : item.value"
+                        :disabled="item.disabled"
+        >
+          {{(options.fieldsName && options.fieldsName.label) ? item[options.fieldsName.label] : item.label}}
+        </a-radio-button>
       </a-radio-group>
     </a-tooltip>
   </a-form-item>
@@ -33,6 +55,7 @@
       AFormItem: Form.Item,
       ARadio: Radio,
       ARadioGroup: Radio.Group,
+      ARadioButton: Radio.Button,
       ATooltip: Tooltip,
       AIcon: Icon,
     },

@@ -121,7 +121,7 @@ export default [
       //   overflow: 'auto'
       // },
       // tableStyle: {      // table的样式
-      //   width: '200px',
+      //   width: '100%',
       //   overflow: 'hidden'
       // }
     },
