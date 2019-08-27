@@ -32,7 +32,7 @@
                   @click="onEnable(record.record_id)"
                   size="small" type="primary">启用</a-button>
         <a-button v-if="record.status === 1 && options.operation && options.operation.disable && options.operation.disable.showBtn"
-                  :disabled="!isInActions('edit')" :loading="disableBtnLoading[record.record_id]"
+                  :disabled="!isInActions('disable')" :loading="disableBtnLoading[record.record_id]"
                   @click="onDisable(record.record_id)"
                   size="small" type="danger">停用</a-button>
         <a-button v-if="options.operation && options.operation.edit && options.operation.edit.showBtn"
