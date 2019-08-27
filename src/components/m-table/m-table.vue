@@ -10,7 +10,7 @@
               @close="handleCreateDrawClose"></m-create>
     <m-edit :visible="showEditDrawer" :options="options.operation ? options.operation.edit : {}"
             :record="editRecord" @close="handleEditDrawClose"></m-edit>
-    <a-table :columns="columns" :rowKey="rowKey" :style="options.attribute.tableStyle" :ref="options.id"
+    <a-table :columns="columns" :rowKey="rowKey" :style="options.attribute.tableStyle" :class="options.id"
              :dataSource="dataList" :pagination="pagination"
              :size="options.attribute.size" :bordered="options.attribute.bordered"
              :scroll="finalScroll"
@@ -127,17 +127,17 @@
       // 监听window的resize方法，并加入防抖函数
       window.addEventListener('resize', window.$debounce(() => {
           this.setTableScroll();
-          console.log(this)
         }, 200)
       , false)
     },
     methods: {
       // 设置table的默认Scroll
       setTableScroll() {
-        let tableTop = this.$refs[this.options.id].$el.offsetTop  // table距离文档顶端距离
+        let tableTop = document.querySelector(`.${this.options.id}`).offsetTop  // table距离文档顶端距离
         let viewTop = document.querySelector('.view-template-wrap').offsetTop   // router-view距离文档顶端距离
         let viewHeight = document.querySelector('.view-template-wrap').clientHeight // router-view高度
         this.scroll = {
+          x : true,
           y :  viewHeight - (tableTop - viewTop) - 54 - 65   // 减去的54为table的header高度,64为pagination高度
         }
       },

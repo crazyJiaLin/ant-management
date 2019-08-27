@@ -1,5 +1,6 @@
 <template>
   <div class="test-wrap">
+    <div class="test-child">123</div>
   </div>
 </template>
 
@@ -84,6 +85,18 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.test-wrap{
+  width: 200px;
+  height: 300px;
+  .test-child{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: tomato;
+  }
+}
 
 </style>

@@ -16,9 +16,9 @@
     <a-layout>
       <m-header :collapsed="collapsed" @clickCollBtn="()=> collapsed = !collapsed"></m-header>
 
-      <a-layout-content class="index-content-wrap">
+      <div class="index-content-wrap">
         <router-view></router-view>
-      </a-layout-content>
+      </div>
     </a-layout>
   </a-layout>
 </template>

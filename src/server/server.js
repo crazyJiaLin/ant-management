@@ -39,7 +39,7 @@ axios.interceptors.response.use(data=> {
   return data;
 }, err=> {
   // console.error('响应拦截器', err.response.status)
-  if(err.response.status == 401){
+  if(err.response.status == 401 || err.response.status == 400){
     Message.error(err.response.data.error.message);
     let hash = location.hash.split('?')[0];
     let path = hash.slice(1, hash.length);

@@ -3,7 +3,7 @@
     <a-table :columns="columns" :rowKey="record => record.record_id"
              :pagination="pagination" size="middle"
              :dataSource="data" :loading="loading" @change="handleTableChange"
-             :scroll="scroll" ref="table">
+             :scroll="scroll" class="sys-user-table">
       <template slot="roles" slot-scope="text, record">
         <span v-for="(item, index) in text" :key="index"> {{item.name}}</span>
       </template>
@@ -85,13 +85,13 @@
             title: '用户名',
             dataIndex: 'user_name',
             align: 'center',
-            width: '200px'
+            width: '180px',
           },
           {
             title: '真实姓名',
             dataIndex: 'real_name',
             align: 'center',
-            width: '200px',
+            width: '150px',
           },
           {
             title: '角色名称',
@@ -104,7 +104,7 @@
             title: '用户状态',
             dataIndex: 'status',
             align: 'center',
-            width: '200px',
+            width: '90px',
             scopedSlots: {customRender: 'status'}
           },
           {
@@ -117,14 +117,7 @@
             title: '手机号',
             dataIndex: 'phone',
             align: 'center',
-            width: '200px',
-          },
-          {
-            title: '创建时间',
-            dataIndex: 'created_at',
-            align: 'center',
-            width: '220px',
-            scopedSlots: {customRender: 'created'},
+            width: '130px',
           },
           {
             title: '操作',
@@ -142,7 +135,6 @@
       // 监听window的resize方法，并加入防抖函数
       window.addEventListener('resize', window.$debounce(() => {
           this.setTableScroll();
-          console.log(this)
         }, 200)
         , false)
     },
@@ -150,15 +142,18 @@
       // 设置table的默认Scroll
       setTableScroll() {
         setTimeout(() => {
-          let tableTop = this.$refs.table.$el.offsetTop  // table距离文档顶端距离
+          let tableTop = document.querySelector('.sys-user-table').offsetTop  // table距离文档顶端距离
           let viewTop = document.querySelector('.router-wrap').offsetTop   // router-view距离文档顶端距离
           let viewHeight = document.querySelector('.router-wrap').clientHeight // router-view高度
-          console.log(this.$refs.table.$el, tableTop)
+          console.log(document.querySelector('.sys-user-table'), tableTop)
           console.log(document.querySelector('.router-wrap'), viewTop, viewHeight)
+          let scrollY = viewHeight - (tableTop - viewTop) - 45 - 60 // 减去的45为table的header高度, 60为pagination高度
+          console.log(scrollY)
           this.scroll = {
-            y :  viewHeight - (tableTop - viewTop) - 45 - 60 // 减去的45为table的header高度, 60为pagination高度
+            x: true,
+            y :  scrollY
           }
-        }, 10)
+        }, 50)
 
       },
       onEnable (record_id) {

@@ -111,6 +111,7 @@ export default [
       bordered: false,
       size : 'default',
       showHeader: true,
+      // 不传自响应
       // scroll:{           // table scroll
       //   x: 300,
       //   y: 100
