@@ -45,7 +45,8 @@ export default [
     isRemote: false,  //是否获取远程数据，如果是的话，内容json由data求处理的结果作为数据解析, 否则内容由content为准
     data : {
       method: 'GET',
-      dataUrl: '',      // 远程数据获取url
+      url: '',      // 远程数据获取url
+      params: {},
       isBase64Data : false,   // 获取到的数据是否为base64格式，如果为base64格式的话组件内部进行解码
     },
     attribute: {

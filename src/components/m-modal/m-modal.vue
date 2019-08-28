@@ -27,6 +27,7 @@
 </template>
 
 <script>
+  const Base64 = require('js-base64').Base64
   import {Modal} from 'ant-design-vue'
   import MQuery from '@/components/m-form/m-query/m-query'
   import MForm from '@/components/m-form/m-form'
@@ -62,10 +63,42 @@
         content: []
       }
     },
+    mounted() {
+      this.getContent();
+    },
     methods: {
       handleOk (e) {
         let okFn = $eval(this.options.methods ? this.options.methods.ok : null)
         okFn(e, this);
+      },
+      getContent () {
+        if(! this.options.isRemote || !this.options.data) return;
+        // 根据配置文件中data的配置项发送请求，获取content数据
+        this.$axios[this.options.data.method](this.options.data.url,this.options.data.params)
+          .then(res => {
+            console.log(res)
+            if(this.options.data.isBase64Data) {
+              // 需要Base54解码
+              let jsonStr = Base64.decode(res.data.data)
+              // 解析解码后的json数据
+              this.parseJSON(jsonStr)
+            }else{
+              // 不需要base64解码，直接解析json数据
+              this.parseJSON(res.data.data)
+            }
+          }).catch(err => {
+            console.log(err)
+            message.error(this.options.id + '组件请求数据失败！');
+        })
+      },
+      parseJSON (jsonStr) {
+        try{
+          this.content = new JsonObj(JSON.parse(jsonStr));
+          console.log(this.content)
+        }catch (e) {
+          // console.log('转化错误',e.toString())
+          message.error('数据不能转化为json格式')
+        }
       },
       handleCancel (e) {
         let cancelFn = $eval(this.options.methods ? this.options.methods.cancel : null)
