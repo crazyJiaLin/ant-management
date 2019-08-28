@@ -53,6 +53,7 @@ export default [
       title: '带表单的Modal',
       width: 600,
       zIndex: 999,
+      destroyOnClose: true,   // 关闭时是否销毁 Modal 里的子元素
       autoFocusButton: 'ok',  // null|string: ok cancel --- 指定自动获得焦点的按钮
       cancelText : '取消',
       okText: '确认',

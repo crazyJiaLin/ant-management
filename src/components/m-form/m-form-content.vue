@@ -16,10 +16,12 @@
         <m-button v-if="item.type && (item.type.toLowerCase() === 'button')" :options="item" @submitEvent="handleSubmitEvent"></m-button>
         <m-switch v-if="item.type && (item.type.toLowerCase() === 'switch')" :options="item" @submitEvent="handleSubmitEvent"></m-switch>
         <m-select v-if="item.type && (item.type.toLowerCase() === 'select')" :options="item"></m-select>
-        <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-upload v-if="item.type && (item.type.toLowerCase() === 'upload')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-upload-img v-if="item.type && (item.type.toLowerCase() === 'uploadimg')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-badge v-if="item.type && (item.type.toLowerCase() === 'badge')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-a v-if="item.type && (item.type.toLowerCase() === 'a')" :options="item"/>
+        <m-div v-if="item.type && (item.type.toLowerCase() === 'div')" :options="item"/>
+        <m-pre v-if="item.type && (item.type.toLowerCase() === 'pre')" :options="item"/>
       </a-col>
     </a-row>
 </template>
@@ -50,6 +52,8 @@
   import MUploadImg from '@/components/m-form/m-upload/m-upload-img'
   import MA from '@/components/m-native/m-a'
   import MBadge from '@/components/m-badge/m-badge'
+  import MDiv from '@/components/m-native/m-div'
+  import MPre from '@/components/m-native/m-pre'
   export default {
     name: "m-form-content",
     components: {
@@ -58,7 +62,7 @@
       MInput, MTextarea, MInputGroup, MTimePicker, MDatePicker, MRangePicker, MMonthPicker,
       MInputNumber, MInputSearch, MCascader, MRadio, MCheckbox, MButton,
       MSwitch, MSelect, MUpload, MUploadImg, MBadge,
-      'm-a': MA
+      'm-a': MA, MDiv, MPre
     },
     props: {
       options: Object,

@@ -8,7 +8,7 @@ export default [
   {
     id: 'badgeDescription',
     type: 'div',
-    text: 'Badge:',
+    html: 'Badge:',
     style: {
       textAlign: 'center',
       fontSize: '16px',

@@ -50,14 +50,16 @@
         this.form.validateFields((error, values) => {
           console.log('error', error);
           console.log('Received values of form: ', values);
-          if(error) return this.$emit('afterSubmit', {
-            status: 'validFailed',
-            data: error
-          });
+          if(error) {
+            return this.$emit('afterSubmit', {
+              status: 'validFailed',
+              data: error
+            });
+          }
           //执行搜索前的钩子函数
           let beforeSubmit = $eval(this.options.beforeSubmit, 'beforeSubmit');
           // console.log(beforeSubmit)
-          beforeSubmit(values);
+          beforeSubmit(values, this);
           // 提交表单到父组件执行
           // this.$emit('submit', values);
           // 提交表单
@@ -71,7 +73,7 @@
             })
             // 执行配置文件中的submitted函数
             let submitted = $eval(this.options.submitted)
-            submitted(res);
+            submitted(res, this);
           }).catch(err => {
             console.log(err)
             // 通知父组件
@@ -81,7 +83,7 @@
             })
             // 执行配置文件中的failed函数
             let failed = $eval(this.options.failed);
-            failed(err)
+            failed(err, this)
           })
         });
       },

@@ -1,21 +1,20 @@
 <template>
-  <a-col :span="options.width" :offset="options.offset">
-    <a-button :disabled="options.attribute.disabled" :loading="options.attribute.loading"
-              :size="options.attribute.size" :type="options.attribute.type"
-              :html-type="options.attribute.htmlType"
-              :icon="options.attribute.icon" @click="onClick">
-      {{options.text}}
-    </a-button>
-  </a-col>
+  <div :style="options.attribute.wrapperStyle">
+      <a-button :disabled="options.attribute.disabled" :loading="options.attribute.loading"
+                :size="options.attribute.size" :type="options.attribute.type"
+                :html-type="options.attribute.htmlType"
+                :icon="options.attribute.icon" @click="onClick">
+        {{options.text}}
+      </a-button>
+  </div>
 </template>
 
 <script>
-  import {Button, Col} from 'ant-design-vue'
+  import {Button} from 'ant-design-vue'
   export default {
     name: "m-button",
     components : {
       AButton: Button,
-      ACol: Col
     },
     props: {
       options: Object
