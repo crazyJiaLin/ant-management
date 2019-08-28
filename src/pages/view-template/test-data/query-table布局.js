@@ -139,14 +139,15 @@ export default [
         align: 'center',
         width: '200px',
         customRender: `(text, record, index)=>{
-        return text
-      }`
+          return text
+        }`
       },
       {
         title: '真实姓名',
         dataIndex: 'real_name',
         align: 'center',
         width: '200px',
+        scopedSlots: {customRender: 'a'},
       },
       {
         title: '角色名称',

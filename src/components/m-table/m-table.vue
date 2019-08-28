@@ -17,6 +17,9 @@
              :showHeader="options.attribute.showHeader === undefined ? true : options.attribute.showHeader"
              :loading="loading" @change="handleTableChange"
     >
+
+      <a :href="text.href" slot="a" slot-scope="text, record">{{text.text ? text.text : text}}</a>
+
       <template slot="status" slot-scope="text, record">
         <a-badge status="success"  v-if="text===1"/>
         <a-badge status="default"  v-if="text===2"/>
@@ -49,6 +52,10 @@
   </div>
 </template>
 <script>
+  const fn = (text) => {
+    console.log(text)
+    return text + '123'
+  }
   import {Table, Button, Popconfirm, Icon, Badge, Notification} from 'ant-design-vue'
   import MCreate from './m-create/m-create'
   import MEdit from './m-edit/m-edit'
