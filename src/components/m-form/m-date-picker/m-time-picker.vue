@@ -18,6 +18,9 @@
 </template>
 
 <script>
+  import moment from 'moment';
+  import 'moment/locale/zh-cn';
+  moment.locale('zh-cn');
   import {Form, TimePicker, Tooltip} from 'ant-design-vue'
   export default {
     name: "m-time-picker",

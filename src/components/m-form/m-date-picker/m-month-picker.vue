@@ -19,6 +19,9 @@
 </template>
 
 <script>
+  import moment from 'moment';
+  import 'moment/locale/zh-cn';
+  moment.locale('zh-cn');
   import {Form, DatePicker, Tooltip} from 'ant-design-vue'
   export default {
     name: "m-date-picker",
