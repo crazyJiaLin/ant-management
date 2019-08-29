@@ -7,7 +7,7 @@
            :closable="options.attribute.closable" :footer="options.attribute.footer"
           @ok="handleOk" @cancel="handleCancel"
   >
-    <template v-for="(item, index) in contentList" >
+    <template v-for="(item, index) in options.children" >
       <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
                @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
       <m-form v-if="item.type && (item.type.toLowerCase() === 'form')" :options="item"
@@ -53,11 +53,6 @@
     props: {
       options: Object
     },
-    computed : {
-      contentList () {
-        return this.options.isRemote ? this.content : this.options.children
-      }
-    },
     data () {
       return {
         content: []
@@ -72,9 +67,11 @@
         okFn(e, this);
       },
       getContent () {
-        if(! this.options.isRemote || !this.options.data) return;
+        if(!this.options.isRemote || !this.options.data) return;
         // 根据配置文件中data的配置项发送请求，获取content数据
-        this.$axios[this.options.data.method](this.options.data.url,this.options.data.params)
+        console.log(this.options.data.method)
+        let method = this.options.data.method.toLowerCase();
+        this.$axios[method](this.options.data.url,this.options.data.params)
           .then(res => {
             console.log(res)
             if(this.options.data.isBase64Data) {
@@ -94,7 +91,9 @@
       parseJSON (jsonStr) {
         try{
           this.content = new JsonObj(JSON.parse(jsonStr));
-          console.log(this.content)
+          // 将content内容通知给父组件，添加到父组件的children里
+          console.log(this.options.id, new Array(JSON.parse(jsonStr)))
+          this.$emit('submitEvent', `jsonobj.set('${this.options.id}','children',${jsonStr});`)
         }catch (e) {
           // console.log('转化错误',e.toString())
           message.error('数据不能转化为json格式')

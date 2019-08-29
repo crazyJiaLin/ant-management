@@ -23,6 +23,23 @@ export default [
     }
   },
   {
+    "id": "remoteDataModalBtn",
+    "type":"Button",
+    text: '远程获取content数据',
+    "attribute":{
+      "size":"default",
+      disabled: false,
+      loading: false,
+      type: 'primary',
+      icon: 'eye',
+      "inner":"jsonobj.set('remoteDataModal','attribute.visible',true)",
+      wrapperStyle : {
+        display: 'inline-block',
+        margin: '20px'
+      }
+    }
+  },
+  {
     "id": "divModalBtn",
     "type":"Button",
     text: '普通Modal',
@@ -398,14 +415,49 @@ export default [
     ]
   },
   {
+    id: 'remoteDataModal',
+    type: 'Modal',
+    isRemote: true,  //是否获取远程数据，如果是的话，内容json由data求处理的结果作为数据解析, 否则内容由content为准
+    data : {
+      method: 'GET',
+      url: '/gettemplates/a2a0301f-1500-4d72-8b90-da08ea1e1bfa',      // 远程数据获取url
+      isBase64Data : true,   // 获取到的数据是否为base64格式，如果为base64格式的话组件内部进行解码
+    },
+    attribute: {
+      visible: false,
+      title: '远程获取数据Modal',
+      width: 640,
+      zIndex: 999,
+      autoFocusButton: 'ok',  // null|string: ok cancel --- 指定自动获得焦点的按钮
+      cancelText : '取消',
+      okText: '确认',
+      okType: 'primary',
+      confirmLoading: false,
+      closable: true,
+    },
+    methods: {
+      cancel: `(e, that) => {
+        console.log(e, that);
+        that.$emit('submitEvent', "jsonobj.set('remoteDataModal','attribute.visible',false)")
+      }`,
+      ok: `(e, that) => {
+        // e和that分别为事件e和当前组件的this
+        console.log(e, that)
+        that.$emit('submitEvent', "jsonobj.set('remoteDataModal','attribute.confirmLoading',true); jsonobj.set('remoteDataModal','attribute.title','2s后自动关闭');")
+        setTimeout(() => {
+          that.$emit('submitEvent', "jsonobj.set('remoteDataModal','attribute.visible',false);")
+          that.$emit('submitEvent', "jsonobj.set('remoteDataModal','attribute.title','远程获取数据Modal');")
+          that.$emit('submitEvent', "jsonobj.set('remoteDataModal','attribute.confirmLoading',false);")
+        }, 2000)
+        
+      }`
+    },
+    children: []
+  },
+  {
     id: 'divModal',
     type: 'Modal',
     isRemote: false,  //是否获取远程数据，如果是的话，内容json由data求处理的结果作为数据解析, 否则内容由content为准
-    data : {
-      method: 'GET',
-      dataUrl: '',      // 远程数据获取url
-      isBase64Data : false,   // 获取到的数据是否为base64格式，如果为base64格式的话组件内部进行解码
-    },
     attribute: {
       visible: false,
       title: '带表单的Modal',
