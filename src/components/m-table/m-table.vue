@@ -133,13 +133,13 @@
       this.setTableScroll()
       // 监听window的resize方法，并加入防抖函数
       window.addEventListener('resize', window.$debounce(() => {
-          this.setTableScroll();
-        }, 200)
-      , false)
+        this.setTableScroll();
+      }, 200), false)
     },
     methods: {
       // 设置table的默认Scroll
       setTableScroll() {
+        if(!document.querySelector(`.${this.options.id}`)) return;
         let tableTop = document.querySelector(`.${this.options.id}`).offsetTop  // table距离文档顶端距离
         let viewTop = document.querySelector('.view-template-wrap').offsetTop   // router-view距离文档顶端距离
         let viewHeight = document.querySelector('.view-template-wrap').clientHeight // router-view高度

@@ -142,13 +142,18 @@
       // 设置table的默认Scroll
       setTableScroll() {
         setTimeout(() => {
-          let tableTop = document.querySelector('.sys-user-table').offsetTop  // table距离文档顶端距离
-          let viewTop = document.querySelector('.router-wrap').offsetTop   // router-view距离文档顶端距离
-          let viewHeight = document.querySelector('.router-wrap').clientHeight // router-view高度
-          console.log(document.querySelector('.sys-user-table'), tableTop)
-          console.log(document.querySelector('.router-wrap'), viewTop, viewHeight)
+          let oTable = document.querySelector('.sys-user-table');
+          let oRouterWrap = document.querySelector('.router-wrap')
+
+          if(!oTable || !oRouterWrap) return;  // 容错处理
+
+          let tableTop = oTable.offsetTop  // table距离文档顶端距离
+          let viewTop = oRouterWrap.offsetTop   // router-view距离文档顶端距离
+          let viewHeight = oRouterWrap.clientHeight // router-view高度
+          // console.log(oTable, tableTop)
+          // console.log(oRouterWrap, viewTop, viewHeight)
           let scrollY = viewHeight - (tableTop - viewTop) - 45 - 60 // 减去的45为table的header高度, 60为pagination高度
-          console.log(scrollY)
+          // console.log(scrollY)
           this.scroll = {
             x: true,
             y :  scrollY

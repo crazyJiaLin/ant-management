@@ -114,7 +114,6 @@
       // 监听window的resize方法，并加入防抖函数
       window.addEventListener('resize', window.$debounce(() => {
           this.setTableScroll();
-          console.log(this)
         }, 200)
         , false)
     },
@@ -122,11 +121,12 @@
       // 设置table的默认Scroll
       setTableScroll() {
         setTimeout(() => {
+          if(!this.$refs.table) return;
           let tableTop = this.$refs.table.$el.offsetTop  // table距离文档顶端距离
           let viewTop = document.querySelector('.router-wrap').offsetTop   // router-view距离文档顶端距离
           let viewHeight = document.querySelector('.router-wrap').clientHeight // router-view高度
-          console.log(this.$refs.table.$el, tableTop)
-          console.log(document.querySelector('.router-wrap'), viewTop, viewHeight)
+          // console.log(this.$refs.table.$el, tableTop)
+          // console.log(document.querySelector('.router-wrap'), viewTop, viewHeight)
           this.scroll = {
             y :  viewHeight - (tableTop - viewTop) - 70 // 减去的54为table的header高度
           }
