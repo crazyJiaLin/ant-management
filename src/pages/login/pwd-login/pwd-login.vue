@@ -48,7 +48,7 @@
         <a>忘记密码</a>
       </a-col>
       <a-col :span="12"  style="text-align: right;">
-        <router-link class="register" :to="{ name: 'register' }">注册账户</router-link>
+        <router-link class="register" :to="{ path: '/register' }">注册账户</router-link>
         <!--        <a-checkbox v-model="autoLogin"> 自动登录 </a-checkbox>-->
       </a-col>
     </a-row>

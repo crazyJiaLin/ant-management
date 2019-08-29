@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/pages/login/login'
+import Register from '@/pages/register/register'
 import Index from '@/pages/index/index'
 import Dashboard from '@/pages/dashboard/dashboard'
 import System from '@/pages/system/system'
@@ -26,6 +27,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
     {
       path: '/',
