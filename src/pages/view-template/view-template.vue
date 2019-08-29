@@ -16,6 +16,7 @@
         <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-steps v-if="item.type && (item.type.toLowerCase() === 'steps')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-modal v-if="item.type && (item.type.toLowerCase() === 'modal')" :options="item" @submitEvent="handleSubmitEvent"/>
+        <m-tabs v-if="item.type && (item.type.toLowerCase() === 'tabs')" :options="item" @submitEvent="handleSubmitEvent"/>
 
         <m-badge v-if="item.type && (item.type.toLowerCase() === 'badge')" :options="item" @submitEvent="handleSubmitEvent"/>
         <m-transfer v-if="item.type && (item.type.toLowerCase() === 'transfer')" :options="item"/>
@@ -29,7 +30,7 @@
 </template>
 <script>
   // 假数据
-  import TemplateData from './test-data/modal组件'
+  import TemplateData from './test-data/test-data'
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
 
@@ -38,6 +39,7 @@
   import MTable from '@/components/m-table/m-table'
   import MSteps from '@/components/m-steps/m-steps'
   import MModal from '@/components/m-modal/m-modal'
+  import MTabs from '@/components/m-tabs/m-tabs'
 
   import MButton from '@/components/m-form/m-button/m-button'
   import MBadge from '@/components/m-badge/m-badge'
@@ -53,7 +55,7 @@
     name: "view-template",
     components: {
       AIcon: Icon,
-      MQuery, MForm, MTable, MSteps, MModal,
+      MQuery, MForm, MTable, MSteps, MModal, MTabs,
       MButton, MBadge, MTransfer,
       MDiv, MPre, 'm-a': MA,
       MTest
@@ -96,10 +98,10 @@
           // console.log('获取到当前菜单的模板数据',res.data)
           if(res.data){
             //数据库中有对应于本菜单的template数据
-            let jsonStr = Base64.decode(res.data.data)
-            this.parseJSON(jsonStr)
+            // let jsonStr = Base64.decode(res.data.data)
+            // this.parseJSON(jsonStr)
             // 这里是个假数据，稍后吧前两行注释打开弄成真数据
-            // this.template = new JsonObj(TemplateData)
+            this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {
           console.log(err.response)
