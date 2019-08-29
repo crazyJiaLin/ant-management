@@ -16,6 +16,10 @@ import 'animate.css'
 // antd of vue
 import {Message} from 'ant-design-vue'
 import "ant-design-vue/dist/antd.css";
+//设置日期选择器组件的语言
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 //路由钩子函数
 router.beforeEach((to, from, next) =>{
