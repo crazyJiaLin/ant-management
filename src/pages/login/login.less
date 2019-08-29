@@ -4,15 +4,13 @@
     width: 100vw;
     height: 100vh;
     overflow: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: #f0f2f5 url('/static/img/background/login.svg') center center no-repeat;
     background-size: cover;
 }
 .login {
-    width: 400px;
-    color: @color;
+  margin: 100px auto 0;
+  width: 400px;
+  color: @color;
 }
 .login-title-wrap {
     width: 100%;
@@ -51,6 +49,12 @@
    border-radius: 10px;
 //    box-shadow: 1px 1px 10px 0 rgba(0, 0, 0, .3);
    margin-top: 30px;
+  .ant-tabs-top-bar{
+    border:none;
+  }
+  .ant-tabs-nav-scroll {
+    text-align: center;
+  }
    .login-form {
        width: 90%;
        margin: 0 auto;
@@ -79,4 +83,28 @@
    .login-btn {
         width: 100%;
    }
+}
+
+.user-login-other {
+  text-align: left;
+  line-height: 22px;
+  margin-bottom: 80px;
+  box-sizing: border-box;
+  padding: 0 20px;
+  .item-icon {
+    font-size: 24px;
+    color: rgba(0, 0, 0, 0.2);
+    margin-left: 16px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: color 0.3s;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+
+  .register {
+    float: right;
+  }
 }

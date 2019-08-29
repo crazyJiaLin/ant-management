@@ -98,7 +98,7 @@
             //数据库中有对应于本菜单的template数据
             let jsonStr = Base64.decode(res.data.data)
             this.parseJSON(jsonStr)
-            // TODO 这里是个假数据，稍后吧前两行注释打开弄成真数据
+            // 这里是个假数据，稍后吧前两行注释打开弄成真数据
             // this.template = new JsonObj(TemplateData)
           }
         }).catch(err => {

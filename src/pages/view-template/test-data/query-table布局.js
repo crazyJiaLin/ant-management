@@ -213,7 +213,6 @@ export default [
         width: 550,
         form: {
           // 这里吧role_ids进行转化，并添加其想要修改的内容---
-          // 注意这里不能使用不能使用this指向vue或者使用import的东西（如md5)---- TODO 密码提交怎么办？
           beforeSubmit : `(values) => {
             if(!values.role_ids) return;
             let roles = [];

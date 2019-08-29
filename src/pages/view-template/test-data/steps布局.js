@@ -363,7 +363,7 @@ export default [
                   }
                 }
             }`,
-            // TODO 这里模拟了一个表单提交的过程，想着在表单提交完成后再执行下边的操作
+            // 这里模拟了一个表单提交的过程，想着在表单提交完成后再执行下边的操作
             formSuccess : `(steps, current) => {
                console.log('formSuccess钩子函数中执行', steps, current)
                 // 修改button loading状态

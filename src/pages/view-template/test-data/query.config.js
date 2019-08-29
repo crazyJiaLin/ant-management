@@ -268,7 +268,6 @@ export default [
     data: [],
     dataUrl: 'roles?q=page',
     params: {},
-    // TODO 对于render中解决不了的function问题，可以吧function当做字符串存储，然后在组件中获取的时候eval（）
     columns : [], // 列表字段--渲染方式
     rowKeys: 'record => record.record_id',
     pagination: {},
