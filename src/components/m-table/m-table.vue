@@ -62,6 +62,13 @@
           <a-button :loading="deleteBtnLoading[record.record_id]" :disabled="!isInActions('delete')" type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
       </template>
+      <template slot="template" slot-scope="text, record, index">
+        <template v-for="item in renderOptions(text, record, index)">
+          <a-tag v-if="item.type && (item.type.toLowerCase() === 'tag')" :color="item.attribute.color">{{item.text}}</a-tag>
+          <m-switch v-if="item.type && (item.type.toLowerCase() === 'switch')" :options="item" @submitEvent="handleSubmitEvent"/>
+          <m-button v-if="item.type && (item.type.toLowerCase() === 'button')"  :options="item" @submitEvent="handleSubmitEvent"/>
+        </template>
+      </template>
     </a-table>
   </div>
 </template>
@@ -70,10 +77,11 @@
     console.log(text)
     return text + '123'
   }
-  import {Table, Row, Col, Button, Popconfirm, Icon, Badge, Notification} from 'ant-design-vue'
+  import {Table, Row, Col, Button, Popconfirm, Icon, Tag, Badge, Notification} from 'ant-design-vue'
   import MCreate from './m-create/m-create'
   import MEdit from './m-edit/m-edit'
   import MButton from '@/components/m-form/m-button/m-button'
+  import MSwitch from '@/components/m-switch/m-switch'
   export default {
     name: 'm-table',
     components: {
@@ -81,11 +89,11 @@
       ARow: Row, ACol: Col,
       AButton: Button,
       APopconfirm: Popconfirm,
-      AIcon: Icon,
+      AIcon: Icon, ATag: Tag,
       ABadge: Badge,
       MCreate,
       MEdit,
-      MButton,
+      MButton, MSwitch
     },
     props: {
       options: Object
@@ -154,6 +162,39 @@
       }, 200), false)
     },
     methods: {
+      // 单元格渲染，通过slot-scope的text，record参数作为实参，对配置文件中columns指定的渲染规则进行渲染，返回的结果让template进行渲染，并达到预期
+      renderOptions (text, record, index) {
+        // 通过text和record查出当前渲染的是哪一列
+        let key = this.getKeyInRecord(text, record)
+        // console.log(key)
+        if(!key) return [];
+
+        // 通过key值去columns里边找到对应的render方法
+        let render = $eval(this.getRenderFnByKey(key));
+        let res = render(text, record, index)
+        return res ? res : [];
+      },
+      getKeyInRecord (text, record) {
+        for(let key in record) {
+          if(typeof(text) === 'object') {
+            if(JSON.stringify(text) == JSON.stringify(record[key])) {
+              return key;
+            }
+          }else{
+            if(text === record[key]){
+              return key;
+            }
+          }
+        }
+        return null;
+      },
+      getRenderFnByKey (key) {
+        for(let i=0; i<this.columns.length; i++) {
+          if(this.columns[i].dataIndex === key) {
+            return this.columns[i].scopedSlots ? this.columns[i].scopedSlots.render : '';
+          }
+        }
+      },
       // 设置table的默认Scroll
       setTableScroll() {
         if(!document.querySelector(`.${this.options.id}`)) return;

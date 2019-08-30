@@ -533,6 +533,37 @@ export default [
         }
       },
       {
+        "id": "radio1",
+        "type":"Radio",
+        "label": '单选',
+        // 若果isRemote为true时，说明需要从远程获取数据，返回数据类型为data.list---Array
+        isRemote: false,
+        // 也可以规定filesName来对label和value进行映射
+        fieldsName: {
+          label: 'label',
+          value: 'value'
+        },
+        data: [
+          {label:"单选1", value: 1},
+          {label:"单选2", value: 2, disabled: true},
+          {label:"单选3", value: 3},
+          {label:"单选4", value: 4},
+          {label:"单选5", value: 5}
+        ],
+        dataUrl : '',
+        "width": 24,
+        "labelCol": {"span":3},
+        "wrapperCol": {"span":20, "offset": 1},
+        attribute : {
+          "decorator":{
+            "rules":[
+              {"required":false,"message":""},
+            ],
+            "initialValue": -1
+          }
+        }
+      },
+      {
         "id": "status",
         "type":"Radio",
         "label": '用户状态',

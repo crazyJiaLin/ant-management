@@ -138,29 +138,70 @@ export default [
         dataIndex: 'user_name',
         align: 'center',
         width: '200px',
-        customRender: `(text, record, index)=>{
-          return text
-        }`
+        // customRender: `(text, record, index)=>{
+        //   return text
+        // }`,
+        scopedSlots: {
+          customRender: 'template',
+          render: `(text, record, index) => {
+            // 注意这里return的一定是一个数组，哪怕只需要渲染一个元素
+            return [
+              {
+                type: 'Button',
+                text: text,
+                attribute: {
+                  wrapperStyle: {
+                    display: 'inline-block'
+                  },
+                  type: 'default',
+                  size: 'small'
+                },
+                onClick : \`(that) => {
+                  message.info('点击了\${text}按钮')
+                  that.$emit('submitEvent', 'jsonobj.set("divModal","attribute.visible", !jsonobj.get("divModal","attribute.visible"))')
+                }\`
+              }
+            ]
+          }`
+        },
       },
       {
         title: '真实姓名',
         dataIndex: 'real_name',
         align: 'center',
         width: '200px',
-        scopedSlots: {customRender: 'a'},
+
       },
       {
         title: '角色名称',
         dataIndex: 'roles',
         align: 'roles',
         width: '200px',
-        customRender: `(text, record, index)=>{
-          let res = '';
-          for(let i=0; i<text.length; i++){
-            res += text[i].name+ ' '
-          }
-          return res;
-        }`
+        // customRender: `(text, record, index)=>{
+        //   let res = '';
+        //   for(let i=0; i<text.length; i++){
+        //     res += text[i].name+ ' '
+        //   }
+        //   return res;
+        // }`,
+        scopedSlots: {
+          customRender: 'template',
+          render: `(text, record, index) => {
+            // console.log('配置文件中的render方法', text, record)
+            let res = [];
+            for(let i=0; i<text.length; i++) {
+              res.push({
+                id: 'tag' + i,
+                type: 'tag',
+                text: text[i].name,
+                attribute: {
+                  color: 'green'
+                }
+              })
+            }
+            return res;
+          }`
+        },
         // scopedSlots: {customRender: 'roles'}
       },
       {
@@ -175,20 +216,47 @@ export default [
         //     return '停用'
         //   }
         // }`,
-        scopedSlots: {customRender: 'status'},
+        // status状态为直接渲染status
+        // scopedSlots: { customRender: 'status'},
+        scopedSlots: {
+          customRender: 'template',
+          render: `(text, record, index) => {
+            return [
+              {
+                id: 'switch',
+                type: 'switch',
+                attribute: {
+                  checkedChildren: '启用',
+                  unCheckedChildren: '停用',
+                  checked: text === 1 ? true : false
+                },
+                onChange: \`(checked, that) => {
+                  // 这里的check参数是change过后switch的选中状态， that指的是当前switch组件的this，可以通过that对当前switch进行loading和发送请求等 
+                  console.log(checked)
+                  that.loading = true;
+                  // 在这里可以进行请求或者其他操作，如果想要使用inner方法，请使用 that.$emit('submitEvent', 'jsonobj.set(...)')
+                  setTimeout(()=>{
+                    that.loading = false;
+                    message.success('修改成功');
+                  },1000)
+                }\`
+              }
+            ]
+          }`
+        }
       },
-      {
-        title: '邮箱',
-        dataIndex: 'email',
-        align: 'center',
-        width: '200px',
-      },
-      {
-        title: '手机号',
-        dataIndex: 'phone',
-        align: 'center',
-        width: '200px',
-      },
+      // {
+      //   title: '邮箱',
+      //   dataIndex: 'email',
+      //   align: 'center',
+      //   width: '200px',
+      // },
+      // {
+      //   title: '手机号',
+      //   dataIndex: 'phone',
+      //   align: 'center',
+      //   width: '200px',
+      // },
       {
         title: '创建时间',
         dataIndex: 'created_at',
@@ -611,6 +679,48 @@ export default [
         showBtn: true,
       }
     }
+  },
+  {
+    id: 'divModal',
+    type: 'Modal',
+    isRemote: false,  //是否获取远程数据，如果是的话，内容json由data求处理的结果作为数据解析, 否则内容由content为准
+    attribute: {
+      visible: false,
+      title: '带表单的Modal',
+      width: 600,
+      zIndex: 999,
+      autoFocusButton: 'ok',  // null|string: ok cancel --- 指定自动获得焦点的按钮
+      cancelText : '取消',
+      okText: '确认',
+      okType: 'primary',
+      confirmLoading: false,
+      closable: true,
+    },
+    methods: {
+      cancel: `(e, that) => {
+        console.log(e, that);
+        that.$emit('submitEvent', "jsonobj.set('divModal','attribute.visible',false)")
+      }`,
+      ok: `(e, that) => {
+        // e和that分别为事件e和当前组件的this
+        console.log(e, that)
+        that.$emit('submitEvent', "jsonobj.set('divModal','attribute.confirmLoading',true); jsonobj.set('modalDiv','html','2s后自动关闭');")
+        setTimeout(() => {
+          that.$emit('submitEvent', "jsonobj.set('divModal','attribute.visible',false);")
+          that.$emit('submitEvent', "jsonobj.set('modalDiv','html','这是一个div形式的的Modal');")
+          that.$emit('submitEvent', "jsonobj.set('divModal','attribute.confirmLoading',false);")
+        }, 2000)
+        
+      }`
+    },
+    children: [
+      {
+        id: 'modalDiv',
+        type: 'div',
+        html: '这是一个div形式的的Modal',
+        style: {}
+      }
+    ]
   }
 ]
 
