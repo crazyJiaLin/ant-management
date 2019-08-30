@@ -1,7 +1,8 @@
 <template>
   <a-form class="login-form" :form="form"  @submit="handleSubmit">
     <a-form-item>
-      <a-input size="large" type="text" placeholder="手机号" v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
+      <a-input size="large" type="text" placeholder="手机号"
+               v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]">
         <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }"/>
       </a-input>
     </a-form-item>
@@ -9,7 +10,8 @@
     <a-row :gutter="16">
       <a-col class="gutter-row" :span="16">
         <a-form-item>
-          <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
+          <a-input size="large" type="text" placeholder="验证码"
+                   v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
             <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
           </a-input>
         </a-form-item>

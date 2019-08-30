@@ -6,7 +6,7 @@
                                 'username',
                                 { rules: [{ required: true, message: '用户名不能为空' }] }
                             ]">
-        <a-icon slot="prefix" type="user" />
+        <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         <!-- <a-icon v-if="username" slot="suffix" type="close-circle"/> -->
       </a-input>
     </a-form-item>
@@ -16,7 +16,7 @@
                                 'password',
                                 { rules: [{ required: true, message: '密码不能为空' }] }
                             ]" >
-        <a-icon slot="prefix" type="lock"/>
+        <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
         <!-- <a-icon v-if="password" slot="suffix" type="close-circle"/> -->
       </a-input>
     </a-form-item>
@@ -28,7 +28,7 @@
                                         'captchaCode',
                                         { rules: [{ required: true, message: '验证码不能为空' }] }
                                     ]" >
-            <a-icon slot="prefix" type="lock"/>
+            <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             <!-- <a-icon v-if="captchaCode" slot="suffix" type="close-circle" /> -->
           </a-input>
         </a-form-item>
