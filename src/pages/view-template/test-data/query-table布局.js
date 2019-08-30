@@ -206,8 +206,57 @@ export default [
         width: '300px',
         scopedSlots: {customRender: 'operation'},
       }], // 列表字段--渲染方式
+    toolsBar: { //表格上方工具栏
+      // 右侧
+      right: {
+        wrapperStyle: {
+          textAlign: 'right'
+        },
+        children: [
+          {
+            id: 'createBtn',
+            action: 'create', // 这里只有action指定为create才会根据当前用户权限action来判断是否disabled
+            type: 'Button',
+            text: '新建',
+            attribute: {
+              wrapperStyle: {
+                display: 'inline-block'
+              },
+              type: 'primary',
+              icon: 'plus',
+              // 在点击按钮执行的内部方法
+              inner: 'jsonobj.set("table1", "operation.create.visible", true)'
+            },
+            onClick : `(that) => {
+              console.log('点击create按钮',that)
+            }`
+          }
+        ]
+      },
+      // 左侧
+      left: {
+        children: [
+          {
+            id: 'exportBtn',
+            type: 'Button',
+            text: '导出',
+            attribute: {
+              wrapperStyle: {
+                display: 'inline-block'
+              },
+              type: 'primary',
+              icon: 'export',
+            },
+            onClick : `(that) => {
+              message.info('点击了export按钮')
+            }`
+          }
+        ]
+      },
+    },
     operation: {
       create: {
+        visible: false,
         showBtn: true,
         title: '新建用户',
         width: 550,

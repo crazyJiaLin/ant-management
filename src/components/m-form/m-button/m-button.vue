@@ -17,10 +17,14 @@
       AButton: Button,
     },
     props: {
-      options: Object
+      options: Object,
     },
     methods : {
       onClick () {
+        if(this.options.onClick) {
+          let onClick = $eval(this.options.onClick);
+          onClick(this);  //吧this传出去
+        }
         // console.log(this.options.attribute.inner)
         (this.options.attribute && this.options.attribute.inner) &&
         this.$emit('submitEvent', this.options.attribute.inner)

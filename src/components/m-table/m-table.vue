@@ -1,12 +1,26 @@
 <template>
   <div :style="options.attribute.wrapperStyle">
-    <div style="width: 100%; margin: 15px 0; text-align: right;">
-      <a-button v-if="options.operation && options.operation.create && options.operation.create.showBtn"
-                :disabled="!isInActions('create')"
-                type="primary" icon="plus"
-                @click="onCreate">新增</a-button>
-    </div>
-    <m-create :visible="showCreateDrawer" :options="options.operation ? options.operation.create : {}"
+    <a-row style="width: 100%; margin: 15px 0;">
+      <a-col :span="12" :style="options.toolsBar.left.wrapperStyle">
+        <template v-for="item in options.toolsBar.left.children">
+          <m-button v-if="item.type && (item.type.toLowerCase() === 'button')"
+                    :options="setCreateDisabledByAction(item)"
+                    @submitEvent="handleSubmitEvent"/>
+        </template>
+      </a-col>
+      <a-col :span="12" :style="options.toolsBar.right.wrapperStyle">
+        <template v-for="item in options.toolsBar.right.children">
+          <m-button v-if="item.type && (item.type.toLowerCase() === 'button')"
+                    :options="setCreateDisabledByAction(item)"
+                    @submitEvent="handleSubmitEvent"/>
+        </template>
+<!--        <a-button v-if="options.operation && options.operation.create && options.operation.create.showBtn"-->
+<!--                  :disabled="!isInActions('create')"-->
+<!--                  type="primary" icon="plus"-->
+<!--                  @click="onCreate">新增</a-button>-->
+      </a-col>
+    </a-row>
+    <m-create :visible="options.operation.create.visible" :options="options.operation ? options.operation.create : {}"
               @close="handleCreateDrawClose"></m-create>
     <m-edit :visible="showEditDrawer" :options="options.operation ? options.operation.edit : {}"
             :record="editRecord" @close="handleEditDrawClose"></m-edit>
@@ -45,7 +59,7 @@
                       :disabled="!isInActions('delete')"
                       title="确认删除此条数据?" okText="确定" cancelText="取消"
                       @confirm="() => onDelete(record.record_id)">
-          <a-button :loading="deleteBtnLoading[record.record_id]" type="danger" ghost size="small">删除</a-button>
+          <a-button :loading="deleteBtnLoading[record.record_id]" :disabled="!isInActions('delete')" type="danger" ghost size="small">删除</a-button>
         </a-popconfirm>
       </template>
     </a-table>
@@ -56,19 +70,22 @@
     console.log(text)
     return text + '123'
   }
-  import {Table, Button, Popconfirm, Icon, Badge, Notification} from 'ant-design-vue'
+  import {Table, Row, Col, Button, Popconfirm, Icon, Badge, Notification} from 'ant-design-vue'
   import MCreate from './m-create/m-create'
   import MEdit from './m-edit/m-edit'
+  import MButton from '@/components/m-form/m-button/m-button'
   export default {
     name: 'm-table',
     components: {
       ATable: Table,
+      ARow: Row, ACol: Col,
       AButton: Button,
       APopconfirm: Popconfirm,
       AIcon: Icon,
       ABadge: Badge,
       MCreate,
-      MEdit
+      MEdit,
+      MButton,
     },
     props: {
       options: Object
@@ -237,6 +254,7 @@
       },
       handleCreateDrawClose (action) {
         this.showCreateDrawer = false;
+        this.$emit('submitEvent', 'jsonobj.set("table1", "operation.create.visible", false)')
         if(action && action == 'created') {
           //如果是创建完成，刷新列表
           this.fetch(this.options.params);
@@ -308,6 +326,15 @@
           ...filters,
         });
       },
-    },
+      handleSubmitEvent (value) {
+        this.$emit('submitEvent', value)
+      },
+      setCreateDisabledByAction (item) {
+        if(item.action === 'create') {
+          item.attribute.disabled = !this.isInActions('create')
+        }
+        return item;
+      },
+    }
   }
 </script>
