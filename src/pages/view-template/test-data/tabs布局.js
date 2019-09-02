@@ -26,10 +26,11 @@ export default [
     children : [
       {
         id: 'tab1',
-        title: 'tab1',
+        title: '带图标',
         isRemote: false,  //是否远程获取数据
         attribute: {
           forceRender: false,   // 被隐藏时是否渲染 DOM 结构
+          icon: 'user',
           style: {}
         },
         children: [
@@ -816,6 +817,35 @@ export default [
             ]
           }
         ]
+      },
+      {
+        id: 'tab3',
+        title: '远程获取数据',
+        isRemote: true,  //是否远程获取数据
+        data: {
+          method: 'GET',
+          url: '/gettemplates/4257c289-e7af-4f94-ad71-92c3b5e25ae4',
+          params: {},
+          isBase64Data: true  //是否需要base64解码
+        },
+        attribute: {
+          forceRender: false,   // 被隐藏时是否渲染 DOM 结构
+          icon: 'windows',
+          style: {}
+        },
+        children: []
+      },
+      {
+        id: 'tab4',
+        title: '禁用tab',
+        isRemote: false,  //是否远程获取数据
+        attribute: {
+          forceRender: false,   // 被隐藏时是否渲染 DOM 结构
+          disabled: true,
+          icon: 'google',
+          style: {}
+        },
+        children: []
       }
     ]
   }

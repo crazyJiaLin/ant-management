@@ -9,8 +9,12 @@
     >
       <a-tab-pane
         v-for="item1 in options.children"
-        :key="item1.id" :tab="item1.title"
+        :key="item1.id" :disabled="item1.attribute.disabled"
       >
+        <span slot="tab">
+          <a-icon v-if="item1.attribute.icon" :type="item1.attribute.icon" />
+          {{item1.title}}
+        </span>
         <template v-for="item in item1.children">
           <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
                    @submitEvent="handleSubmitEvent"/>
@@ -33,7 +37,7 @@
 </template>
 
 <script>
-  import {Tabs} from 'ant-design-vue'
+  import {Tabs, Icon} from 'ant-design-vue'
   import MQuery from '@/components/m-form/m-query/m-query'
   import MForm from '@/components/m-form/m-form'
   import MTable from '@/components/m-table/m-table'
@@ -52,6 +56,7 @@
     components: {
       ATabs: Tabs,
       ATabPane: Tabs.TabPane,
+      AIcon: Icon,
       MQuery, MForm, MTable, MSteps, MModal,
       MButton, MBadge, MTransfer,
       MDiv, MPre, 'm-a': MA,
@@ -59,9 +64,48 @@
     props: {
       options: Object
     },
+    mounted () {
+      // this.getContent();
+      for(let i=0; i<this.options.children.length; i++) {
+        this.getContent(this.options.children[i])
+      }
+    },
     methods: {
       onChange (key) {
         console.log(key)
+      },
+      getContent (item) {
+        if(!item.isRemote || !item.data) return;
+        // 根据配置文件中data的配置项发送请求，获取content数据
+        console.log(item.data.method)
+        let method = item.data.method.toLowerCase();
+        this.$axios[method](item.data.url,item.data.params)
+          .then(res => {
+            console.log(res)
+            if(item.data.isBase64Data) {
+              // 需要Base54解码
+              let jsonStr = Base64.decode(res.data.data)
+              // 解析解码后的json数据
+              this.parseJSON(jsonStr, item)
+            }else{
+              // 不需要base64解码，直接解析json数据
+              this.parseJSON(res.data.data, item)
+            }
+          }).catch(err => {
+          console.log(err)
+          message.error(item.id + '组件请求数据失败！');
+        })
+      },
+      parseJSON (jsonStr, item) {
+        try{
+          this.content = new JsonObj(JSON.parse(jsonStr));
+          // 将content内容通知给父组件，添加到父组件的children里
+          console.log(item.id, new Array(JSON.parse(jsonStr)))
+          this.$emit('submitEvent', `jsonobj.set('${item.id}','children',${jsonStr});`)
+        }catch (e) {
+          // console.log('转化错误',e.toString())
+          message.error('数据不能转化为json格式')
+        }
       },
       // 子组件中带动作的，需要template对配置json数据进行操作
       handleSubmitEvent (value) {
