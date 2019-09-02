@@ -113,7 +113,7 @@ export default [
       showHeader: true,
       // y不传自响应
       scroll:{           // table scroll
-        x: 1600,
+        x: false,
         // y: 100
       },
       // wrapperStyle: {    // 最外层容器的样式，包括新增按钮
@@ -174,18 +174,6 @@ export default [
         width: '150px',
       },
       {
-        title: '真实姓名',
-        dataIndex: 'real_name',
-        align: 'center',
-        width: '150px',
-      },
-      {
-        title: '真实姓名',
-        dataIndex: 'real_name',
-        align: 'center',
-        width: '150px',
-      },
-      {
         title: '角色名称',
         dataIndex: 'roles',
         align: 'roles',
@@ -222,15 +210,6 @@ export default [
         dataIndex: 'status',
         align: 'center',
         width: '200px',
-        // customRender: `(text, record, index)=>{
-        //   if(text === 1){
-        //     return '启用'
-        //   }else {
-        //     return '停用'
-        //   }
-        // }`,
-        // status状态为直接渲染status
-        // scopedSlots: { customRender: 'status'},
         scopedSlots: {
           customRender: 'template',
           render: `(text, record, index) => {
@@ -245,13 +224,16 @@ export default [
                 },
                 onChange: \`(checked, that) => {
                   // 这里的check参数是change过后switch的选中状态， that指的是当前switch组件的this，可以通过that对当前switch进行loading和发送请求等 
-                  console.log(checked)
-                  that.loading = true;
-                  // 在这里可以进行请求或者其他操作，如果想要使用inner方法，请使用 that.$emit('submitEvent', 'jsonobj.set(...)')
-                  setTimeout(()=>{
-                    that.loading = false;
-                    message.success('修改成功');
-                  },1000)
+                  console.log(checked, '\${record.record_id}')
+                  let url = '/users/\${record.record_id}/'
+                  url = checked ? url + 'enable' : url + 'disable'
+                  that.$axios.patch(url).then(res => {
+                     message.success('修改成功');
+                     // 刷新table
+                     that.$emit('submitEvent', 'jsonobj.set("table1", "reload", Math.random())')
+                  }).catch(err => {
+                    message.error('修改失败');
+                  })
                 }\`
               }
             ]

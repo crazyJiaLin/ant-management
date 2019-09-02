@@ -199,7 +199,6 @@
       },
       // 设置table的默认Scroll
       setTableScroll() {
-        console.log('set table scroll')
         if(!document.querySelector(`.${this.options.id}`)) return;
         let tableTop = document.querySelector(`.${this.options.id}`).offsetTop  // table距离文档顶端距离
         let viewTop = document.querySelector('.view-template-wrap').offsetTop   // router-view距离文档顶端距离
