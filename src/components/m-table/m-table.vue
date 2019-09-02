@@ -27,7 +27,7 @@
     <a-table :columns="columns" :rowKey="rowKey" :style="options.attribute.tableStyle" :class="options.id"
              :dataSource="dataList" :pagination="pagination"
              :size="options.attribute.size" :bordered="options.attribute.bordered"
-             :scroll="finalScroll"
+             :scroll="scroll"
              :showHeader="options.attribute.showHeader === undefined ? true : options.attribute.showHeader"
              :loading="loading" @change="handleTableChange"
     >
@@ -123,14 +123,16 @@
       resources(){
         return this.$store.state.curMenu.resources;
       },
-      finalScroll () {
-        return this.options.attribute.scroll ? this.options.attribute.scroll : this.scroll
-      }
     },
     watch: {
       'options.params' (newVal) {
         // console.log('table 得到通知', newVal);
         this.fetch(newVal);
+      },
+      // 监听reload参数变化，如果变化就刷新表格
+      'options.reload' () {
+        // console.log('table组件监听到reload')
+        this.fetch(this.options.params)
       }
     },
     data() {
@@ -197,13 +199,16 @@
       },
       // 设置table的默认Scroll
       setTableScroll() {
+        console.log('set table scroll')
         if(!document.querySelector(`.${this.options.id}`)) return;
         let tableTop = document.querySelector(`.${this.options.id}`).offsetTop  // table距离文档顶端距离
         let viewTop = document.querySelector('.view-template-wrap').offsetTop   // router-view距离文档顶端距离
         let viewHeight = document.querySelector('.view-template-wrap').clientHeight // router-view高度
+        let scrollY = viewHeight - (tableTop - viewTop) - 54 - 65
         this.scroll = {
-          x : true,
-          y :  viewHeight - (tableTop - viewTop) - 54 - 65   // 减去的54为table的header高度,64为pagination高度
+          x : this.options.attribute.scroll ? this.options.attribute.scroll.x : false,
+
+          y : (this.options.attribute.scroll && this.options.attribute.scroll.y) ? this.options.attribute.scroll.y : scrollY
         }
       },
       onEnable (record_id) {

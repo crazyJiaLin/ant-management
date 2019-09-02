@@ -108,14 +108,14 @@ export default [
     rowKeys: 'record => record.record_id',
     // pagination: {}, //可以不用传或者false
     attribute: {
-      bordered: false,
+      bordered: true,
       size : 'default',
       showHeader: true,
-      // 不传自响应
-      // scroll:{           // table scroll
-      //   x: 300,
-      //   y: 100
-      // },
+      // y不传自响应
+      scroll:{           // table scroll
+        x: 1600,
+        // y: 100
+      },
       // wrapperStyle: {    // 最外层容器的样式，包括新增按钮
       //   width: '800px',
       //   height: '300px',
@@ -130,6 +130,7 @@ export default [
     isRemote: true,
     data: [],
     params: {},
+    reload: 1,
     // 对于render中解决不了的function问题，可以吧function当做字符串存储，然后在组件中获取的时候eval（）
     // TODO 问题所在，这里如果使用eval执行函数的话，会不支持jsx语法，所以只能在函数中返回字符串，不能返回jsx语法标签
     columns : [
@@ -138,6 +139,7 @@ export default [
         dataIndex: 'user_name',
         align: 'center',
         width: '200px',
+        fixed: 'left',
         // customRender: `(text, record, index)=>{
         //   return text
         // }`,
@@ -169,8 +171,19 @@ export default [
         title: '真实姓名',
         dataIndex: 'real_name',
         align: 'center',
-        width: '200px',
-
+        width: '150px',
+      },
+      {
+        title: '真实姓名',
+        dataIndex: 'real_name',
+        align: 'center',
+        width: '150px',
+      },
+      {
+        title: '真实姓名',
+        dataIndex: 'real_name',
+        align: 'center',
+        width: '150px',
       },
       {
         title: '角色名称',
@@ -281,6 +294,25 @@ export default [
           textAlign: 'right'
         },
         children: [
+          {
+            id: 'reloadBtn',
+            type: 'Button',
+            text: '刷新',
+            attribute: {
+              wrapperStyle: {
+                display: 'inline-block',
+                marginRight: '15px'
+              },
+              type: 'primary',
+              icon: 'sync',
+              // 在点击按钮执行的内部方法
+              // inner: 'jsonobj.set("table1", "reload", Math.random())'
+            },
+            onClick : `(that) => {
+              // 这里的that就是vue的this
+              that.$emit('submitEvent', 'jsonobj.set("table1", "reload", Math.random())')
+            }`
+          },
           {
             id: 'createBtn',
             action: 'create', // 这里只有action指定为create才会根据当前用户权限action来判断是否disabled
