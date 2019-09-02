@@ -5,6 +5,7 @@
            :okText="options.attribute.okText" :okType="options.attribute.okType"
            :confirmLoading="options.attribute.confirmLoading" :destroyOnClose="options.attribute.destroyOnClose"
            :closable="options.attribute.closable" :footer="options.attribute.footer"
+           :mask="options.attribute.mask"
           @ok="handleOk" @cancel="handleCancel"
   >
     <template v-for="(item, index) in options.children" >

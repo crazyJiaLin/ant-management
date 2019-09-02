@@ -106,7 +106,7 @@ export default [
   {
     id: 'div1',
     type: 'div',
-    text: '这里是div，通过样式控制',
+    html: `这里是div，通过样式控制`,
     style: {
       textAlign: 'center',
       fontSize: '20px',
@@ -117,8 +117,8 @@ export default [
   {
     id: 'pre1',
     type: 'pre',
-    text: `这里是pre
-    ，用于展示带分割的
+    html: `这里是pre
+    ，用于展示带分割的 <a href="#">123</a>
     text`,
     style: {
       textAlign: 'center',

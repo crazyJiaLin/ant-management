@@ -69,6 +69,7 @@ export default [
     attribute: {
       visible: false,
       title: '带表单的Modal',
+      mask: false,
       width: 600,
       zIndex: 999,
       destroyOnClose: true,   // 关闭时是否销毁 Modal 里的子元素

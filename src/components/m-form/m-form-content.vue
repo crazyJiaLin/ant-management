@@ -13,7 +13,9 @@
         <m-cascader v-if="item.type && (item.type.toLowerCase() === 'cascader')" :options="item"></m-cascader>
         <m-radio v-if="item.type && (item.type.toLowerCase() === 'radio')" :options="item" @submitEvent="handleSubmitEvent"></m-radio>
         <m-checkbox v-if="item.type && (item.type.toLowerCase() === 'checkbox')" :options="item" @submitEvent="handleSubmitEvent"></m-checkbox>
-        <m-button v-if="item.type && (item.type.toLowerCase() === 'button')" :options="item" @submitEvent="handleSubmitEvent"></m-button>
+        <m-button v-if="item.type && (item.type.toLowerCase() === 'button')" :options="item"
+                  @submitEvent="handleSubmitEvent" @reset="handleReset"
+        ></m-button>
         <m-switch v-if="item.type && (item.type.toLowerCase() === 'switch')" :options="item" @submitEvent="handleSubmitEvent"></m-switch>
         <m-select v-if="item.type && (item.type.toLowerCase() === 'select')" :options="item"></m-select>
         <m-upload v-if="item.type && (item.type.toLowerCase() === 'upload')" :options="item" @submitEvent="handleSubmitEvent"/>
@@ -85,7 +87,10 @@
       // 子组件中带动作的，需要template对配置json数据进行操作
       handleSubmitEvent (value) {
         this.$emit('submitEvent', value)
-      }
+      },
+      handleReset (value) {
+        this.$emit('reset', value)
+      },
     },
     mounted() {
       // console.log(this.options)

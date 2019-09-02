@@ -3,7 +3,8 @@
                 :labelCol="options.labelCol" :wrapperCol="options.wrapperCol" >
     <a-input v-if="!options.attribute.Tooltip" :placeholder="options.attribute.placeholder"
              :size="options.attribute.size" :disabled="options.attribute.disabled"
-             :type="options.attribute.type"
+             :prefix="options.attribute.prefix" :suffix="options.attribute.suffix"
+             :type="options.attribute.type" :style="options.attribute.style"
              :autocomplete="options.attribute.autocomplete ? options.attribute.autocomplete : 'off'"
              :allowClear="options.attribute.allowClear" :addonBefore="options.attribute.addonBefore"
              :addonAfter="options.attribute.addonAfter" v-decorator="[
@@ -13,7 +14,9 @@
     <a-tooltip v-if="options.attribute.Tooltip"
                :placement="options.attribute.Tooltip.placement" :title="options.attribute.Tooltip.title">
       <a-input :placeholder="options.attribute.placeholder" :size="options.attribute.size"
-               :disabled="options.attribute.disabled" :type="options.attribute.type"
+               :disabled="options.attribute.disabled"
+               :prefix="options.attribute.prefix" :suffix="options.attribute.suffix"
+               :type="options.attribute.type" :style="options.attribute.style"
                :autocomplete="options.attribute.autocomplete ? options.attribute.autocomplete : 'off'"
                :allowClear="options.attribute.allowClear" :addonBefore="options.attribute.addonBefore"
                :addonAfter="options.attribute.addonAfter" v-decorator="[

@@ -72,9 +72,13 @@ export default [
         wrapperCol: {span: 14, offset: 2},// 输入框长度
         "attribute":{
           "icon":"user",
+          prefix: '86+',
           "size":"default",
           "allowClear":true,//是否支持清除
           "placeholder":"请输入手机号",
+          style: {
+            paddingLeft: '5px'
+          },
           "decorator":{
             "rules":[
               {"required":true,"message":"请输入手机号"},
@@ -146,7 +150,7 @@ export default [
           allowClear: true,
           placeholder: "请选择",
           // 参考antd 文档中select-mode属性
-          mode:"multiple",
+          mode:"tags",
           disabled: false,
           "decorator":{
             "rules":[
@@ -469,13 +473,13 @@ export default [
             }
           },
           {
-            "id": "input2",
+            "id": "input-group2",
             "type":"InputText",
             "attribute":{
               style: {
                 width: '40%'
               },
-              "icon":"user",
+              "addonBefore":"user",
               "size":"default",
               "allowClear":true,//是否支持清除
               "placeholder":"请输入手机号",
@@ -489,7 +493,7 @@ export default [
             },
           },
           {
-            "id": "input3",
+            "id": "input-group3",
             "type":"InputText",
             "attribute":{
               style: {

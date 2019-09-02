@@ -30,7 +30,7 @@
 </template>
 <script>
   // 假数据
-  import TemplateData from './test-data/tabs布局'
+  import TemplateData from './test-data/其他组件'
   const Base64 = require('js-base64').Base64
   import {Icon, Notification, Message} from 'ant-design-vue'
 

@@ -5,6 +5,7 @@
           <m-form-content :formList="options.children"
                           @submitEvent="handleSubmitEvent"
                           @inputGroupChange="oninputGroupChange"
+                          @reset="handleReset"
           ></m-form-content>
     </a-form>
   </div>
@@ -99,8 +100,8 @@
         this.form.setFieldsValue(this.inputGroup)
         // console.log('after', this.form.getFieldsValue([name]))
       },
-      handleReset (e) {
-        // this.form.resetFields();
+      handleReset (value) {
+        console.log('reset',value)
         this.form.resetFields();
       },
       // 子组件中带动作的，需要template对配置json数据进行操作

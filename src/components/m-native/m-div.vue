@@ -1,7 +1,5 @@
 <template>
-  <div :style="options.style" v-html="options.html">
-    {{options.text}}
-  </div>
+  <div :style="options.style" v-html="options.html"></div>
 </template>
 
 <script>
