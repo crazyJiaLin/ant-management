@@ -10,7 +10,10 @@
     <div class="template-input" v-if="!loading && template">
       <template v-for="(item, index) in this.template" >
         <m-query v-if="item.type && (item.type.toLowerCase() === 'query')" :options="item"
-                 @submitEvent="handleSubmitEvent" @search="handleSearch(item.tableId, $event)"/>
+                 @submitEvent="handleSubmitEvent"
+                 @search="handleSearch(item.tableId, $event)"
+                 @collapse="handleCollapse(item.tableId, $event)"
+        />
         <m-form v-if="item.type && (item.type.toLowerCase() === 'form')" :options="item"
                  @submitEvent="handleSubmitEvent"/>
         <m-table v-if="item.type && (item.type.toLowerCase() === 'table')" :options="item" @submitEvent="handleSubmitEvent"/>
@@ -76,6 +79,11 @@
         // console.log('start search', tableId, params)
         // 通过自定义方法吧params设置到对应的table中去
         this.template.set(tableId, 'params', params)
+      },
+      // query组件折叠事件
+      handleCollapse (tableId, status) {
+        // 通过设置table参数来通知table进行高度自响应
+        this.template.set(tableId, 'resize', status)
       },
       handleSubmitEvent(value) {
         // console.log('template 父组件接收到命令', value)

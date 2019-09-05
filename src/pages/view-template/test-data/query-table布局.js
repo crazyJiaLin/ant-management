@@ -109,7 +109,7 @@ export default [
     // pagination: {}, //可以不用传或者false
     attribute: {
       bordered: true,
-      size : 'default',
+      size : 'small',
       showHeader: true,
       // y不传自响应
       scroll:{           // table scroll
@@ -130,9 +130,9 @@ export default [
     isRemote: true,
     data: [],
     params: {},
-    reload: 1,
+    reload: 1,    // 刷新表格请修改这个值
+    resize: 1,    // 重置表格高度自响应
     // 对于render中解决不了的function问题，可以吧function当做字符串存储，然后在组件中获取的时候eval（）
-    // TODO 问题所在，这里如果使用eval执行函数的话，会不支持jsx语法，所以只能在函数中返回字符串，不能返回jsx语法标签
     columns : [
       {
         title: '用户名',

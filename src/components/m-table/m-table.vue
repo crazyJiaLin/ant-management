@@ -133,6 +133,9 @@
       'options.reload' () {
         // console.log('table组件监听到reload')
         this.fetch(this.options.params)
+      },
+      'options.resize' () {
+        this.setTableScroll();
       }
     },
     data() {
@@ -203,7 +206,12 @@
         let tableTop = document.querySelector(`.${this.options.id}`).offsetTop  // table距离文档顶端距离
         let viewTop = document.querySelector('.view-template-wrap').offsetTop   // router-view距离文档顶端距离
         let viewHeight = document.querySelector('.view-template-wrap').clientHeight // router-view高度
-        let scrollY = viewHeight - (tableTop - viewTop) - 54 - 65
+        let tableHeaderHeight = this.options.attribute.size == 'small' ? 39 : 54
+        let paginationHeight = this.options.attribute.size == 'small' ? 59: 65
+        if(this.options.attribute.showHeader === false) {
+          tableHeaderHeight = 0
+        }
+        let scrollY = viewHeight - (tableTop - viewTop) - tableHeaderHeight - paginationHeight
         this.scroll = {
           x : this.options.attribute.scroll ? this.options.attribute.scroll.x : false,
 

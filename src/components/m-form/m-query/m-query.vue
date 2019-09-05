@@ -138,6 +138,7 @@
       },
       handleCollapse () {
         this.expand = !this.expand;
+        this.$emit('collapse', this.expand ? 'unfold' : 'fold' )
       },
       handleReset (e) {
         // this.form.resetFields();

@@ -215,7 +215,7 @@ export default [
           allowClear: true,
           placeholder: "please select",
           // 参考antd 文档中select-mode属性
-          mode:"multiple",
+          mode:"tags",
           disabled: false,
           "decorator":{
             "rules":[
