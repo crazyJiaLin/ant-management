@@ -64,7 +64,7 @@
 
         // 设置定时器，定时刷新token
         this.refreshTokenTimer && clearTimeout(this.refreshTokenTimer)
-        this.refreshTokenTimer = setTimeout(this.refreshToken, 7199 * 1000)
+        this.refreshTokenTimer = setTimeout(this.refreshToken, 7160 * 1000)
 
         //路由跳转
         // console.log(this.redirectPath)
