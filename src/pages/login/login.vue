@@ -12,7 +12,7 @@
             <div class="login-body">
               <a-tabs :animated="false" defaultActiveKey="1" type="line" @change="tabChange">
                 <a-tab-pane tab="账号密码登录" key="1">
-                  <pwd-login></pwd-login>
+                  <pwd-login @login="onLogin"></pwd-login>
                 </a-tab-pane>
                 <a-tab-pane tab="手机号登陆" key="2" forceRender>
                   <mobile-login></mobile-login>
@@ -48,9 +48,41 @@
       PwdLogin,
       MobileLogin
     },
-    methods: {
-      tabChange (key) {
+    data () {
+      return {
+        redirectPath: this.$route.query.redirect ? this.$route.query.redirect : '/',
+        refreshTokenTimer : null
       }
+    },
+    methods: {
+      onLogin(data, username) {
+        //将acces_token和用户名保存到localStorage
+        this.$setLocalStorage('access_token', data.access_token, data.expires_at);
+        this.$setLocalStorage('token_type', data.token_type, data.expires_at);
+        username && this.$setLocalStorage('username', username, data.expires_at);
+        // localStorage.setItem('username', values.username)
+
+        // 设置定时器，定时刷新token
+        this.refreshTokenTimer && clearTimeout(this.refreshTokenTimer)
+        this.refreshTokenTimer = setTimeout(this.refreshToken, 7199 * 1000)
+
+        //路由跳转
+        // console.log(this.redirectPath)
+        this.$router.push({
+          path: this.redirectPath
+        });
+      },
+      refreshToken () {
+        // 刷新令牌
+        this.$axios.post('/refresh_token').then(res => {
+          console.log(res)
+          this.onLogin(res.data)
+        }).catch(err => {
+          console.log('刷新令牌出错', err)
+        })
+      },
+      tabChange (key) {
+      },
     }
   }
 </script>

@@ -116,16 +116,7 @@
           this.btnLoading = false;
           let data = res.data;
           if(data.access_token){
-            //将acces_token和用户名保存到localStorage
-            this.$setLocalStorage('access_token', data.access_token, data.expires_at);
-            this.$setLocalStorage('token_type', data.token_type, data.expires_at);
-            this.$setLocalStorage('username', values.username, data.expires_at);
-            // localStorage.setItem('username', values.username)
-            //路由跳转
-            // console.log(this.redirectPath)
-            this.$router.push({
-              path: this.redirectPath
-            });
+            this.$emit('login', data, values.username)
           }
         }).catch(err => {
           console.log(err.response)
@@ -141,7 +132,7 @@
       getCaptchaId () {
         //获取验证码
         this.$axios.get('/login/captchaid').then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           let data = res.data;
           if(data.captcha_id) {
             this.captchaId = data.captcha_id;
