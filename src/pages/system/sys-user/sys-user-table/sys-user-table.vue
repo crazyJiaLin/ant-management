@@ -228,6 +228,7 @@
         })
       },
       fetch(params = {}) {
+        console.log(params)
         this.loading = true;
         this.$axios.get('/users?q=page', {
           params: {
@@ -251,8 +252,7 @@
         pager.current = pagination.current;
         this.pagination = pager;
         this.fetch({
-          results: pagination.pageSize,
-          page: pagination.current,
+          ...pagination,
           sortField: sorter.field,
           sortOrder: sorter.order,
           ...filters,

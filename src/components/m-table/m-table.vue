@@ -372,8 +372,7 @@
         pager.current = pagination.current;
         this.pagination = pager;
         this.fetch({
-          results: pagination.pageSize,
-          page: pagination.current,
+          ...pagination,
           sortField: sorter.field,
           sortOrder: sorter.order,
           ...filters,
