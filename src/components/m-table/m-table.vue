@@ -127,12 +127,18 @@
     watch: {
       'options.params' (newVal) {
         // console.log('table 得到通知', newVal);
-        this.fetch(newVal);
+        this.fetch({
+          ...newVal,
+          ...this.pagination
+        });
       },
       // 监听reload参数变化，如果变化就刷新表格
       'options.reload' () {
         // console.log('table组件监听到reload')
-        this.fetch(this.options.params)
+        this.fetch({
+          ...this.options.params,
+          ...this.pagination
+        })
       },
       'options.resize' () {
         this.setTableScroll();
@@ -155,7 +161,10 @@
     },
     mounted() {
       // 参数params为query组件传进来的搜索条件或者配置文件里边给出的
-      this.options.isRemote && this.fetch(this.options.params);
+      this.options.isRemote && this.fetch({
+        ...this.options.params,
+        ...this.pagination
+      });
       // console.log('actions', this.actions)
       // console.log('resources', this.resources)
 
@@ -233,7 +242,10 @@
         this.$axios[method](url).then(res => {
           console.log(res)
           if(res.data) {
-            this.fetch(this.options.params);
+            this.fetch({
+              ...this.options.params,
+              ...this.pagination
+            });
             notification.success({
               message: '启用成功'
             })
@@ -259,7 +271,10 @@
         this.$axios[method](url).then(res => {
           console.log(res)
           if(res.data) {
-            this.fetch(this.options.params);
+            this.fetch({
+              ...this.options.params,
+              ...this.pagination
+            });
             notification.success({
               message: '停用成功'
             })
@@ -294,7 +309,10 @@
         this.$axios[method](url).then(res => {
           console.log(res)
           if(res.data) {
-            this.fetch(this.options.params);
+            this.fetch({
+              ...this.options.params,
+              ...this.pagination
+            });
             notification.success({
               message: '删除成功'
             })
@@ -310,13 +328,19 @@
         this.$emit('submitEvent', 'jsonobj.set("table1", "operation.create.visible", false)')
         if(action && action == 'created') {
           //如果是创建完成，刷新列表
-          this.fetch(this.options.params);
+          this.fetch({
+            ...this.options.params,
+            ...this.pagination
+          });
         }
       },
       handleEditDrawClose (action) {
         this.showEditDrawer = false;
         if(action && action == 'updated') {
-          this.fetch(this.options.params);
+          this.fetch({
+            ...this.options.params,
+            ...this.pagination
+          });
         }
       },
       fetch (params = {}) {

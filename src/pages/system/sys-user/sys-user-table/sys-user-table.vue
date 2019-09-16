@@ -57,13 +57,20 @@
     watch: {
       // 监听创建表单动作，如果创建完成，进行数据更新
       createTimes(newVal, oldVal) {
-        this.fetch(this.searchParams)  // 如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
+        // 如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
+        this.fetch({
+          ...this.searchParams,
+          ...this.pagination
+        });
       },
       // 监听查询条件变化，用于表单组件和table组件通信
       searchParams: {
         handler(newVal, oldVal) {
           // console.log(newVal, oldVal)
-          this.fetch(newVal);
+          this.fetch({
+            ...this.searchParams,
+            ...this.pagination
+          });
         },
         deep: true
       }
@@ -130,7 +137,10 @@
       }
     },
     mounted() {
-      this.fetch(this.pagination);
+      this.fetch({
+        ...this.searchParams,
+        ...this.pagination
+      });
       this.setTableScroll()
       // 监听window的resize方法，并加入防抖函数
       window.addEventListener('resize', window.$debounce(() => {
@@ -155,7 +165,6 @@
           let scrollY = viewHeight - (tableTop - viewTop) - 45 - 60 // 减去的45为table的header高度, 60为pagination高度
           // console.log(scrollY)
           this.scroll = {
-            x: true,
             y :  scrollY
           }
         }, 50)
@@ -166,7 +175,10 @@
         this.$axios.patch(`users/${record_id}/enable`).then(res => {
           console.log(res)
           if(res.data) {
-            this.fetch(this.searchParams);
+            this.fetch({
+              ...this.searchParams,
+              ...this.pagination
+            });
             notification.success({
               message: '启用成功'
             })
@@ -183,7 +195,10 @@
         this.$axios.patch(`users/${record_id}/disable`).then(res => {
           console.log(res)
           if(res.data) {
-            this.fetch(this.searchParams);
+            this.fetch({
+              ...this.searchParams,
+              ...this.pagination
+            });
             notification.success({
               message: '停用成功'
             })
@@ -209,7 +224,10 @@
       handleEditDrawClose(action) {
         this.showEditDrawer = false;
         if (action && action === 'updated') {
-          this.fetch()
+          this.fetch({
+            ...this.searchParams,
+            ...this.pagination
+          });
         }
       },
       onDelete(record_id) {  //点击删除
@@ -219,7 +237,10 @@
           console.log(res)
           if (res.data) {
             //删除成功，同步表格信息
-            this.fetch(this.searchParams)
+            this.fetch({
+              ...this.searchParams,
+              ...this.pagination
+            });
           }
         }).catch(err => {
           console.log(err)

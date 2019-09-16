@@ -1,5 +1,5 @@
 <template>
-  <a-menu theme="dark" mode="inline" :selectedKeys="defaultSelectedKeys"
+  <a-menu class="nav-wrapper" theme="dark" mode="inline" :selectedKeys="defaultSelectedKeys"
           :openKeys="defaultOpenKeys" @select="handleMenuChange" @openChange="handleTitleClick"
           forceSubMenuRender>
     <template v-for="(item, index) in menuList" v-if="item.hidden == 0">
@@ -116,6 +116,15 @@
 </script>
 
 <style scoped lang="less">
+  .nav-wrapper {
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar{
+      width: 0px;
+      background: none;
+    }
+  }
   .ant-menu-submenu-title {
     a {
       color: #fff;

@@ -160,6 +160,7 @@ export default [
                 },
                 onClick : \`(that) => {
                   message.info('点击了\${text}按钮')
+                  that.$emit('submitEvent', 'jsonobj.set("modalDiv","html", "用户名: \${text} 真实姓名：\${record.real_name} 用户状态：\${record.status}")')
                   that.$emit('submitEvent', 'jsonobj.set("divModal","attribute.visible", !jsonobj.get("divModal","attribute.visible"))')
                 }\`
               }
