@@ -330,7 +330,6 @@
           //如果是创建完成，刷新列表
           this.fetch({
             ...this.options.params,
-            ...this.pagination
           });
         }
       },

@@ -60,7 +60,6 @@
         // 如果table的查询是分页查询，需要查询条件的时候，这里还是需要将查询条件作为参数穿进去的
         this.fetch({
           ...this.searchParams,
-          ...this.pagination
         });
       },
       // 监听查询条件变化，用于表单组件和table组件通信
