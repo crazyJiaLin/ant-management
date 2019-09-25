@@ -106,7 +106,11 @@ export default [
     type: 'Table',
     // 每行数据的key值，由函数渲染，组件内部会执行eval，所以请书写正确可执行的函数
     rowKeys: 'record => record.record_id',
-    // pagination: {}, //可以不用传或者false
+    //可以不用传或者false
+    pagination: {
+      showSizeChanger : true,
+      showQuickJumper: true
+    },
     attribute: {
       bordered: true,
       size : 'small',
@@ -241,6 +245,19 @@ export default [
           }`
         }
       },
+      {
+        "title": "邮箱",
+        "dataIndex": "email",
+        "align": "roles",
+        "width": "200px",
+        "scopedSlots": {
+          "customRender": "template",
+          "render": `(text, record, index) => {
+              // console.log('配置文件中的render方法', text, typeof(text), record)
+              return [{id:'tag'+index,type:'tag',text: text ? text : 2,attribute:{color: 'geekblue'}}];
+            }`
+        }
+      },
       // {
       //   title: '邮箱',
       //   dataIndex: 'email',
@@ -253,16 +270,16 @@ export default [
       //   align: 'center',
       //   width: '200px',
       // },
-      {
-        title: '创建时间',
-        dataIndex: 'created_at',
-        align: 'center',
-        width: '220px',
-        customRender: `(text, record, index)=>{
-          return text.split('T')[0]+ ' ' + text.split('T')[1].split('+')[0];
-        }`
-        // scopedSlots: {customRender: 'created'},
-      },
+      // {
+      //   title: '创建时间',
+      //   dataIndex: 'created_at',
+      //   align: 'center',
+      //   width: '220px',
+      //   customRender: `(text, record, index)=>{
+      //     return text.split('T')[0]+ ' ' + text.split('T')[1].split('+')[0];
+      //   }`
+      //   // scopedSlots: {customRender: 'created'},
+      // },
       {
         title: '操作',
         dataIndex: 'record_id',

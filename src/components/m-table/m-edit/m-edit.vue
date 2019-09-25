@@ -5,6 +5,7 @@
       :width="options.width ? options.width : 720"
       @close="onClose"
       :visible="visible"
+      destroyOnClose
       wrapClassName="sys-menu-create-wrap">
       <!--      <m-form :options="options.form" @submit="handleSubmit"></m-form>-->
       <a-form :form="form" @submit="handleSubmit">
@@ -44,10 +45,11 @@
         // 在这里将record中的值合并到form中去
         let res = [];
         for(let i=0; i<this.options.form.children.length; i++) {
-          let item = this.options.form.children[i];
-          let value = this.record[item.id];
+          let item = this.options.form.children[i]; // 从options的列表中获取当前操作的item
+          let value = this.record[item.id];         // 从record中获取当前item id的值
           // console.log('找到',item.id, '值为',value)
-          if(value) {
+          // 这里不应当有非空判断，因为在value值为空的时候也不应该是上一次的值
+          // if(value) {
             let tempDecorator = item.attribute.decorator;
             if(item.attribute.initialValueRender){
               // 如果存在初始化render，则按照render中的进行
@@ -57,7 +59,7 @@
               tempDecorator.initialValue = value;
             }
             item.attribute.decorator = tempDecorator;
-          }
+          // }
           res.push(item)
         }
         // console.log('通过editItem对decorator设置initVal', res)
@@ -100,7 +102,7 @@
                 message: '更新成功'
               })
               // 置空表单，向父组件提交动作，更新表格
-              // this.form.resetFields(); --- 编辑不用置空
+              // this.form.resetFields();
               this.$emit('close', 'updated');
             }
           }).catch(err => {
@@ -111,6 +113,8 @@
         });
       },
       onClose() {
+        // this.form.resetFields();
+        // console.log('on edit close')
         this.$emit('close');
       },
       handleSubmitEvent (value) {

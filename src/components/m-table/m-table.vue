@@ -180,7 +180,6 @@
       renderOptions (text, record, index) {
         // 通过text和record查出当前渲染的是哪一列
         let key = this.getKeyInRecord(text, record)
-        // console.log(key)
         if(!key) return [];
 
         // 通过key值去columns里边找到对应的render方法
@@ -189,6 +188,7 @@
         return res ? res : [];
       },
       getKeyInRecord (text, record) {
+        // console.log('getKeyInRecord里text和record', text, typeof(text), record)
         for(let key in record) {
           if(typeof(text) === 'object') {
             if(JSON.stringify(text) == JSON.stringify(record[key])) {
@@ -196,6 +196,7 @@
             }
           }else{
             if(text === record[key]){
+              // console.log(key)
               return key;
             }
           }
